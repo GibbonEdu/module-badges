@@ -1,0 +1,5 @@
+CHANGELOG
+=========
+v0.1.00
+-------
+Added ability to define awards
