@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v0.2.00
+-------
+Added ability to assign awards to students
+
 v0.1.00
 -------
 Added ability to define awards

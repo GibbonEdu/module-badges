@@ -25,7 +25,7 @@ $description="The Awards module allows a school to define and assign a range of 
 $entryURL="awards_manage.php" ;
 $type="Additional" ;
 $category="Assess" ;
-$version="0.1.00" ;
+$version="0.2.00" ;
 $author="Ross Parker" ;
 $url="http://rossparker.org" ;
 
@@ -44,8 +44,20 @@ $moduleTables[0]="CREATE TABLE `awardsAward` (
   PRIMARY KEY (`awardsAwardID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;" ;
 
+$moduleTables[1]="CREATE TABLE `awardsAwardStudent` (
+  `awardsAwardStudentID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `awardsAwardID` int(8) unsigned zerofill NOT NULL,
+  `gibbonSchoolYearID` int(3) unsigned zerofill NOT NULL,
+  `date` date NOT NULL,
+  `gibbonPersonID` int(10) unsigned zerofill NOT NULL,
+  `comment` text CHARACTER SET utf8 NOT NULL,
+  `gibbonPersonIDCreator` int(10) unsigned zerofill NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`awardsAwardStudentID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;" ;
+
 //Settings
-$moduleTables[1]="INSERT INTO `gibbonSetting` (`gibbonSystemSettingsID` ,`scope` ,`name` ,`nameDisplay` ,`description` ,`value`) VALUES (NULL , 'Awards', 'awardCategories', 'Award Categories', 'Comma-separated list of available choices for award category.', 'Academic,Athletic,Social,Other');";
+$moduleTables[2]="INSERT INTO `gibbonSetting` (`gibbonSystemSettingsID` ,`scope` ,`name` ,`nameDisplay` ,`description` ,`value`) VALUES (NULL , 'Awards', 'awardCategories', 'Award Categories', 'Comma-separated list of available choices for award category.', 'Academic,Athletic,Social,Other');";
 
 //Action rows
 $actionRows[0]["name"]="Manage Awards" ;
@@ -79,5 +91,21 @@ $actionRows[1]["categoryPermissionStaff"]="Y" ;
 $actionRows[1]["categoryPermissionStudent"]="Y" ;
 $actionRows[1]["categoryPermissionParent"]="Y" ;
 $actionRows[1]["categoryPermissionOther"]="Y" ;
+
+$actionRows[2]["name"]="Grant Awards" ;
+$actionRows[2]["precedence"]="0";
+$actionRows[2]["category"]="Manage Awards" ;
+$actionRows[2]["description"]="Allows a user to give out awards to students." ;
+$actionRows[2]["URLList"]="awards_grant.php, awards_grant_add.php, awards_grant_delete.php" ;
+$actionRows[2]["entryURL"]="awards_grant.php" ;
+$actionRows[2]["defaultPermissionAdmin"]="Y" ;
+$actionRows[2]["defaultPermissionTeacher"]="N" ;
+$actionRows[2]["defaultPermissionStudent"]="N" ;
+$actionRows[2]["defaultPermissionParent"]="N" ;
+$actionRows[2]["defaultPermissionSupport"]="N" ;
+$actionRows[2]["categoryPermissionStaff"]="Y" ;
+$actionRows[2]["categoryPermissionStudent"]="Y" ;
+$actionRows[2]["categoryPermissionParent"]="Y" ;
+$actionRows[2]["categoryPermissionOther"]="Y" ;
 
 ?>
