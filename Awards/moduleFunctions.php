@@ -17,4 +17,89 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+function getAwards($connection2, $guid, $gibbonPersonID) {
+	$output="" ;
+	
+	try {
+		$data=array("gibbonPersonID"=>$gibbonPersonID); 
+		$sql="SELECT awardsAwardStudent.*, awardsAward.name AS award, awardsAward.logo AS logo, gibbonSchoolYear.name AS year FROM awardsAwardStudent JOIN awardsAward ON (awardsAwardStudent.awardsAwardID=awardsAward.awardsAwardID) JOIN gibbonSchoolYear ON (awardsAwardStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC" ;
+		$result=$connection2->prepare($sql);
+		$result->execute($data);
+	}
+	catch(PDOException $e) { 
+		print "<div class='error'>" . $e->getMessage() . "</div>" ; 
+	}
+	if ($result->rowCount()<1) {
+		$output.="<div class='warning'>" ;
+		$output.=_("There are no records to display.") ;
+		$output.="</div>" ;
+	}
+	else {
+		//Prep array of awards
+		$awardYears=array() ;
+		$innerCount=0 ;
+		while ($row=$result->fetch()) {
+			$awardYears[$row["year"]][0]=$row["year"] ;
+			if (isset($awardYears[$row["year"]][1])==FALSE) { //No data, so start adding data
+				$innerCount=0 ;
+				$awardYears[$row["year"]][1]=array("$innerCount"=>$row["award"]) ;
+				$awardYears[$row["year"]][2]=array("$innerCount"=>$row["logo"]) ;
+				$innerCount++ ;
+			}
+			else { //Already data, so start appending
+				$awardYears[$row["year"]][1][$innerCount]=$row["award"] ;
+				$awardYears[$row["year"]][2][$innerCount]=$row["logo"] ;
+				$innerCount++ ;
+			}
+		}
+		
+		//Spit out awards from array
+		$columns=3 ;
+		foreach ($awardYears AS $awardYear) { //Spit out years
+			$output.="<h3>" ;
+				$output.=$awardYear[0] ;
+			$output.="</h3>" ;
+			
+			$count=0 ;
+			foreach ($awardYear[1] AS $awards) {
+				if ($count%$columns==0) {
+					if ($count==0) {
+						$output.="<table class='margin-bottom: 10px; smallIntBorder' cellspacing='0' style='width:100%'>" ;
+					}
+					$output.="<tr>" ;
+				}
+				
+				$output.="<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>" ;
+					if ($awardYear[2][$count]!="") {
+						$output.="<img style='margin-bottom: 20px; max-width: 150px' src='" . $_SESSION[$guid]["absoluteURL"] . "/" . $awardYear[2][$count] . "'/><br/>" ;
+					}
+					else {
+						$output.="<img style='margin-bottom: 20px; max-width: 150px' src='" . $_SESSION[$guid]["absoluteURL"] . "/themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/anonymous_240_square.jpg'/><br/>" ;
+					}
+					$output.="<b>" . $awards . "</b><br/>" ;
+				$output.="</td>" ;
+
+				if ($count%$columns==($columns-1)) {
+					$output.="</tr>" ;
+				}
+				$count++ ;
+			}
+
+			if ($count%$columns!=0) {
+				for ($i=0;$i<$columns-($count%$columns);$i++) {
+					$output.="<td></td>" ;
+				}
+				$output.="</tr>" ;
+			}
+
+			$output.="</table>" ;	
+		}
+		
+	
+		
+	}
+	
+	return $output ;
+}
+
 ?>

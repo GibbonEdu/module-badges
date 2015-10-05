@@ -1,5 +1,15 @@
 CHANGELOG
 =========
+v1.0.00
+-------
+Added student profile hook
+Added parental dashboard hook
+Added logo credits/license page
+
+v0.5.00
+-------
+Added ability to view awards assigned to a student
+
 v0.2.00
 -------
 Added ability to assign awards to students

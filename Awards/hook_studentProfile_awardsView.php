@@ -17,8 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * Sets version information
- */
-$moduleVersion="1.0.00" ;
+@session_start() ;
+
+//Module includes
+include "./modules/Awards/moduleFunctions.php" ;
+
+if (isActionAccessible($guid, $connection2, "/modules/Awards/awards_view.php")==FALSE) {
+	//Acess denied
+	print "<div class='error'>" ;
+		print "You do not have access to this action." ;
+	print "</div>" ;
+}
+else {
+	print getAwards($connection2, $guid, $gibbonPersonID) ;
+}
 ?>
