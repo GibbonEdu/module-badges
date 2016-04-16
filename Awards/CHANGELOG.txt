@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.01
+-------
+Gibbon Core v12 & PHP 7 Compatibility 
+
 v1.0.00
 -------
 Added student profile hook

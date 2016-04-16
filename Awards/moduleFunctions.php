@@ -31,7 +31,7 @@ function getAwards($connection2, $guid, $gibbonPersonID) {
 	}
 	if ($result->rowCount()<1) {
 		$output.="<div class='warning'>" ;
-		$output.=_("There are no records to display.") ;
+		$output.=__($guid, "There are no records to display.") ;
 		$output.="</div>" ;
 	}
 	else {

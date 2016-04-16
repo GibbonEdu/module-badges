@@ -32,7 +32,7 @@ if (isActionAccessible($guid, $connection2, "/modules/Awards/awards_manage_edit.
 else {
 	//Proceed!
 	print "<div class='trail'>" ;
-	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/awards_manage.php'>" . _('Manage Awards') . "</a> > </div><div class='trailEnd'>" . _('Edit Award') . "</div>" ;
+	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/awards_manage.php'>" . __($guid, 'Manage Awards') . "</a> > </div><div class='trailEnd'>" . __($guid, 'Edit Award') . "</div>" ;
 	print "</div>" ;
 	
 	if (isset($_GET["updateReturn"])) { $updateReturn=$_GET["updateReturn"] ; } else { $updateReturn="" ; }
@@ -131,12 +131,12 @@ else {
 					?>
 					<tr>
 						<td> 
-							<b><?php print _('Category') ?> *</b><br/>
+							<b><?php print __($guid, 'Category') ?> *</b><br/>
 							<span style="font-size: 90%"><i></i></span>
 						</td>
 						<td class="right">
 							<select name="category" id="category" style="width: 302px">
-								<option value="Please select..."><?php print _('Please select...') ?></option>
+								<option value="Please select..."><?php print __($guid, 'Please select...') ?></option>
 								<?php
 								for ($i=0; $i<count($categories); $i++) {
 									$selected="" ;
@@ -151,7 +151,7 @@ else {
 							</select>
 							<script type="text/javascript">
 								var category=new LiveValidation('category');
-								category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php print _('Select something!') ?>"});
+								category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php print __($guid, 'Select something!') ?>"});
 							</script>
 						</td>
 					</tr>
@@ -166,16 +166,16 @@ else {
 					<tr>
 						<td> 
 							<b>Logo</b><br/>
-							<span style="font-size: 90%"><i><?php print _('240px x 240px') . "<br/>" ?>
+							<span style="font-size: 90%"><i><?php print __($guid, '240px x 240px') . "<br/>" ?>
 							<?php if ($row["logo"]!="") {
-								print _('Will overwrite existing attachment.') ;
+								print __($guid, 'Will overwrite existing attachment.') ;
 							} ?>
 							</i></span>
 						</td>
 						<td class="right">
 							<?php
 							if ($row["logo"]!="") {
-								print _("Current attachment:") . " <a target='_blank' href='" . $_SESSION[$guid]["absoluteURL"] . "/" . $row["logo"] . "'>" . $row["logo"] . "</a><br/><br/>" ;
+								print __($guid, "Current attachment:") . " <a target='_blank' href='" . $_SESSION[$guid]["absoluteURL"] . "/" . $row["logo"] . "'>" . $row["logo"] . "</a><br/><br/>" ;
 							}
 							?>
 							<input type="file" name="file" id="file">
@@ -195,14 +195,14 @@ else {
 					</tr>
 					<tr>
 						<td> 
-							<b><?php print _('Year Groups') ?></b><br/>
-							<span style="font-size: 90%"><i><?php print _('Relevant student year groups') ?><br/></i></span>
+							<b><?php print __($guid, 'Year Groups') ?></b><br/>
+							<span style="font-size: 90%"><i><?php print __($guid, 'Relevant student year groups') ?><br/></i></span>
 						</td>
 						<td class="right">
 							<?php 
 							$yearGroups=getYearGroups($connection2) ;
 							if ($yearGroups=="") {
-								print "<i>" . _('No year groups available.') . "</i>" ;
+								print "<i>" . __($guid, 'No year groups available.') . "</i>" ;
 							}
 							else {
 								for ($i=0; $i<count($yearGroups); $i=$i+2) {
@@ -210,7 +210,7 @@ else {
 									if (is_numeric(strpos($row["gibbonYearGroupIDList"], $yearGroups[$i]))) {
 										$checked="checked " ;
 									}
-									print _($yearGroups[($i+1)]) . " <input $checked type='checkbox' name='gibbonYearGroupIDCheck" . ($i)/2 . "'><br/>" ; 
+									print __($guid, $yearGroups[($i+1)]) . " <input $checked type='checkbox' name='gibbonYearGroupIDCheck" . ($i)/2 . "'><br/>" ; 
 									print "<input type='hidden' name='gibbonYearGroupID" . ($i)/2 . "' value='" . $yearGroups[$i] . "'>" ;
 								}
 							}

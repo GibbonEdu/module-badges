@@ -40,7 +40,10 @@ INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`
 INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '6', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Awards' AND gibbonAction.name='Credits & Licensing'));end
 " ;
 
-
+//v1.0.01
+$count++ ;
+$sql[$count][0]="1.0.01" ;
+$sql[$count][1]="" ;
 
 
 

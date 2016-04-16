@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, "/modules/Awards/awards_manage_add.p
 }
 else {
 	print "<div class='trail'>" ;
-	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/awards_manage.php'>" . _('Manage Awards') . "</a> > </div><div class='trailEnd'>" . _('Add Award') . "</div>" ;
+	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>Home</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . getModuleName($_GET["q"]) . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/awards_manage.php'>" . __($guid, 'Manage Awards') . "</a> > </div><div class='trailEnd'>" . __($guid, 'Add Award') . "</div>" ;
 	print "</div>" ;
 	
 	if (isset($_GET["addReturn"])) { $addReturn=$_GET["addReturn"] ; } else { $addReturn="" ; }
@@ -100,12 +100,12 @@ else {
 			?>
 			<tr>
 				<td> 
-					<b><?php print _('Category') ?> *</b><br/>
+					<b><?php print __($guid, 'Category') ?> *</b><br/>
 					<span style="font-size: 90%"><i></i></span>
 				</td>
 				<td class="right">
 					<select name="category" id="category" style="width: 302px">
-						<option value="Please select..."><?php print _('Please select...') ?></option>
+						<option value="Please select..."><?php print __($guid, 'Please select...') ?></option>
 						<?php
 						for ($i=0; $i<count($categories); $i++) {
 							?>
@@ -116,7 +116,7 @@ else {
 					</select>
 					<script type="text/javascript">
 						var category=new LiveValidation('category');
-						category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php print _('Select something!') ?>"});
+						category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php print __($guid, 'Select something!') ?>"});
 					</script>
 				</td>
 			</tr>
@@ -131,7 +131,7 @@ else {
 			<tr>
 				<td> 
 					<b>Logo</b><br/>
-					<span style="font-size: 90%"><i><?php print _('240px x 240px') ?></i></span>
+					<span style="font-size: 90%"><i><?php print __($guid, '240px x 240px') ?></i></span>
 				</td>
 				<td class="right">
 					<input type="file" name="file" id="file">
@@ -151,8 +151,8 @@ else {
 			</tr>
 			<tr>
 				<td> 
-					<b><?php print _('Year Groups') ?></b><br/>
-					<span style="font-size: 90%"><i><?php print _('Relevant student year groups') ?><br/></i></span>
+					<b><?php print __($guid, 'Year Groups') ?></b><br/>
+					<span style="font-size: 90%"><i><?php print __($guid, 'Relevant student year groups') ?><br/></i></span>
 				</td>
 				<td class="right">
 					<?php
@@ -166,14 +166,14 @@ else {
 						});
 					</script>
 					<?php
-					print _("All/None") . " <input type='checkbox' class='checkall'><br/>" ;
+					print __($guid, "All/None") . " <input type='checkbox' class='checkall'><br/>" ;
 					$yearGroups=getYearGroups($connection2) ;
 					if ($yearGroups=="") {
-						print "<i>" . _('No year groups available.') . "</i>" ;
+						print "<i>" . __($guid, 'No year groups available.') . "</i>" ;
 					}
 					else {
 						for ($i=0; $i<count($yearGroups); $i=$i+2) {
-							print _($yearGroups[($i+1)]) . " <input type='checkbox' name='gibbonYearGroupIDCheck" . ($i)/2 . "'><br/>" ; 
+							print __($guid, $yearGroups[($i+1)]) . " <input type='checkbox' name='gibbonYearGroupIDCheck" . ($i)/2 . "'><br/>" ; 
 							print "<input type='hidden' name='gibbonYearGroupID" . ($i)/2 . "' value='" . $yearGroups[$i] . "'>" ;
 						}
 					}

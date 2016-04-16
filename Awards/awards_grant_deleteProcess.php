@@ -63,7 +63,7 @@ else {
 			//Fail2
 			$URL.="&deleteReturn=fail2" ;
 			header("Location: {$URL}");
-			break ;
+			exit() ;
 		}
 		
 		if ($result->rowCount()!=1) {
@@ -85,7 +85,7 @@ else {
 				//Fail2
 				$URL.="&deleteReturn=fail2" ;
 				header("Location: {$URL}");
-				break ;
+				exit() ;
 			}
 			
 			$return=deleteLike($connection2, "Awards", "awardsAwardStudentID", $awardsAwardStudentID, $_SESSION[$guid]["gibbonPersonID"], $row["gibbonPersonID"], "Award Granted") ;

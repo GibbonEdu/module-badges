@@ -25,7 +25,7 @@ $description="The Awards module allows a school to define and assign a range of 
 $entryURL="awards_manage.php" ;
 $type="Additional" ;
 $category="Assess" ;
-$version="1.0.00" ;
+$version="1.0.01" ;
 $author="Ross Parker" ;
 $url="http://rossparker.org" ;
 

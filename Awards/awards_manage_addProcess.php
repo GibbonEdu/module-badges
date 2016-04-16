@@ -99,7 +99,7 @@ else {
 			//Fail 5
 			$URL=$URL . "&addReturn=fail5" ;
 			header("Location: {$URL}");
-			break ;
+			exit() ;
 		}
 		else {
 			//Write to database
@@ -114,7 +114,7 @@ else {
 				//Fail 2
 				$URL=$URL . "&addReturn=fail2" ;
 				header("Location: {$URL}");
-				break ;
+				exit() ;
 			}
 
 			//Success 0
