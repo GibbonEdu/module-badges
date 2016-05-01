@@ -17,31 +17,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
-$returnInt=NULL ;
+$returnInt = null;
 
 //Only include module include if it is not already included (which it may be been on the index page)
-$included=FALSE ;
-$includes=get_included_files() ;
-foreach ($includes AS $include) {
-	if ($include==$_SESSION[$guid]["absolutePath"] . "/modules/Awards/moduleFunctions.php") {
-		$included=TRUE ;
-	}
+$included = false;
+$includes = get_included_files();
+foreach ($includes as $include) {
+    if ($include == $_SESSION[$guid]['absolutePath'].'/modules/Awards/moduleFunctions.php') {
+        $included = true;
+    }
 }
-if ($included==FALSE) {
-	include "./modules/Awards/moduleFunctions.php" ;
-}
-
-if (isActionAccessible($guid, $connection2, "/modules/Awards/awards_view.php")==FALSE) {
-	//Acess denied
-	$returnInt.="<div class='error'>" ;
-		$returnInt.="You do not have access to this action." ;
-	$returnInt.="</div>" ;
-}
-else {
-	$returnInt.=getAwards($connection2, $guid, $gibbonPersonID) ;
+if ($included == false) {
+    include './modules/Awards/moduleFunctions.php';
 }
 
-return $returnInt ;
-?>
+if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') == false) {
+    //Acess denied
+    $returnInt .= "<div class='error'>";
+    $returnInt .= 'You do not have access to this action.';
+    $returnInt .= '</div>';
+} else {
+    $returnInt .= getAwards($connection2, $guid, $gibbonPersonID);
+}
+
+return $returnInt;

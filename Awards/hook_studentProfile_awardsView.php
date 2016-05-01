@@ -17,18 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-@session_start() ;
+@session_start();
 
 //Module includes
-include "./modules/Awards/moduleFunctions.php" ;
+include './modules/Awards/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, "/modules/Awards/awards_view.php")==FALSE) {
-	//Acess denied
-	print "<div class='error'>" ;
-		print "You do not have access to this action." ;
-	print "</div>" ;
+if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') == false) {
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    echo getAwards($connection2, $guid, $gibbonPersonID);
 }
-else {
-	print getAwards($connection2, $guid, $gibbonPersonID) ;
-}
-?>
