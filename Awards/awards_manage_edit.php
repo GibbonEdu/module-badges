@@ -39,8 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
 
     //Check if school year specified
     $awardsAwardID = $_GET['awardsAwardID'];
-    if ($awardsAwardID == '') {
-        echo "<div class='error'>";
+    if ($awardsAwardID == '') { echo "<div class='error'>";
         echo 'You have not specified a policy.';
         echo '</div>';
     } else {
@@ -88,21 +87,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
 						</td>
 						<td class="right">
 							<select name="active" id="active" style="width: 302px">
-								<option <?php if ($row['active'] == 'Y') {
-    echo 'selected';
-}
-            ?> value="Y">Y</option>
-								<option <?php if ($row['active'] == 'N') {
-    echo 'selected';
-}
-            ?> value="N">N</option>
+								<option <?php if ($row['active'] == 'Y') { echo 'selected'; } ?> value="Y">Y</option>
+								<option <?php if ($row['active'] == 'N') { echo 'selected'; } ?> value="N">N</option>
 							</select>
 						</td>
 					</tr>
 					<?php
                     $categories = getSettingByScope($connection2, 'Awards', 'awardCategories');
-            $categories = explode(',', $categories);
-            ?>
+					$categories = explode(',', $categories);
+					?>
 					<tr>
 						<td>
 							<b><?php echo __($guid, 'Category') ?> *</b><br/>
@@ -122,7 +115,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
 								<?php
 
                                 }
-            ?>
+            					?>
 							</select>
 							<script type="text/javascript">
 								var category=new LiveValidation('category');
@@ -142,18 +135,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
 						<td>
 							<b>Logo</b><br/>
 							<span style="font-size: 90%"><i><?php echo __($guid, '240px x 240px').'<br/>' ?>
-							<?php if ($row['logo'] != '') {
-    echo __($guid, 'Will overwrite existing attachment.');
-}
-            ?>
+							<?php if ($row['logo'] != '') { echo __($guid, 'Will overwrite existing attachment.'); } ?>
 							</i></span>
 						</td>
 						<td class="right">
 							<?php
                             if ($row['logo'] != '') {
-                                echo __($guid, 'Current attachment:')." <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'>".$row['logo'].'</a><br/><br/>';
-                            }
-            ?>
+                                echo __($guid, 'Current attachment:')." <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'>".$row['logo'].'</a><br/><br/>'; } ?>
 							<input type="file" name="file" id="file">
 							<script type="text/javascript">
 								var file=new LiveValidation('file');
@@ -177,19 +165,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
 						<td class="right">
 							<?php
                             $yearGroups = getYearGroups($connection2);
-            if ($yearGroups == '') {
-                echo '<i>'.__($guid, 'No year groups available.').'</i>';
-            } else {
-                for ($i = 0; $i < count($yearGroups); $i = $i + 2) {
-                    $checked = '';
-                    if (is_numeric(strpos($row['gibbonYearGroupIDList'], $yearGroups[$i]))) {
-                        $checked = 'checked ';
-                    }
-                    echo __($guid, $yearGroups[($i + 1)])." <input $checked type='checkbox' name='gibbonYearGroupIDCheck".($i) / 2 ."'><br/>";
-                    echo "<input type='hidden' name='gibbonYearGroupID".($i) / 2 ."' value='".$yearGroups[$i]."'>";
-                }
-            }
-            ?>
+							if ($yearGroups == '') {
+								echo '<i>'.__($guid, 'No year groups available.').'</i>';
+							} else {
+								for ($i = 0; $i < count($yearGroups); $i = $i + 2) {
+									$checked = '';
+									if (is_numeric(strpos($row['gibbonYearGroupIDList'], $yearGroups[$i]))) {
+										$checked = 'checked ';
+									}
+									echo __($guid, $yearGroups[($i + 1)])." <input $checked type='checkbox' name='gibbonYearGroupIDCheck".($i) / 2 ."'><br/>";
+									echo "<input type='hidden' name='gibbonYearGroupID".($i) / 2 ."' value='".$yearGroups[$i]."'>";
+								}
+							}
+							?>
 							<input type="hidden" name="count" value="<?php echo(count($yearGroups)) / 2 ?>">
 						</td>
 					</tr>

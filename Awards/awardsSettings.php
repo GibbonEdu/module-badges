@@ -46,20 +46,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php'
                     $result->execute($data);
                 } catch (PDOException $e) {
                 }
-    $row = $result->fetch();
-    ?>
+				$row = $result->fetch();
+				?>
 				<td style='width: 275px'>
 					<b><?php echo __($guid, $row['nameDisplay']) ?> *</b><br/>
-					<span style="font-size: 90%"><i><?php if ($row['description'] != '') {
-    echo __($guid, $row['description']);
-}
-    ?></i></span>
+					<span style="font-size: 90%"><i><?php if ($row['description'] != '') { echo __($guid, $row['description']); } ?></i></span>
 				</td>
 				<td class="right">
-					<textarea name="<?php echo $row['name'] ?>" id="<?php echo $row['name'] ?>" type="text" style="width: 300px" rows=4><?php if (isset($row['value'])) {
-    echo $row['value'];
-}
-    ?></textarea>
+					<textarea name="<?php echo $row['name'] ?>" id="<?php echo $row['name'] ?>" type="text" style="width: 300px" rows=4><?php if (isset($row['value'])) { echo $row['value']; } ?></textarea>
 					<script type="text/javascript">
 						var <?php echo $row['name'] ?>=new LiveValidation('<?php echo $row['name'] ?>');
 						<?php echo $row['name'] ?>.add(Validate.Presence);
@@ -69,13 +63,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php'
 
 			<tr>
 				<td>
-					<span style="font-size: 90%"><i>* <?php echo __($guid, 'denotes a required field');
-    ?></i></span>
+					<span style="font-size: 90%"><i>* <?php echo __($guid, 'denotes a required field'); ?></i></span>
 				</td>
 				<td class="right">
 					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<input type="submit" value="<?php echo __($guid, 'Submit');
-    ?>">
+					<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
 				</td>
 			</tr>
 		</table>

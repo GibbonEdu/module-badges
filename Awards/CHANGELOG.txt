@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.03
+-------
+Fixed indentation in beautified PHP code
+
 v1.0.02
 -------
 Beautified PHP code

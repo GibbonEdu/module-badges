@@ -41,8 +41,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.p
         returnProcess($guid, $_GET['return'], $editLink, null);
     }
 
-    if ($_GET['search'] != '') {
-        echo "<div class='linkTop'>";
+    if ($_GET['search'] != '') { echo "<div class='linkTop'>";
         echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
         echo '</div>';
     }
@@ -76,8 +75,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.p
 			</tr>
 			<?php
             $categories = getSettingByScope($connection2, 'Awards', 'awardCategories');
-    $categories = explode(',', $categories);
-    ?>
+			$categories = explode(',', $categories);
+			?>
 			<tr>
 				<td>
 					<b><?php echo __($guid, 'Category') ?> *</b><br/>
@@ -93,7 +92,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.p
 						<?php
 
                         }
-    ?>
+   						?>
 					</select>
 					<script type="text/javascript">
 						var category=new LiveValidation('category');
@@ -138,7 +137,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.p
 				<td class="right">
 					<?php
                     echo "<fieldset style='border: none'>";
-    ?>
+    				?>
 					<script type="text/javascript">
 						$(function () {
 							$('.checkall').click(function () {
@@ -148,17 +147,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.p
 					</script>
 					<?php
                     echo __($guid, 'All/None')." <input type='checkbox' class='checkall'><br/>";
-    $yearGroups = getYearGroups($connection2);
-    if ($yearGroups == '') {
-        echo '<i>'.__($guid, 'No year groups available.').'</i>';
-    } else {
-        for ($i = 0; $i < count($yearGroups); $i = $i + 2) {
-            echo __($guid, $yearGroups[($i + 1)])." <input type='checkbox' name='gibbonYearGroupIDCheck".($i) / 2 ."'><br/>";
-            echo "<input type='hidden' name='gibbonYearGroupID".($i) / 2 ."' value='".$yearGroups[$i]."'>";
-        }
-    }
-    echo '</fieldset>';
-    ?>
+					$yearGroups = getYearGroups($connection2);
+					if ($yearGroups == '') {
+						echo '<i>'.__($guid, 'No year groups available.').'</i>';
+					} else {
+						for ($i = 0; $i < count($yearGroups); $i = $i + 2) {
+							echo __($guid, $yearGroups[($i + 1)])." <input type='checkbox' name='gibbonYearGroupIDCheck".($i) / 2 ."'><br/>";
+							echo "<input type='hidden' name='gibbonYearGroupID".($i) / 2 ."' value='".$yearGroups[$i]."'>";
+						}
+					}
+					echo '</fieldset>';
+					?>
 					<input type="hidden" name="count" value="<?php echo(count($yearGroups)) / 2 ?>">
 				</td>
 			</tr>

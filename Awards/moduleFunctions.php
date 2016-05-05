@@ -26,8 +26,7 @@ function getAwards($connection2, $guid, $gibbonPersonID)
         $sql = 'SELECT awardsAwardStudent.*, awardsAward.name AS award, awardsAward.logo AS logo, gibbonSchoolYear.name AS year FROM awardsAwardStudent JOIN awardsAward ON (awardsAwardStudent.awardsAwardID=awardsAward.awardsAwardID) JOIN gibbonSchoolYear ON (awardsAwardStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
         $result = $connection2->prepare($sql);
         $result->execute($data);
-    } catch (PDOException $e) {
-        echo "<div class='error'>".$e->getMessage().'</div>';
+    } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
     }
     if ($result->rowCount() < 1) {
         $output .= "<div class='warning'>";

@@ -39,8 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delet
 
     //Check if school year specified
     $awardsAwardID = $_GET['awardsAwardID'];
-    if ($awardsAwardID == '') {
-        echo "<div class='error'>";
+    if ($awardsAwardID == '') { echo "<div class='error'>";
         echo 'You have not specified a policy.';
         echo '</div>';
     } else {

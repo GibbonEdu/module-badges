@@ -39,8 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 
     echo "<div class='linkTop'>";
-    if ($_GET['gibbonPersonID2'] != '' or $_GET['awardsAwardID2'] != '') {
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."'>".__($guid, 'Back to Search Results').'</a>';
+    if ($_GET['gibbonPersonID2'] != '' or $_GET['awardsAwardID2'] != '') { echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."'>".__($guid, 'Back to Search Results').'</a>';
     }
     echo '</div>';
     ?>
@@ -63,10 +62,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
                                 $resultSelect->execute($dataSelect);
                             } catch (PDOException $e) {
                             }
-    while ($rowSelect = $resultSelect->fetch()) {
-        echo "<option value='".$rowSelect['gibbonPersonID']."'>".htmlPrep($rowSelect['name']).' - '.formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).'</option>';
-    }
-    ?>
+							while ($rowSelect = $resultSelect->fetch()) {
+								echo "<option value='".$rowSelect['gibbonPersonID']."'>".htmlPrep($rowSelect['name']).' - '.formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).'</option>';
+							}
+							?>
 						</optgroup>
 						<optgroup label='--<?php echo __($guid, 'Students by Name') ?>--'>
 							<?php
@@ -77,10 +76,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
                                 $resultSelect->execute($dataSelect);
                             } catch (PDOException $e) {
                             }
-    while ($rowSelect = $resultSelect->fetch()) {
-        echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['name']).')</option>';
-    }
-    ?>
+							while ($rowSelect = $resultSelect->fetch()) {
+								echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['name']).')</option>';
+							}
+							?>
 						</optgroup>
 					</select>
 				</td>
@@ -100,19 +99,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
                     } catch (PDOException $e) {
                     }
 
-    echo "<select name='awardsAwardID' id='awardsAwardID' style='width: 302px'>";
-    echo "<option value='Please select...'>Please select...</option>";
-    $lastCategory = '';
-    while ($rowPurpose = $resultPurpose->fetch()) {
-        $currentCategory = $rowPurpose['category'];
-        if ($currentCategory != $lastCategory) {
-            echo "<optgroup label='--".$currentCategory."--'>";
-        }
-        echo "<option value='".$rowPurpose['awardsAwardID']."'>".$rowPurpose['name'].'</option>';
-        $lastCategory = $currentCategory;
-    }
-    echo '</select>';
-    ?>
+					echo "<select name='awardsAwardID' id='awardsAwardID' style='width: 302px'>";
+					echo "<option value='Please select...'>Please select...</option>";
+					$lastCategory = '';
+					while ($rowPurpose = $resultPurpose->fetch()) {
+						$currentCategory = $rowPurpose['category'];
+						if ($currentCategory != $lastCategory) {
+							echo "<optgroup label='--".$currentCategory."--'>";
+						}
+						echo "<option value='".$rowPurpose['awardsAwardID']."'>".$rowPurpose['name'].'</option>';
+						$lastCategory = $currentCategory;
+					}
+					echo '</select>';
+					?>
 					<script type="text/javascript">
 						var awardsAwardID=new LiveValidation('awardsAwardID');
 						awardsAwardID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
@@ -123,27 +122,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
 				<td>
 					<b><?php echo __($guid, 'Date') ?> *</b><br/>
 					<span style="font-size: 90%"><i><?php echo __($guid, 'Format:') ?> <?php if ($_SESSION[$guid]['i18n']['dateFormat'] == '') {
-    echo 'dd/mm/yyyy';
-} else {
-    echo $_SESSION[$guid]['i18n']['dateFormat'];
-}
-    ?></i></span>
+						echo 'dd/mm/yyyy';
+					} else {
+						echo $_SESSION[$guid]['i18n']['dateFormat'];
+					}
+					?></i></span>
 				</td>
 				<td class="right">
 					<input name="date" id="date" maxlength=10 value="<?php echo date($_SESSION[$guid]['i18n']['dateFormatPHP']) ?>" type="text" style="width: 300px">
 					<script type="text/javascript">
 						var date=new LiveValidation('date');
 						date.add( Validate.Format, {pattern: <?php if ($_SESSION[$guid]['i18n']['dateFormatRegEx'] == '') {
-    echo "/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/i";
-} else {
-    echo $_SESSION[$guid]['i18n']['dateFormatRegEx'];
-}
-    ?>, failureMessage: "Use <?php if ($_SESSION[$guid]['i18n']['dateFormat'] == '') {
-    echo 'dd/mm/yyyy';
-} else {
-    echo $_SESSION[$guid]['i18n']['dateFormat'];
-}
-    ?>." } );
+							echo "/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/i";
+						} else {
+							echo $_SESSION[$guid]['i18n']['dateFormatRegEx'];
+						}
+						?>, failureMessage: "Use <?php if ($_SESSION[$guid]['i18n']['dateFormat'] == '') {
+							echo 'dd/mm/yyyy';
+						} else {
+							echo $_SESSION[$guid]['i18n']['dateFormat'];
+						}
+						?>." } );
 					</script>
 					 <script type="text/javascript">
 						$(function() {
@@ -160,8 +159,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
 			</tr>
 			<tr>
 				<td>
-					<span style="font-size: 90%"><i>* <?php echo __($guid, 'denotes a required field');
-    ?></i></span>
+					<span style="font-size: 90%"><i>* <?php echo __($guid, 'denotes a required field'); ?></i></span>
 				</td>
 				<td class="right">
 					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">

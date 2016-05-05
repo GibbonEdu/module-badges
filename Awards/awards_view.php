@@ -35,8 +35,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 
     //Get action with highest precendence
     $highestAction = getHighestGroupedAction($guid, $_GET['q'], $connection2);
-    if ($highestAction == false) {
-        echo "<div class='error'>";
+    if ($highestAction == false) { echo "<div class='error'>";
         echo __($guid, 'The highest grouped action cannot be determined.');
         echo '</div>';
     } else {
@@ -62,30 +61,29 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 							<select style="width: 302px" name="gibbonPersonID">
 								<?php
                                 echo "<option value=''></option>";
-            try {
-                $dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
-                $sqlSelect = "SELECT * FROM gibbonPerson JOIN gibbonStudentEnrolment ON (gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonRollGroup.gibbonSchoolYearID=:gibbonSchoolYearID AND status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
-                $resultSelect = $connection2->prepare($sqlSelect);
-                $resultSelect->execute($dataSelect);
-            } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
-            }
-            while ($rowSelect = $resultSelect->fetch()) {
-                if ($gibbonPersonID == $rowSelect['gibbonPersonID']) {
-                    echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
-                } else {
-                    echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
-                }
-            }
-            ?>				
+								try {
+									$dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+									$sqlSelect = "SELECT * FROM gibbonPerson JOIN gibbonStudentEnrolment ON (gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonRollGroup.gibbonSchoolYearID=:gibbonSchoolYearID AND status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
+									$resultSelect = $connection2->prepare($sqlSelect);
+									$resultSelect->execute($dataSelect);
+								} catch (PDOException $e) {
+									echo "<div class='error'>".$e->getMessage().'</div>';
+								}
+								while ($rowSelect = $resultSelect->fetch()) {
+									if ($gibbonPersonID == $rowSelect['gibbonPersonID']) {
+										echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
+									} else {
+										echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
+									}
+								}
+								?>				
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 class="right">
 							<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/awards_view.php">
-							<input type="submit" value="<?php echo __($guid, 'Submit');
-            ?>">
+							<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
 						</td>
 					</tr>
 				</table>
@@ -202,8 +200,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 								<td class="right">
 									<select name="search" id="search" style="width: 302px">
 										<option value=""></value>
-										<?php echo $options;
-                    ?> 
+										<?php echo $options; ?> 
 									</select>
 								</td>
 							</tr>
@@ -212,10 +209,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 									<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/awards_View.php">
 									<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 									<?php
-                                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/awards_View.php'>".__($guid, 'Clear Search').'</a>';
-                    ?>
-									<input type="submit" value="<?php echo __($guid, 'Submit');
-                    ?>">
+                                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/awards_View.php'>".__($guid, 'Clear Search').'</a>'; ?>
+									<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
 								</td>
 							</tr>
 						</table>

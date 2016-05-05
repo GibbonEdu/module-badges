@@ -40,8 +40,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
     //Check if school year specified
     $awardsAwardStudentID = $_GET['awardsAwardStudentID'];
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
-    if ($awardsAwardStudentID == '') {
-        echo "<div class='error'>";
+    if ($awardsAwardStudentID == '') { echo "<div class='error'>";
         echo __($guid, 'You have not specified one or more required parameters.');
         echo '</div>';
     } else {
@@ -72,10 +71,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
 						<td>
-							<b><?php echo __($guid, 'Are you sure you want to delete this record?');
-            ?></b><br/>
-							<span style="font-size: 90%; color: #cc0000"><i><?php echo __($guid, 'This operation cannot be undone, and may lead to loss of vital data in your system. PROCEED WITH CAUTION!');
-            ?></i></span>
+							<b><?php echo __($guid, 'Are you sure you want to delete this record?'); ?></b><br/>
+							<span style="font-size: 90%; color: #cc0000"><i><?php echo __($guid, 'This operation cannot be undone, and may lead to loss of vital data in your system. PROCEED WITH CAUTION!'); ?></i></span>
 						</td>
 						<td class="right">
 
@@ -85,8 +82,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
 						<td>
 							<input type="hidden" name="gibbonSchoolYearID" value="<?php echo $gibbonSchoolYearID ?>">
 							<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-							<input type="submit" value="<?php echo __($guid, 'Yes');
-            ?>">
+							<input type="submit" value="<?php echo __($guid, 'Yes'); ?>">
 						</td>
 						<td class="right">
 

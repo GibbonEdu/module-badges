@@ -125,14 +125,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
                                 $resultSelect->execute($dataSelect);
                             } catch (PDOException $e) {
                             }
-        while ($rowSelect = $resultSelect->fetch()) {
-            if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
-                echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
-            } else {
-                echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
-            }
-        }
-        ?>
+							while ($rowSelect = $resultSelect->fetch()) {
+								if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
+									echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
+								} else {
+									echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
+								}
+							}
+							?>
 						</select>
 					</td>
 				</tr>
@@ -151,34 +151,34 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
                         } catch (PDOException $e) {
                         }
 
-        echo "<select name='awardsAwardID2' id='awardsAwardID2' style='width: 302px'>";
-        echo "<option value=''></option>";
-        $lastCategory = '';
-        while ($rowPurpose = $resultPurpose->fetch()) {
-            $selected = '';
-            if ($rowPurpose['awardsAwardID'] == $awardsAwardID2) {
-                $selected = 'selected';
-            }
-            $currentCategory = $rowPurpose['category'];
-            if ($currentCategory != $lastCategory) {
-                echo "<optgroup label='--".$currentCategory."--'>";
-            }
-            echo "<option $selected value='".$rowPurpose['awardsAwardID']."'>".$rowPurpose['name'].'</option>';
-            $lastCategory = $currentCategory;
-        }
-        echo '</select>';
-        ?>
+						echo "<select name='awardsAwardID2' id='awardsAwardID2' style='width: 302px'>";
+						echo "<option value=''></option>";
+						$lastCategory = '';
+						while ($rowPurpose = $resultPurpose->fetch()) {
+							$selected = '';
+							if ($rowPurpose['awardsAwardID'] == $awardsAwardID2) {
+								$selected = 'selected';
+							}
+							$currentCategory = $rowPurpose['category'];
+							if ($currentCategory != $lastCategory) {
+								echo "<optgroup label='--".$currentCategory."--'>";
+							}
+							echo "<option $selected value='".$rowPurpose['awardsAwardID']."'>".$rowPurpose['name'].'</option>';
+							$lastCategory = $currentCategory;
+						}
+						echo '</select>';
+						?>
 					</td>
 				</tr>
 				<?php
 
-                echo '<tr>';
-        echo "<td class='right' colspan=2>";
-        echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Awards/awards_grant.php'>".__($guid, 'Clear Filters').'</a> ';
-        echo "<input type='submit' value='".__($guid, 'Go')."'>";
-        echo '</td>';
-        echo '</tr>';
+            echo '<tr>';
+			echo "<td class='right' colspan=2>";
+			echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
+			echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Awards/awards_grant.php'>".__($guid, 'Clear Filters').'</a> ';
+			echo "<input type='submit' value='".__($guid, 'Go')."'>";
+			echo '</td>';
+			echo '</tr>';
         echo '</table>';
         echo '</form>';
 
@@ -266,8 +266,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
                 }
                 ++$count;
 
-                    //COLOR ROW BY STATUS!
-                    echo "<tr class=$rowNum>";
+				//COLOR ROW BY STATUS!
+				echo "<tr class=$rowNum>";
                 echo "<td style='font-weight: bold; text-align: center'>";
                 if ($row['logo'] != '') {
                     echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'/>";
