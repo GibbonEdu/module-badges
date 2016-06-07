@@ -23,7 +23,7 @@ function getAwards($connection2, $guid, $gibbonPersonID)
 
     try {
         $data = array('gibbonPersonID' => $gibbonPersonID);
-        $sql = 'SELECT awardsAwardStudent.*, awardsAward.name AS award, awardsAward.logo AS logo, gibbonSchoolYear.name AS year FROM awardsAwardStudent JOIN awardsAward ON (awardsAwardStudent.awardsAwardID=awardsAward.awardsAwardID) JOIN gibbonSchoolYear ON (awardsAwardStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
+        $sql = 'SELECT awardsAwardStudent.*, awardsAward.name AS award, awardsAward.logo AS logo, awardsAward.category AS category, gibbonSchoolYear.name AS year FROM awardsAwardStudent JOIN awardsAward ON (awardsAwardStudent.awardsAwardID=awardsAward.awardsAwardID) JOIN gibbonSchoolYear ON (awardsAwardStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
         $result = $connection2->prepare($sql);
         $result->execute($data);
     } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
@@ -42,10 +42,12 @@ function getAwards($connection2, $guid, $gibbonPersonID)
                 $innerCount = 0;
                 $awardYears[$row['year']][1] = array("$innerCount" => $row['award']);
                 $awardYears[$row['year']][2] = array("$innerCount" => $row['logo']);
+                $awardYears[$row['year']][3] = array("$innerCount" => $row['category']);
                 ++$innerCount;
             } else { //Already data, so start appending
                 $awardYears[$row['year']][1][$innerCount] = $row['award'];
                 $awardYears[$row['year']][2][$innerCount] = $row['logo'];
+                $awardYears[$row['year']][3][$innerCount] = $row['category'];
                 ++$innerCount;
             }
         }
@@ -73,6 +75,7 @@ function getAwards($connection2, $guid, $gibbonPersonID)
                     $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
                 }
                 $output .= '<b>'.$awards.'</b><br/>';
+                $output .= '<span class=\'emphasis small\'>'.$awardYear[3][$count].'</span><br/>';
                 $output .= '</td>';
 
                 if ($count % $columns == ($columns - 1)) {

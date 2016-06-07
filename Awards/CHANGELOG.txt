@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v1.0.04
+-------
+Added category to award display
+
 v1.0.03
 -------
 Fixed indentation in beautified PHP code
