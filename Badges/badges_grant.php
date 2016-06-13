@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __($guid, 'You do not have access to this action.');
@@ -30,13 +30,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
 } else {
     //Get action with highest precendence
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'Grant Awards').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'Grant Badges').'</div>';
     echo '</div>';
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
-    
+
     $gibbonSchoolYearID = '';
     if (isset($_GET['gibbonSchoolYearID'])) {
         $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
@@ -74,13 +74,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
         echo "<div class='linkTop'>";
             //Print year picker
             if (getPreviousSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/awards_grant.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__($guid, 'Previous Year').'</a> ';
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__($guid, 'Previous Year').'</a> ';
             } else {
                 echo __($guid, 'Previous Year').' ';
             }
         echo ' | ';
         if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/awards_grant.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__($guid, 'Next Year').'</a> ';
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__($guid, 'Next Year').'</a> ';
         } else {
             echo __($guid, 'Next Year').' ';
         }
@@ -90,9 +90,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
         if (isset($_GET['gibbonPersonID2'])) {
             $gibbonPersonID2 = $_GET['gibbonPersonID2'];
         }
-        $awardsAwardID2 = null;
-        if (isset($_GET['awardsAwardID2'])) {
-            $awardsAwardID2 = $_GET['awardsAwardID2'];
+        $badgesBadgeID2 = null;
+        if (isset($_GET['badgesBadgeID2'])) {
+            $badgesBadgeID2 = $_GET['badgesBadgeID2'];
         }
         $gibbonYearGroupID = null;
         if (isset($_GET['gibbonYearGroupID'])) {
@@ -106,7 +106,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
         echo '<h3>';
         echo __($guid, 'Filter');
         echo '</h3>';
-        echo "<form method='get' action='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Awards/awards_grant.php'>";
+        echo "<form method='get' action='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>";
         echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
         ?>
 				<tr>
@@ -138,32 +138,32 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
 				</tr>
 				<tr>
 					<td>
-						<b><?php echo __($guid, 'Award') ?></b><br/>
+						<b><?php echo __($guid, 'Badges') ?></b><br/>
 						<span style="font-size: 90%"><i></i></span>
 					</td>
 					<td class="right">
 						<?php
                         try {
                             $dataPurpose = array();
-                            $sqlPurpose = 'SELECT * FROM awardsAward ORDER BY category, name';
+                            $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
                             $resultPurpose = $connection2->prepare($sqlPurpose);
                             $resultPurpose->execute($dataPurpose);
                         } catch (PDOException $e) {
                         }
 
-						echo "<select name='awardsAwardID2' id='awardsAwardID2' style='width: 302px'>";
+						echo "<select name='badgesBadgeID2' id='badgesBadgeID2' style='width: 302px'>";
 						echo "<option value=''></option>";
 						$lastCategory = '';
 						while ($rowPurpose = $resultPurpose->fetch()) {
 							$selected = '';
-							if ($rowPurpose['awardsAwardID'] == $awardsAwardID2) {
+							if ($rowPurpose['badgesBadgeID'] == $badgesBadgeID2) {
 								$selected = 'selected';
 							}
 							$currentCategory = $rowPurpose['category'];
 							if ($currentCategory != $lastCategory) {
 								echo "<optgroup label='--".$currentCategory."--'>";
 							}
-							echo "<option $selected value='".$rowPurpose['awardsAwardID']."'>".$rowPurpose['name'].'</option>';
+							echo "<option $selected value='".$rowPurpose['badgesBadgeID']."'>".$rowPurpose['name'].'</option>';
 							$lastCategory = $currentCategory;
 						}
 						echo '</select>';
@@ -175,7 +175,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
             echo '<tr>';
 			echo "<td class='right' colspan=2>";
 			echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
-			echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Awards/awards_grant.php'>".__($guid, 'Clear Filters').'</a> ';
+			echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>".__($guid, 'Clear Filters').'</a> ';
 			echo "<input type='submit' value='".__($guid, 'Go')."'>";
 			echo '</td>';
 			echo '</tr>';
@@ -183,7 +183,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
         echo '</form>';
 
         echo '<h3>';
-        echo __($guid, 'Awards');
+        echo __($guid, 'Badges');
         echo '</h3>';
         //Set pagination variable
         $page = 1;
@@ -200,11 +200,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
             $sqlWhere = 'AND ';
             if ($gibbonPersonID2 != '') {
                 $data['gibbonPersonID'] = $gibbonPersonID2;
-                $sqlWhere .= 'awardsAwardStudent.gibbonPersonID=:gibbonPersonID AND ';
+                $sqlWhere .= 'badgesBadgeStudent.gibbonPersonID=:gibbonPersonID AND ';
             }
-            if ($awardsAwardID2 != '') {
-                $data['awardsAwardID2'] = $awardsAwardID2;
-                $sqlWhere .= 'awardsAward.awardsAwardID=:awardsAwardID2 AND ';
+            if ($badgesBadgeID2 != '') {
+                $data['badgesBadgeID2'] = $badgesBadgeID2;
+                $sqlWhere .= 'badgesBadge.badgesBadgeID=:badgesBadgeID2 AND ';
             }
             if ($sqlWhere == 'AND ') {
                 $sqlWhere = '';
@@ -213,7 +213,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
             }
             $data['gibbonSchoolYearID'] = $gibbonSchoolYearID;
             $data['gibbonSchoolYearID2'] = $gibbonSchoolYearID;
-            $sql = "SELECT awardsAward.*, awardsAwardStudent.*, surname, preferredName FROM awardsAward JOIN awardsAwardStudent ON (awardsAwardStudent.awardsAwardID=awardsAward.awardsAwardID) JOIN gibbonPerson ON (awardsAwardStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (gibbonStudentEnrolment.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND awardsAwardStudent.gibbonSchoolYearID=:gibbonSchoolYearID2 $sqlWhere ORDER BY timestamp DESC";
+            $sql = "SELECT badgesBadge.*, badgesBadgeStudent.*, surname, preferredName FROM badgesBadge JOIN badgesBadgeStudent ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonPerson ON (badgesBadgeStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (gibbonStudentEnrolment.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID AND badgesBadgeStudent.gibbonSchoolYearID=:gibbonSchoolYearID2 $sqlWhere ORDER BY timestamp DESC";
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -222,7 +222,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
         $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
 
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/awards_grant_add.php&gibbonPersonID2=$gibbonPersonID2&awardsAwardID2=$awardsAwardID2&gibbonSchoolYearID=$gibbonSchoolYearID'>".__($guid, 'Add')."<img style='margin: 0 0 -4px 5px' title='".__($guid, 'Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_grant_add.php&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'>".__($guid, 'Add')."<img style='margin: 0 0 -4px 5px' title='".__($guid, 'Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
         echo '</div>';
 
         if ($result->rowCount() < 1) {
@@ -231,13 +231,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
             echo '</div>';
         } else {
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', "gibbonPersonID2=$gibbonPersonID2&awardsAwardID2=$awardsAwardID2&gibbonSchoolYearID=$gibbonSchoolYearID");
+                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
             echo "<tr class='head'>";
             echo "<th style='width: 180px'>";
-            echo __($guid, 'Award');
+            echo __($guid, 'Badges');
             echo '</th>';
             echo '<th>';
             echo __($guid, 'Student');
@@ -277,13 +277,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
                 echo $row['name'];
                 echo '</td>';
                 echo '<td>';
-                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&subpage=Awards&search=&allStudents=&sort=surname, preferredName'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
+                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&subpage=Badges&search=&allStudents=&sort=surname, preferredName'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
                 echo '</td>';
                 echo '<td>';
                 echo dateConvertBack($guid, $row['date']).'<br/>';
                 echo '</td>';
                 echo '<td>';
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/awards_grant_delete.php&awardsAwardStudentID='.$row['awardsAwardStudentID']."&gibbonPersonID2=$gibbonPersonID2&awardsAwardID2=$awardsAwardID2&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='".__($guid, 'Delete')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='".__($guid, 'Delete')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
                 echo "<script type='text/javascript'>";
                 echo '$(document).ready(function(){';
                 echo "\$(\".comment-$count\").hide();";
@@ -312,7 +312,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant.php') 
             echo '</table>';
 
             if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom', "gibbonPersonID2=$gibbonPersonID2&awardsAwardID2=$awardsAwardID2&gibbonSchoolYearID=$gibbonSchoolYearID");
+                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
             }
         }
     }

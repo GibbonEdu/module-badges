@@ -17,7 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * Sets version information.
- */
-$moduleVersion = '1.0.04';
+@session_start();
+
+//Module includes
+include './modules/Badges/moduleFunctions.php';
+
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
+    //Acess denied
+    echo "<div class='error'>";
+    echo 'You do not have access to this action.';
+    echo '</div>';
+} else {
+    echo getBadges($connection2, $guid, $gibbonPersonID);
+}

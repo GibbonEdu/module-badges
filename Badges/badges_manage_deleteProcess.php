@@ -36,24 +36,24 @@ try {
 //Set timezone from session variable
 date_default_timezone_set($_SESSION[$guid]['timezone']);
 
-$awardsAwardID = $_POST['awardsAwardID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/awards_manage_delete.php&awardsAwardID=$awardsAwardID&search=".$_GET['search'];
-$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/awards_manage.php&search='.$_GET['search'];
+$badgesBadgeID = $_POST['badgesBadgeID'];
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_delete.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search'];
+$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage.php&search='.$_GET['search'];
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delete.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delete.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
     //Proceed!
-    if ($awardsAwardID == '') {
+    if ($badgesBadgeID == '') {
         //Fail1
         $URL = $URL.'&return=error1';
         header("Location: {$URL}");
     } else {
         try {
-            $data = array('awardsAwardID' => $awardsAwardID);
-            $sql = 'SELECT * FROM awardsAward WHERE awardsAwardID=:awardsAwardID';
+            $data = array('badgesBadgeID' => $badgesBadgeID);
+            $sql = 'SELECT * FROM badgesBadge WHERE badgesBadgeID=:badgesBadgeID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -70,8 +70,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delet
         } else {
             //Write to database
             try {
-                $data = array('awardsAwardID' => $awardsAwardID);
-                $sql = 'DELETE FROM awardsAward WHERE awardsAwardID=:awardsAwardID';
+                $data = array('badgesBadgeID' => $badgesBadgeID);
+                $sql = 'DELETE FROM badgesBadge WHERE badgesBadgeID=:badgesBadgeID';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {

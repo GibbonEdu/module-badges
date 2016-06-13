@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __($guid, 'You do not have access to this action.');
@@ -35,7 +35,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 
     try {
         $data = array();
-        $sql = 'SELECT * FROM awardsAward ORDER BY name';
+        $sql = 'SELECT * FROM badgesBadge ORDER BY name';
         $result = $connection2->prepare($sql);
         $result->execute($data);
     } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';

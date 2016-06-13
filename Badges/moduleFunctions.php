@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function getAwards($connection2, $guid, $gibbonPersonID)
+function getBadges($connection2, $guid, $gibbonPersonID)
 {
     $output = '';
 
     try {
         $data = array('gibbonPersonID' => $gibbonPersonID);
-        $sql = 'SELECT awardsAwardStudent.*, awardsAward.name AS award, awardsAward.logo AS logo, awardsAward.category AS category, gibbonSchoolYear.name AS year FROM awardsAwardStudent JOIN awardsAward ON (awardsAwardStudent.awardsAwardID=awardsAward.awardsAwardID) JOIN gibbonSchoolYear ON (awardsAwardStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
+        $sql = 'SELECT badgesBadgeStudent.*, badgesBadge.name AS award, badgesBadge.logo AS logo, badgesBadge.category AS category, gibbonSchoolYear.name AS year FROM badgesBadgeStudent JOIN badgesBadge ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonSchoolYear ON (badgesBadgeStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
         $result = $connection2->prepare($sql);
         $result->execute($data);
     } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';

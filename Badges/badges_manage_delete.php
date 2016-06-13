@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @session_start();
 
 //Module includes
-include './modules/Awards/moduleFunctions.php';
+include './modules/Badges/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delete.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delete.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo 'You do not have access to this action.';
@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delet
 } else {
     //Proceed!
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/awards_manage.php'>".__($guid, 'Manage Awards')."</a> > </div><div class='trailEnd'>".__($guid, 'Delete Award').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/badges_manage.php'>".__($guid, 'Manage Badges')."</a> > </div><div class='trailEnd'>".__($guid, 'Delete Badges').'</div>';
     echo '</div>';
 
     if (isset($_GET['return'])) {
@@ -38,14 +38,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delet
     }
 
     //Check if school year specified
-    $awardsAwardID = $_GET['awardsAwardID'];
-    if ($awardsAwardID == '') { echo "<div class='error'>";
+    $badgesBadgeID = $_GET['badgesBadgeID'];
+    if ($badgesBadgeID == '') { echo "<div class='error'>";
         echo 'You have not specified a policy.';
         echo '</div>';
     } else {
         try {
-            $data = array('awardsAwardID' => $awardsAwardID);
-            $sql = 'SELECT * FROM awardsAward WHERE awardsAwardID=:awardsAwardID';
+            $data = array('badgesBadgeID' => $badgesBadgeID);
+            $sql = 'SELECT * FROM badgesBadge WHERE badgesBadgeID=:badgesBadgeID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -62,15 +62,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delet
 
             if ($_GET['search'] != '') {
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
                 echo '</div>';
             }
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL']."/modules/Awards/awards_manage_deleteProcess.php?awardsAwardID=$awardsAwardID&search=".$_GET['search'] ?>">
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL']."/modules/Badges/badges_manage_deleteProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search'] ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
 						<td>
-							<b>Are you sure you want to delete "<?php echo $row['name'] ?>" from Awards?</b><br/>
+							<b>Are you sure you want to delete "<?php echo $row['name'] ?>" from Badges?</b><br/>
 							<span style="font-size: 90%; color: #cc0000"><i>This operation cannot be undone, and may lead to loss of vital data in your system.<br/>PROCEED WITH CAUTION!</i></span>
 						</td>
 						<td class="right">
@@ -79,7 +79,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_delet
 					</tr>
 					<tr>
 						<td>
-							<input name="awardsAwardID" id="awardsAwardID" value="<?php echo $awardsAwardID ?>" type="hidden">
+							<input name="badgesBadgeID" id="badgesBadgeID" value="<?php echo $badgesBadgeID ?>" type="hidden">
 							<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 							<input type="submit" value="Yes">
 						</td>

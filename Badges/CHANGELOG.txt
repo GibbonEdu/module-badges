@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.0.00
+-------
+Transitioned naming from Awards to Badges (no direct upgrade path!)
+
 v1.0.04
 -------
 Added category to award display

@@ -36,24 +36,24 @@ try {
 //Set timezone from session variable
 date_default_timezone_set($_SESSION[$guid]['timezone']);
 
-$awardsAwardID = $_GET['awardsAwardID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/awards_manage_edit.php&awardsAwardID=$awardsAwardID&search=".$_GET['search'];
+$badgesBadgeID = $_GET['badgesBadgeID'];
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_edit.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search'];
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.php') == false) {
     //Fail 0
     $URL = $URL.'&return=error0';
     header("Location: {$URL}");
 } else {
     //Proceed!
     //Check if school year specified
-    if ($awardsAwardID == '') {
+    if ($badgesBadgeID == '') {
         //Fail1
         $URL = $URL.'&return=error1';
         header("Location: {$URL}");
     } else {
         try {
-            $data = array('awardsAwardID' => $awardsAwardID);
-            $sql = 'SELECT * FROM awardsAward WHERE awardsAwardID=:awardsAwardID';
+            $data = array('badgesBadgeID' => $badgesBadgeID);
+            $sql = 'SELECT * FROM badgesBadge WHERE badgesBadgeID=:badgesBadgeID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -106,9 +106,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
                     while ($unique == false and $count < 100) {
                         $suffix = randomPassword(16);
                         if ($count == 0) {
-                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/award_'.str_replace(' ', '_', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
+                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.str_replace(' ', '_', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
                         } else {
-                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/award_'.str_replace(' ', '_', trim($name))."_$suffix"."_$count".strrchr($_FILES['file']['name'], '.');
+                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.str_replace(' ', '_', trim($name))."_$suffix"."_$count".strrchr($_FILES['file']['name'], '.');
                         }
 
                         if (!(file_exists($path.'/'.$logo))) {
@@ -123,8 +123,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_edit.
 
                 //Write to database
                 try {
-                    $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonYearGroupIDList' => $gibbonYearGroupIDList, 'awardsAwardID' => $awardsAwardID);
-                    $sql = 'UPDATE awardsAward SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonYearGroupIDList=:gibbonYearGroupIDList WHERE awardsAwardID=:awardsAwardID';
+                    $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonYearGroupIDList' => $gibbonYearGroupIDList, 'badgesBadgeID' => $badgesBadgeID);
+                    $sql = 'UPDATE badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonYearGroupIDList=:gibbonYearGroupIDList WHERE badgesBadgeID=:badgesBadgeID';
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {

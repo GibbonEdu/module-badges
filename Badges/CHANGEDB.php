@@ -59,3 +59,24 @@ $sql[$count][1] = '';
 ++$count;
 $sql[$count][0] = '1.0.04';
 $sql[$count][1] = '';
+
+//v2.0.00
+++$count;
+$sql[$count][0] = '2.0.00';
+$sql[$count][1] = "
+UPDATE gibbonModule SET name='Badges', description='The Badges module allows a school to define and assign a range of badges or awards to students. Badges recognise, for example, academic, social or athletic achievement or progress.', entryURL='badges_manage.php' WHERE name='Awards';end
+RENAME TABLE awardsAward TO badgesBadge;end
+ALTER TABLE `badgesBadge` CHANGE `awardsAwardID` `badgesBadgeID` INT(8) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;end
+RENAME TABLE awardsAwardStudent TO badgesBadgeStudent;end
+ALTER TABLE `badgesBadgeStudent` CHANGE `awardsAwardStudentID` `badgesBadgeStudentID` INT(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, CHANGE `awardsAwardID` `badgesBadgeID` INT(8) UNSIGNED ZEROFILL NOT NULL;end
+UPDATE gibbonAction SET name='Manage Badges', category='Manage Badges', description='Allows a user to define and edit badges.', URLList='badges_manage.php, badges_manage_add.php, badges_manage_edit.php, badges_manage_delete.php', entryURL='badges_manage.php' WHERE name='Manage Awards' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonAction SET name='Badge Settings', category='Manage Badges', description='Allows a user to adjust badge settings.', URLList='badgeSettings.php', entryURL='badgeSettings.php' WHERE name='Awards Settings' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonAction SET name='Grant Badges', category='Manage Badges', description='Allows a user to give out badges to students.', URLList='badges_grant.php, badges_grant_add.php, badges_grant_delete.php', entryURL='badges_grant.php' WHERE name='Grant Awards' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonAction SET name='View Badges_my', category='View Badges', description='Allows a user to view badges that they have been granted.', URLList='badges_view.php', entryURL='badges_view.php' WHERE name='View Awards_my' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonAction SET name='View Badges_myChildren', category='View Badges', description='Allows parents to view badges that have have been granted to their children.', URLList='badges_view.php', entryURL='badges_view.php' WHERE name='View Awards_myChildren' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonAction SET name='View Badges_all', category='View Badges', description='Allows a user to view badges that have been granted to any student.', URLList='badges_view.php', entryURL='badges_view.php' WHERE name='View Awards_all' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonAction SET precedence=0, description='Allows a user to view image credits for licensed images.', URLList='badges_credits.php', entryURL='badges_credits.php' WHERE name='Credits & Licenses' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonHook SET name='Badges', options='a:3:{s:16:\"sourceModuleName\";s:6:\"Badges\";s:18:\"sourceModuleAction\";s:15:\"View Badges_all\";s:19:\"sourceModuleInclude\";s:34:\"hook_studentProfile_badgesView.php\";}' WHERE name='Awards' AND type='Student Profile' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE gibbonHook SET name='Badges', options='a:3:{s:16:\"sourceModuleName\";s:6:\"Badges\";s:18:\"sourceModuleAction\";s:22:\"View Badges_myChildren\";s:19:\"sourceModuleInclude\";s:37:\"hook_parentalDashboard_badgesView.php\";}' WHERE name='Awards' AND type='Parental Dashboard' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
+UPDATE `gibbonSetting` SET scope='Badges', name='badgeCategories', nameDisplay='Badge Categories', description='Comma-separated list of available choices for badge category.' WHERE scope='Awards' AND name='awardCategories';end
+";

@@ -22,14 +22,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __($guid, 'You do not have access to this action.');
     echo '</div>';
 } else {
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_grant.php&gibbonSchoolYearID='.$_GET['gibbonSchoolYearID']."'>".__($guid, 'Grant Awards')."</a> > </div><div class='trailEnd'>".__($guid, 'Add').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonSchoolYearID='.$_GET['gibbonSchoolYearID']."'>".__($guid, 'Grant Badges')."</a> > </div><div class='trailEnd'>".__($guid, 'Add').'</div>';
     echo '</div>';
 
     if (isset($_GET['return'])) {
@@ -39,12 +39,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
 
     echo "<div class='linkTop'>";
-    if ($_GET['gibbonPersonID2'] != '' or $_GET['awardsAwardID2'] != '') { echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."'>".__($guid, 'Back to Search Results').'</a>';
+    if ($_GET['gibbonPersonID2'] != '' or $_GET['badgesBadgeID2'] != '') { echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."'>".__($guid, 'Back to Search Results').'</a>';
     }
     echo '</div>';
     ?>
 
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/awards_grant_addProcess.php?gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_grant_addProcess.php?gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 			<tr>
 				<td style='width: 275px'>
@@ -86,20 +86,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
 			</tr>
 			<tr>
 				<td>
-					<b><?php echo __($guid, 'Award') ?> *</b><br/>
+					<b><?php echo __($guid, 'Badge') ?> *</b><br/>
 					<span style="font-size: 90%"><i></i></span>
 				</td>
 				<td class="right">
 					<?php
                     try {
                         $dataPurpose = array();
-                        $sqlPurpose = 'SELECT * FROM awardsAward ORDER BY category, name';
+                        $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
                         $resultPurpose = $connection2->prepare($sqlPurpose);
                         $resultPurpose->execute($dataPurpose);
                     } catch (PDOException $e) {
                     }
 
-					echo "<select name='awardsAwardID' id='awardsAwardID' style='width: 302px'>";
+					echo "<select name='badgesBadgeID' id='badgesBadgeID' style='width: 302px'>";
 					echo "<option value='Please select...'>Please select...</option>";
 					$lastCategory = '';
 					while ($rowPurpose = $resultPurpose->fetch()) {
@@ -107,14 +107,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
 						if ($currentCategory != $lastCategory) {
 							echo "<optgroup label='--".$currentCategory."--'>";
 						}
-						echo "<option value='".$rowPurpose['awardsAwardID']."'>".$rowPurpose['name'].'</option>';
+						echo "<option value='".$rowPurpose['badgesBadgeID']."'>".$rowPurpose['name'].'</option>';
 						$lastCategory = $currentCategory;
 					}
 					echo '</select>';
 					?>
 					<script type="text/javascript">
-						var awardsAwardID=new LiveValidation('awardsAwardID');
-						awardsAwardID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
+						var badgesBadgeID=new LiveValidation('badgesBadgeID');
+						badgesBadgeID.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
 					</script>
 				</td>
 			</tr>

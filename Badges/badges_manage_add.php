@@ -20,34 +20,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @session_start();
 
 //Module includes
-include './modules/Awards/moduleFunctions.php';
+include './modules/Badges/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo 'You do not have access to this action.';
     echo '</div>';
 } else {
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/awards_manage.php'>".__($guid, 'Manage Awards')."</a> > </div><div class='trailEnd'>".__($guid, 'Add Award').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/badges_manage.php'>".__($guid, 'Manage Badges')."</a> > </div><div class='trailEnd'>".__($guid, 'Add Badges').'</div>';
     echo '</div>';
 
     $returns = array();
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_manage_edit.php&awardsAwardID='.$_GET['editID'].'&search='.$_GET['search'];
+        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'];
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
     }
 
     if ($_GET['search'] != '') { echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
         echo '</div>';
     }
 
     ?>
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/Awards/awards_manage_addProcess.php?search='.$_GET['search'] ?>" enctype="multipart/form-data">
+	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/Badges/badges_manage_addProcess.php?search='.$_GET['search'] ?>" enctype="multipart/form-data">
 		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 			<tr>
 				<td>
@@ -74,7 +74,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage_add.p
 				</td>
 			</tr>
 			<?php
-            $categories = getSettingByScope($connection2, 'Awards', 'awardCategories');
+            $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
 			$categories = explode(',', $categories);
 			?>
 			<tr>

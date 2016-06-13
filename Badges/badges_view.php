@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __($guid, 'You do not have access to this action.');
@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 } else {
     //Proceed!
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'View Awards').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'View Badges').'</div>';
     echo '</div>';
 
     //Get action with highest precendence
@@ -39,7 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
         echo __($guid, 'The highest grouped action cannot be determined.');
         echo '</div>';
     } else {
-        if ($highestAction == 'View Awards_all') {
+        if ($highestAction == 'View Badges_all') {
             echo '<h2>';
             echo __($guid, 'Choose Student');
             echo '</h2>';
@@ -49,11 +49,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
                 $gibbonPersonID = $_GET['gibbonPersonID'];
             }
             ?>
-			
+
 			<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-				<table class='smallIntBorder' cellspacing='0' style="width: 100%">	
+				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
-						<td style='width: 275px'> 
+						<td style='width: 275px'>
 							<b><?php echo __($guid, 'Student') ?></b><br/>
 							<span style="font-size: 90%"><i></i></span>
 						</td>
@@ -76,13 +76,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 										echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
 									}
 								}
-								?>				
+								?>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td colspan=2 class="right">
-							<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/awards_view.php">
+							<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_view.php">
 							<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
 						</td>
 					</tr>
@@ -93,7 +93,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
             if ($gibbonPersonID != '') {
                 $output = '';
                 echo '<h2>';
-                echo __($guid, 'Awards');
+                echo __($guid, 'Badges');
                 echo '</h2>';
 
                 try {
@@ -109,13 +109,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
                     echo __($guid, 'The specified record does not exist.');
                     echo '</div>';
                 } else {
-                    echo getAwards($connection2, $guid, $gibbonPersonID);
+                    echo getBadges($connection2, $guid, $gibbonPersonID);
                 }
             }
-        } elseif ($highestAction == 'View Awards_my') {
+        } elseif ($highestAction == 'View Badges_my') {
             $output = '';
             echo '<h2>';
-            echo __($guid, 'My Awards');
+            echo __($guid, 'My Badges');
             echo '</h2>';
 
             try {
@@ -131,9 +131,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
                 echo __($guid, 'The specified record does not exist.');
                 echo '</div>';
             } else {
-                echo getAwards($connection2, $guid, $_SESSION[$guid]['gibbonPersonID']);
+                echo getBadges($connection2, $guid, $_SESSION[$guid]['gibbonPersonID']);
             }
-        } elseif ($highestAction == 'View Awards_myChildren') {
+        } elseif ($highestAction == 'View Badges_myChildren') {
             $gibbonPersonID = null;
             if (isset($_GET['search'])) {
                 $gibbonPersonID = $_GET['search'];
@@ -190,26 +190,26 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
 
                     ?>
 					<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-						<table class='noIntBorder' cellspacing='0' style="width: 100%">	
+						<table class='noIntBorder' cellspacing='0' style="width: 100%">
 							<tr><td style="width: 30%"></td><td></td></tr>
 							<tr>
-								<td> 
+								<td>
 									<b><?php echo __($guid, 'Search For') ?></b><br/>
 									<span style="font-size: 90%"><i><?php echo __($guid, 'Preferred, surname, username.') ?></i></span>
 								</td>
 								<td class="right">
 									<select name="search" id="search" style="width: 302px">
 										<option value=""></value>
-										<?php echo $options; ?> 
+										<?php echo $options; ?>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<td colspan=2 class="right">
-									<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/awards_View.php">
+									<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_View.php">
 									<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 									<?php
-                                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/awards_View.php'>".__($guid, 'Clear Search').'</a>'; ?>
+                                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_View.php'>".__($guid, 'Clear Search').'</a>'; ?>
 									<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
 								</td>
 							</tr>
@@ -240,7 +240,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
                         if ($gibbonPersonID != '') {
                             $output = '';
                             echo '<h2>';
-                            echo __($guid, 'Awards');
+                            echo __($guid, 'Badges');
                             echo '</h2>';
 
                             try {
@@ -257,7 +257,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_view.php') =
                                 echo '</div>';
                             } else {
                                 $row = $result->fetch();
-                                echo getAwards($connection2, $guid, $gibbonPersonID);
+                                echo getBadges($connection2, $guid, $gibbonPersonID);
                             }
                         }
                     }

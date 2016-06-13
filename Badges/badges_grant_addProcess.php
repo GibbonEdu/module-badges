@@ -36,9 +36,9 @@ date_default_timezone_set($_SESSION[$guid]['timezone']);
 
 $gibbonSchoolYearID = $_POST['gibbonSchoolYearID'];
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/awards_grant_add.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_grant_add.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.php') == false) {
     //Fail 0
     $URL .= '&return=error0';
     header("Location: {$URL}");
@@ -49,11 +49,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
     } else {
         $gibbonPersonIDMulti = null;
     }
-    $awardsAwardID = $_POST['awardsAwardID'];
+    $badgesBadgeID = $_POST['badgesBadgeID'];
     $date = $_POST['date'];
     $comment = $_POST['comment'];
 
-    if ($gibbonPersonIDMulti == null or $date == '' or $awardsAwardID == '' or $gibbonSchoolYearID == '') {
+    if ($gibbonPersonIDMulti == null or $date == '' or $badgesBadgeID == '' or $gibbonSchoolYearID == '') {
         //Fail 3
         $URL .= '&return=error3';
         header("Location: {$URL}");
@@ -63,22 +63,22 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_add.ph
         foreach ($gibbonPersonIDMulti as $gibbonPersonID) {
             //Write to database
             try {
-                $data = array('awardsAwardID' => $awardsAwardID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => dateConvert($guid, $date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID']);
-                $sql = 'INSERT INTO awardsAwardStudent SET awardsAwardID=:awardsAwardID, gibbonSchoolYearID=:gibbonSchoolYearID, date=:date, gibbonPersonID=:gibbonPersonID, comment=:comment, gibbonPersonIDCreator=:gibbonPersonIDCreator';
+                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => dateConvert($guid, $date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID']);
+                $sql = 'INSERT INTO badgesBadgeStudent SET badgesBadgeID=:badgesBadgeID, gibbonSchoolYearID=:gibbonSchoolYearID, date=:date, gibbonPersonID=:gibbonPersonID, comment=:comment, gibbonPersonIDCreator=:gibbonPersonIDCreator';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
                 $partialFail = true;
             }
 
-            $awardsAwardStudentID = $connection2->lastInsertID();
+            $badgesBadgeStudentID = $connection2->lastInsertID();
 
             //Attempt to add like
             $likeComment = '';
             if ($comment != '') {
                 $likeComment .= $comment;
             }
-            $return = setLike($connection2, 'Awards', $_SESSION[$guid]['gibbonSchoolYearID'], 'awardsAwardStudentID', $awardsAwardStudentID, $_SESSION[$guid]['gibbonPersonID'], $gibbonPersonID, 'Award Granted', $likeComment);
+            $return = setLike($connection2, 'Badges', $_SESSION[$guid]['gibbonSchoolYearID'], 'badgesBadgeStudentID', $badgesBadgeStudentID, $_SESSION[$guid]['gibbonPersonID'], $gibbonPersonID, 'Badges Granted', $likeComment);
         }
 
         if ($partialFail == true) {

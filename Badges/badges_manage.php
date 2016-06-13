@@ -20,16 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @session_start();
 
 //Module includes
-include './modules/Awards/moduleFunctions.php';
+include './modules/Badges/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo 'You do not have access to this action.';
     echo '</div>';
 } else {
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Manage Awards</div>";
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > </div><div class='trailEnd'>Manage Badges</div>";
     echo '</div>';
 
     if (isset($_GET['return'])) {
@@ -80,10 +80,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage.php')
 			</tr>
 			<tr>
 				<td colspan=2 class="right">
-					<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/awards_manage.php">
+					<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_manage.php">
 					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 					<?php
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/awards_manage.php'>Clear Search</a> "; ?>
+                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_manage.php'>Clear Search</a> "; ?>
 					<input type="submit" value="Submit">
 				</td>
 			</tr>
@@ -97,10 +97,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage.php')
 
     try {
         $data = array();
-        $sql = 'SELECT awardsAward.* FROM awardsAward ORDER BY category, awardsAward.name';
+        $sql = 'SELECT badgesBadge.* FROM badgesBadge ORDER BY category, badgesBadge.name';
         if ($search != '') {
             $data = array('search1' => "%$search%", 'search2' => "%$search%");
-            $sql = 'SELECT awardsAward.* FROM awardsAward WHERE (awardsAward.name LIKE :search1 OR awardsAward.category LIKE :search2) ORDER BY category, awardsAward.name';
+            $sql = 'SELECT badgesBadge.* FROM badgesBadge WHERE (badgesBadge.name LIKE :search1 OR badgesBadge.category LIKE :search2) ORDER BY category, badgesBadge.name';
         }
         $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
         $result = $connection2->prepare($sql);
@@ -109,11 +109,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage.php')
     }
 
     echo "<div class='linkTop'>";
-    echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Awards/awards_manage_add.php&search=$search'>".__($guid, 'Add')."<img style='margin-left: 5px' title='".__($guid, 'Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+    echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_manage_add.php&search=$search'>".__($guid, 'Add')."<img style='margin-left: 5px' title='".__($guid, 'Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
     echo '</div>';
 
     if ($result->rowCount() < 1) { echo "<div class='error'>";
-        echo 'There are no awards to display.';
+        echo 'There are no badges to display.';
         echo '</div>';
     } else {
         if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
@@ -181,8 +181,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_manage.php')
             echo '});';
             echo '});';
             echo '</script>';
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_manage_edit.php&awardsAwardID='.$row['awardsAwardID']."&search=$search'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_manage_delete.php&awardsAwardID='.$row['awardsAwardID']."&search=$search'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$row['badgesBadgeID']."&search=$search'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID='.$row['badgesBadgeID']."&search=$search'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
             if ($row['description'] != '') {
                 echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' title='Show Description' onclick='return false;' /></a>";
             }

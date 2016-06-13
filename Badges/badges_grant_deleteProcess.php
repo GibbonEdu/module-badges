@@ -34,25 +34,25 @@ try {
 //Set timezone from session variable
 date_default_timezone_set($_SESSION[$guid]['timezone']);
 
-$awardsAwardStudentID = $_GET['awardsAwardStudentID'];
+$badgesBadgeStudentID = $_GET['badgesBadgeStudentID'];
 $gibbonSchoolYearID = $_POST['gibbonSchoolYearID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/awards_grant_delete.php&awardsAwardStudentID=$awardsAwardStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
-$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/awards_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_grant_delete.php&badgesBadgeStudentID=$badgesBadgeStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
+$URLDelete = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete.php') == false) {
     //Fail 0
     $URL .= '&return=error0';
     header("Location: {$URL}");
 } else {
     //Proceed!
-    if ($awardsAwardStudentID == '') {
+    if ($badgesBadgeStudentID == '') {
         //Fail1
         $URL .= '&return=error1';
         header("Location: {$URL}");
     } else {
         try {
-            $data = array('awardsAwardStudentID' => $awardsAwardStudentID);
-            $sql = 'SELECT * FROM awardsAwardStudent WHERE awardsAwardStudentID=:awardsAwardStudentID';
+            $data = array('badgesBadgeStudentID' => $badgesBadgeStudentID);
+            $sql = 'SELECT * FROM badgesBadgeStudent WHERE badgesBadgeStudentID=:badgesBadgeStudentID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -71,8 +71,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
 
             //Write to database
             try {
-                $data = array('awardsAwardStudentID' => $awardsAwardStudentID);
-                $sql = 'DELETE FROM awardsAwardStudent WHERE awardsAwardStudentID=:awardsAwardStudentID';
+                $data = array('badgesBadgeStudentID' => $badgesBadgeStudentID);
+                $sql = 'DELETE FROM badgesBadgeStudent WHERE badgesBadgeStudentID=:badgesBadgeStudentID';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {
@@ -82,7 +82,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
                 exit();
             }
 
-            $return = deleteLike($connection2, 'Awards', 'awardsAwardStudentID', $awardsAwardStudentID, $_SESSION[$guid]['gibbonPersonID'], $row['gibbonPersonID'], 'Award Granted');
+            $return = deleteLike($connection2, 'Badges', 'badgesBadgeStudentID', $badgesBadgeStudentID, $_SESSION[$guid]['gibbonPersonID'], $row['gibbonPersonID'], 'Badges Granted');
 
             //Success 0
             $URLDelete = $URLDelete.'&return=success0';

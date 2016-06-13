@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __($guid, 'You do not have access to this action.');
@@ -30,7 +30,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
 } else {
     //Proceed!
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_grant.php&gibbonSchoolYearID='.$_GET['gibbonSchoolYearID']."'>".__($guid, 'Grant Awards')."</a> > </div><div class='trailEnd'>".__($guid, 'Delete').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonSchoolYearID='.$_GET['gibbonSchoolYearID']."'>".__($guid, 'Grant Badges')."</a> > </div><div class='trailEnd'>".__($guid, 'Delete').'</div>';
     echo '</div>';
 
     if (isset($_GET['return'])) {
@@ -38,15 +38,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
     }
 
     //Check if school year specified
-    $awardsAwardStudentID = $_GET['awardsAwardStudentID'];
+    $badgesBadgeStudentID = $_GET['badgesBadgeStudentID'];
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
-    if ($awardsAwardStudentID == '') { echo "<div class='error'>";
+    if ($badgesBadgeStudentID == '') { echo "<div class='error'>";
         echo __($guid, 'You have not specified one or more required parameters.');
         echo '</div>';
     } else {
         try {
-            $data = array('awardsAwardStudentID' => $awardsAwardStudentID);
-            $sql = 'SELECT * FROM awardsAwardStudent WHERE awardsAwardStudentID=:awardsAwardStudentID';
+            $data = array('badgesBadgeStudentID' => $badgesBadgeStudentID);
+            $sql = 'SELECT * FROM badgesBadgeStudent WHERE badgesBadgeStudentID=:badgesBadgeStudentID';
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
@@ -61,13 +61,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awards_grant_delete
             //Let's go!
             $row = $result->fetch();
 
-            if ($_GET['gibbonPersonID2'] != '' or $_GET['awardsAwardID2'] != '') {
+            if ($_GET['gibbonPersonID2'] != '' or $_GET['badgesBadgeID2'] != '') {
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Awards/awards_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."&gibbonSchoolYearID=$gibbonSchoolYearID"."'>".__($guid, 'Back to Search Results').'</a>';
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID"."'>".__($guid, 'Back to Search Results').'</a>';
                 echo '</div>';
             }
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/awards_grant_deleteProcess.php?awardsAwardStudentID=$awardsAwardStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&awardsAwardID2='.$_GET['awardsAwardID2']."&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/badges_grant_deleteProcess.php?badgesBadgeStudentID=$badgesBadgeStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID" ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
 						<td>

@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 @session_start();
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php') == false) {
     //Acess denied
     echo "<div class='error'>";
     echo __($guid, 'You do not have access to this action.');
@@ -27,7 +27,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php'
 } else {
     //Proceed!
     echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'Awards Settings').'</div>';
+    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'Badges Settings').'</div>';
     echo '</div>';
 
     if (isset($_GET['return'])) {
@@ -35,13 +35,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php'
     }
     ?>
 
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/awardsSettingsProcess.php' ?>">
+	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badgeSettingsProcess.php' ?>">
 		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 			<tr>
 				<?php
                 try {
                     $data = array();
-                    $sql = "SELECT * FROM gibbonSetting WHERE scope='Awards' AND name='awardCategories'";
+                    $sql = "SELECT * FROM gibbonSetting WHERE scope='Badges' AND name='badgeCategories'";
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {

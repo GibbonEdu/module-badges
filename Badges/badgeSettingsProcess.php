@@ -34,22 +34,22 @@ try {
 //Set timezone from session variable
 date_default_timezone_set($_SESSION[$guid]['timezone']);
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/awardsSettings.php';
+$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badgeSettings.php';
 
-if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php') == false) {
+if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php') == false) {
     //Fail 0
     $URL .= '&return=error0';
     header("Location: {$URL}");
 } else {
     //Proceed!
-    $awardCategories = '';
-    foreach (explode(',', $_POST['awardCategories']) as $category) {
-        $awardCategories .= trim($category).',';
+    $badgeCategories = '';
+    foreach (explode(',', $_POST['badgeCategories']) as $category) {
+        $badgeCategories .= trim($category).',';
     }
-    $awardCategories = substr($awardCategories, 0, -1);
+    $badgeCategories = substr($badgeCategories, 0, -1);
 
     //Validate Inputs
-    if ($awardCategories == '') {
+    if ($badgeCategories == '') {
         //Fail 3
         $URL .= '&return=error3';
         header("Location: {$URL}");
@@ -58,8 +58,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Awards/awardsSettings.php'
         $fail = false;
 
         try {
-            $data = array('value' => $awardCategories);
-            $sql = "UPDATE gibbonSetting SET value=:value WHERE scope='Awards' AND name='awardCategories'";
+            $data = array('value' => $badgeCategories);
+            $sql = "UPDATE gibbonSetting SET value=:value WHERE scope='Badges' AND name='badgeCategories'";
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
