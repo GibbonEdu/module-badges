@@ -80,3 +80,11 @@ UPDATE gibbonHook SET name='Badges', options='a:3:{s:16:\"sourceModuleName\";s:6
 UPDATE gibbonHook SET name='Badges', options='a:3:{s:16:\"sourceModuleName\";s:6:\"Badges\";s:18:\"sourceModuleAction\";s:22:\"View Badges_myChildren\";s:19:\"sourceModuleInclude\";s:37:\"hook_parentalDashboard_badgesView.php\";}' WHERE name='Awards' AND type='Parental Dashboard' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end
 UPDATE `gibbonSetting` SET scope='Badges', name='badgeCategories', nameDisplay='Badge Categories', description='Comma-separated list of available choices for badge category.' WHERE scope='Awards' AND name='awardCategories';end
 ";
+
+//v2.1.00
+++$count;
+$sql[$count][0] = '2.1.00';
+$sql[$count][1] = "
+UPDATE gibbonModule SET entryURL='badges_view.php', description='The Badges module allows a school to define and assign a range of badges or awards to users. Badges recognise, for example, student progress, staff professional development or parent involvement in school life.' WHERE name='Badges';end
+ALTER TABLE `badgesBadge` DROP `gibbonYearGroupIDList`;end
+";

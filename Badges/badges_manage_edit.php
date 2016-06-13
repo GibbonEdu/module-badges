@@ -157,30 +157,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 							<textarea name='logoLicense' id='logoLicense' rows=5 style='width: 300px'><?php echo htmlPrep($row['logoLicense']) ?></textarea>
 						</td>
 					</tr>
-					<tr>
-						<td>
-							<b><?php echo __($guid, 'Year Groups') ?></b><br/>
-							<span style="font-size: 90%"><i><?php echo __($guid, 'Relevant student year groups') ?><br/></i></span>
-						</td>
-						<td class="right">
-							<?php
-                            $yearGroups = getYearGroups($connection2);
-							if ($yearGroups == '') {
-								echo '<i>'.__($guid, 'No year groups available.').'</i>';
-							} else {
-								for ($i = 0; $i < count($yearGroups); $i = $i + 2) {
-									$checked = '';
-									if (is_numeric(strpos($row['gibbonYearGroupIDList'], $yearGroups[$i]))) {
-										$checked = 'checked ';
-									}
-									echo __($guid, $yearGroups[($i + 1)])." <input $checked type='checkbox' name='gibbonYearGroupIDCheck".($i) / 2 ."'><br/>";
-									echo "<input type='hidden' name='gibbonYearGroupID".($i) / 2 ."' value='".$yearGroups[$i]."'>";
-								}
-							}
-							?>
-							<input type="hidden" name="count" value="<?php echo(count($yearGroups)) / 2 ?>">
-						</td>
-					</tr>
 
 					<tr>
 						<td>

@@ -62,8 +62,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 								<?php
                                 echo "<option value=''></option>";
 								try {
-									$dataSelect = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
-									$sqlSelect = "SELECT * FROM gibbonPerson JOIN gibbonStudentEnrolment ON (gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonRollGroup.gibbonSchoolYearID=:gibbonSchoolYearID AND status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
+									$dataSelect = array();
+									$sqlSelect = "SELECT gibbonPersonID, surname, preferredName, username FROM gibbonPerson WHERE status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
 									$resultSelect = $connection2->prepare($sqlSelect);
 									$resultSelect->execute($dataSelect);
 								} catch (PDOException $e) {
@@ -71,9 +71,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 								}
 								while ($rowSelect = $resultSelect->fetch()) {
 									if ($gibbonPersonID == $rowSelect['gibbonPersonID']) {
-										echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
+										echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
 									} else {
-										echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['nameShort']).')</option>';
+										echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
 									}
 								}
 								?>
@@ -134,7 +134,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo getBadges($connection2, $guid, $_SESSION[$guid]['gibbonPersonID']);
             }
         } elseif ($highestAction == 'View Badges_myChildren') {
-            $gibbonPersonID = null;
+            $gibbonPersonID = $_SESSION[$guid]['gibbonPersonID'];
             if (isset($_GET['search'])) {
                 $gibbonPersonID = $_GET['search'];
             }
@@ -177,53 +177,48 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                     }
                 }
 
-                if ($count == 0) {
-                    echo "<div class='error'>";
-                    echo __($guid, 'Access denied.');
-                    echo '</div>';
-                } elseif ($count == 1) {
-                    $gibbonPersonID = $gibbonPersonIDArray[0];
-                } else {
-                    echo '<h2>';
-                    echo __($guid, 'Choose');
-                    echo '</h2>';
+                echo '<h2>';
+                echo __($guid, 'Choose');
+                echo '</h2>';
 
-                    ?>
-					<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-						<table class='noIntBorder' cellspacing='0' style="width: 100%">
-							<tr><td style="width: 30%"></td><td></td></tr>
-							<tr>
-								<td>
-									<b><?php echo __($guid, 'Search For') ?></b><br/>
-									<span style="font-size: 90%"><i><?php echo __($guid, 'Preferred, surname, username.') ?></i></span>
-								</td>
-								<td class="right">
-									<select name="search" id="search" style="width: 302px">
-										<option value=""></value>
-										<?php echo $options; ?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan=2 class="right">
-									<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_View.php">
-									<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+                ?>
+				<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
+					<table class='noIntBorder' cellspacing='0' style="width: 100%">
+						<tr><td style="width: 30%"></td><td></td></tr>
+						<tr>
+							<td>
+								<b><?php echo __($guid, 'User') ?></b><br/>
+							</td>
+							<td class="right">
+								<select name="search" id="search" style="width: 302px">
 									<?php
-                                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_View.php'>".__($guid, 'Clear Search').'</a>'; ?>
-									<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
-								</td>
-							</tr>
-						</table>
-					</form>
-					<?php
-
-                }
+                                    echo "<option value='".$_SESSION[$guid]['gibbonPersonID'] ."'>".formatName('', $_SESSION[$guid]['preferredName'], $_SESSION[$guid]['surname'], 'Student', true)."</value>";
+									echo $options;
+                                    ?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan=2 class="right">
+								<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_View.php">
+								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+								<?php
+                                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_View.php'>".__($guid, 'Clear Search').'</a>'; ?>
+								<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
+							</td>
+						</tr>
+					</table>
+				</form>
+				<?php
 
                 if ($gibbonPersonID != '' and $count > 0) {
                     //Confirm access to this student
                     try {
-                        $dataChild = array('gibbonPersonID' => $gibbonPersonID, 'gibbonPersonID2' => $_SESSION[$guid]['gibbonPersonID']);
-                        $sqlChild = "SELECT * FROM gibbonFamilyChild JOIN gibbonFamily ON (gibbonFamilyChild.gibbonFamilyID=gibbonFamily.gibbonFamilyID) JOIN gibbonFamilyAdult ON (gibbonFamilyAdult.gibbonFamilyID=gibbonFamily.gibbonFamilyID) JOIN gibbonPerson ON (gibbonFamilyChild.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') AND gibbonFamilyChild.gibbonPersonID=:gibbonPersonID AND gibbonFamilyAdult.gibbonPersonID=:gibbonPersonID2 AND childDataAccess='Y'";
+                        $dataChild = array('gibbonPersonID' => $gibbonPersonID, 'gibbonPersonID2' => $_SESSION[$guid]['gibbonPersonID'], 'gibbonPersonID3' => $_SESSION[$guid]['gibbonPersonID']);
+                        $sqlChild = "(SELECT gibbonPerson.gibbonPersonID FROM gibbonFamilyChild JOIN gibbonFamily ON (gibbonFamilyChild.gibbonFamilyID=gibbonFamily.gibbonFamilyID) JOIN gibbonFamilyAdult ON (gibbonFamilyAdult.gibbonFamilyID=gibbonFamily.gibbonFamilyID) JOIN gibbonPerson ON (gibbonFamilyChild.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') AND gibbonFamilyChild.gibbonPersonID=:gibbonPersonID AND gibbonFamilyAdult.gibbonPersonID=:gibbonPersonID2 AND childDataAccess='Y')
+                            UNION
+                            (SELECT gibbonPersonID FROM gibbonPerson WHERE gibbonPersonID=:gibbonPersonID3)
+                        ";
                         $resultChild = $connection2->prepare($sqlChild);
                         @$resultChild->execute($dataChild);
                     } catch (PDOException $e) {

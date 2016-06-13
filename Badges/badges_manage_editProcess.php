@@ -76,15 +76,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
             $category = $_POST['category'];
             $description = $_POST['description'];
             $logoLicense = $_POST['logoLicense'];
-            $gibbonYearGroupIDList = '';
-            for ($i = 0; $i < $_POST['count']; ++$i) {
-                if (isset($_POST["gibbonYearGroupIDCheck$i"])) {
-                    if ($_POST["gibbonYearGroupIDCheck$i"] == 'on') {
-                        $gibbonYearGroupIDList = $gibbonYearGroupIDList.$_POST["gibbonYearGroupID$i"].',';
-                    }
-                }
-            }
-            $gibbonYearGroupIDList = substr($gibbonYearGroupIDList, 0, (strlen($gibbonYearGroupIDList) - 1));
 
             if ($name == '' or $active == '' or $category == '') {
                 //Fail 3
@@ -123,8 +114,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 
                 //Write to database
                 try {
-                    $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonYearGroupIDList' => $gibbonYearGroupIDList, 'badgesBadgeID' => $badgesBadgeID);
-                    $sql = 'UPDATE badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonYearGroupIDList=:gibbonYearGroupIDList WHERE badgesBadgeID=:badgesBadgeID';
+                    $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'badgesBadgeID' => $badgesBadgeID);
+                    $sql = 'UPDATE badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense WHERE badgesBadgeID=:badgesBadgeID';
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {

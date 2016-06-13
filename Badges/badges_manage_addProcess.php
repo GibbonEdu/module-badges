@@ -49,15 +49,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     $category = $_POST['category'];
     $description = $_POST['description'];
     $logoLicense = $_POST['logoLicense'];
-    $gibbonYearGroupIDList = '';
-    for ($i = 0; $i < $_POST['count']; ++$i) {
-        if (isset($_POST["gibbonYearGroupIDCheck$i"])) {
-            if ($_POST["gibbonYearGroupIDCheck$i"] == 'on') {
-                $gibbonYearGroupIDList = $gibbonYearGroupIDList.$_POST["gibbonYearGroupID$i"].',';
-            }
-        }
-    }
-    $gibbonYearGroupIDList = substr($gibbonYearGroupIDList, 0, (strlen($gibbonYearGroupIDList) - 1));
 
     if ($name == '' or $active == '' or $category == '') {
         //Fail 3
@@ -99,8 +90,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
         } else {
             //Write to database
             try {
-                $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonYearGroupIDList' => $gibbonYearGroupIDList, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID'], 'timestampCreated' => date('Y-m-d H:i:s'));
-                $sql = 'INSERT INTO badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonYearGroupIDList=:gibbonYearGroupIDList, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
+                $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID'], 'timestampCreated' => date('Y-m-d H:i:s'));
+                $sql = 'INSERT INTO badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
             } catch (PDOException $e) {

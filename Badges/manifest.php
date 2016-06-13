@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //Basic variables
 $name = 'Badges';
-$description = 'The Badges module allows a school to define and assign a range of badges or awards to students. Badges recognise, for example, academic, social or athletic achievement or progress.';
-$entryURL = 'badges_manage.php';
+$description = 'The Badges module allows a school to define and assign a range of badges or awards to users. Badges recognise, for example, student progress, staff professional development or parent involvement in school life.';
+$entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.0.00';
+$version = '2.1.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -38,7 +38,6 @@ $moduleTables[0] = "CREATE TABLE `badgesBadge` (
   `active` enum('Y','N') NOT NULL,
   `logo` varchar(255) NULL,
   `logoLicense` text NOT NULL,
-  `gibbonYearGroupIDList` varchar(255) NOT NULL,
   `gibbonPersonIDCreator` int(8) unsigned zerofill NOT NULL,
   `timestampCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`badgesBadgeID`)
