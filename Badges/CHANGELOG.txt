@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.1.01
+-------
+Added granting notification
+
 v2.1.00
 -------
 Broadened badge granting from students to all users

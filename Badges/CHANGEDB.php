@@ -88,3 +88,8 @@ $sql[$count][1] = "
 UPDATE gibbonModule SET entryURL='badges_view.php', description='The Badges module allows a school to define and assign a range of badges or awards to users. Badges recognise, for example, student progress, staff professional development or parent involvement in school life.' WHERE name='Badges';end
 ALTER TABLE `badgesBadge` DROP `gibbonYearGroupIDList`;end
 ";
+
+//v2.1.01
+++$count;
+$sql[$count][0] = '2.1.01';
+$sql[$count][1] = "";
