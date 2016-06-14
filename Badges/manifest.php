@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.1.02';
+$version = '2.1.03';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -50,7 +50,7 @@ $moduleTables[1] = 'CREATE TABLE `badgesBadgeStudent` (
   `date` date NOT NULL,
   `gibbonPersonID` int(10) unsigned zerofill NOT NULL,
   `comment` text CHARACTER SET utf8 NOT NULL,
-  `gibbonPersonIDCreator` int(10) unsigned zerofill NOT NULL,
+  `gibbonPersonIDCreator` int(10) unsigned zerofill NULL DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`badgesBadgeStudentID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;';

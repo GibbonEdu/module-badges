@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.1.03
+-------
+Made null creator possible (makes more sense with automated granting)
+
 v2.1.02
 -------
 Logo upload bug fix
