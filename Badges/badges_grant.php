@@ -109,76 +109,76 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         echo "<form method='get' action='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>";
         echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
         ?>
-				<tr>
-					<td>
-						<b><?php echo __($guid, 'User') ?></b><br/>
-						<span style="font-size: 90%"><i></i></span>
-					</td>
-					<td class="right">
-						<select name="gibbonPersonID2" id="gibbonPersonID2" style="width: 302px">
-							<option value=""></option>
-							<?php
-                            try {
-                                $dataSelect = array();
-                                $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, preferredName, surname, username FROM gibbonPerson WHERE status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
-                                $resultSelect = $connection2->prepare($sqlSelect);
-                                $resultSelect->execute($dataSelect);
-                            } catch (PDOException $e) {
-                            }
-							while ($rowSelect = $resultSelect->fetch()) {
-								if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
-									echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
-								} else {
-									echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
-								}
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<b><?php echo __($guid, 'Badges') ?></b><br/>
-						<span style="font-size: 90%"><i></i></span>
-					</td>
-					<td class="right">
-						<?php
-                        try {
-                            $dataPurpose = array();
-                            $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
-                            $resultPurpose = $connection2->prepare($sqlPurpose);
-                            $resultPurpose->execute($dataPurpose);
-                        } catch (PDOException $e) {
-                        }
-
-						echo "<select name='badgesBadgeID2' id='badgesBadgeID2' style='width: 302px'>";
-						echo "<option value=''></option>";
-						$lastCategory = '';
-						while ($rowPurpose = $resultPurpose->fetch()) {
-							$selected = '';
-							if ($rowPurpose['badgesBadgeID'] == $badgesBadgeID2) {
-								$selected = 'selected';
-							}
-							$currentCategory = $rowPurpose['category'];
-							if ($currentCategory != $lastCategory) {
-								echo "<optgroup label='--".$currentCategory."--'>";
-							}
-							echo "<option $selected value='".$rowPurpose['badgesBadgeID']."'>".$rowPurpose['name'].'</option>';
-							$lastCategory = $currentCategory;
+		<tr>
+			<td>
+				<b><?php echo __($guid, 'User') ?></b><br/>
+				<span style="font-size: 90%"><i></i></span>
+			</td>
+			<td class="right">
+				<select name="gibbonPersonID2" id="gibbonPersonID2" style="width: 302px">
+					<option value=""></option>
+					<?php
+                    try {
+                        $dataSelect = array();
+                        $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, preferredName, surname, username FROM gibbonPerson WHERE status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
+                        $resultSelect = $connection2->prepare($sqlSelect);
+                        $resultSelect->execute($dataSelect);
+                    } catch (PDOException $e) {
+                    }
+					while ($rowSelect = $resultSelect->fetch()) {
+						if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
+							echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
+						} else {
+							echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
 						}
-						echo '</select>';
-						?>
-					</td>
-				</tr>
+					}
+					?>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b><?php echo __($guid, 'Badges') ?></b><br/>
+				<span style="font-size: 90%"><i></i></span>
+			</td>
+			<td class="right">
 				<?php
+                try {
+                    $dataPurpose = array();
+                    $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
+                    $resultPurpose = $connection2->prepare($sqlPurpose);
+                    $resultPurpose->execute($dataPurpose);
+                } catch (PDOException $e) {
+                }
 
-            echo '<tr>';
-			echo "<td class='right' colspan=2>";
-			echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
-			echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>".__($guid, 'Clear Filters').'</a> ';
-			echo "<input type='submit' value='".__($guid, 'Go')."'>";
-			echo '</td>';
-			echo '</tr>';
+				echo "<select name='badgesBadgeID2' id='badgesBadgeID2' style='width: 302px'>";
+				echo "<option value=''></option>";
+				$lastCategory = '';
+				while ($rowPurpose = $resultPurpose->fetch()) {
+					$selected = '';
+					if ($rowPurpose['badgesBadgeID'] == $badgesBadgeID2) {
+						$selected = 'selected';
+					}
+					$currentCategory = $rowPurpose['category'];
+					if ($currentCategory != $lastCategory) {
+						echo "<optgroup label='--".$currentCategory."--'>";
+					}
+					echo "<option $selected value='".$rowPurpose['badgesBadgeID']."'>".$rowPurpose['name'].'</option>';
+					$lastCategory = $currentCategory;
+				}
+				echo '</select>';
+				?>
+			</td>
+		</tr>
+		<?php
+
+        echo '<tr>';
+    	echo "<td class='right' colspan=2>";
+    	echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
+    	echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>".__($guid, 'Clear Filters').'</a> ';
+    	echo "<input type='submit' value='".__($guid, 'Go')."'>";
+    	echo '</td>';
+    	echo '</tr>';
         echo '</table>';
         echo '</form>';
 
@@ -192,6 +192,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         }
         if ((!is_numeric($page)) or $page < 1) {
             $page = 1;
+        }
+
+        //Get gibbonHookID for link to Student Profile
+        $gibbonHookID = null;
+        try {
+            $dataHook = array();
+            $sqlHook = "SELECT gibbonHookID FROM gibbonHook WHERE name='Badges' AND type='Student Profile' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges')";
+            $resultHook = $connection2->prepare($sqlHook);
+            $resultHook->execute($dataHook);
+        } catch (PDOException $e) {
+        }
+        if ($resultHook->rowCount() == 1) {
+            $rowHook = $resultHook->fetch();
+            $gibbonHookID = $rowHook['gibbonHookID'];
         }
 
         //Search with filters applied
@@ -276,7 +290,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 echo $row['name'];
                 echo '</td>';
                 echo '<td>';
-                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&subpage=Badges&search=&allStudents=&sort=surname, preferredName'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
+                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&hook=Badges&module=Badges&action=View Badges_all&gibbonHookID=$gibbonHookID&search=&allStudents=&sort=surname, preferredName'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
                 echo '</td>';
                 echo '<td>';
                 echo dateConvertBack($guid, $row['date']).'<br/>';

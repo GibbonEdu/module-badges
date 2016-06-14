@@ -191,7 +191,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             if ($row['description'] != '') {
                 echo "<tr class='comment-$count' id='comment-$count'>";
                 echo "<td style='background-color: #fff' colspan=5>";
-                echo $row['description'];
+                echo nl2brr($row['description']);
                 echo '</td>';
                 echo '</tr>';
             }

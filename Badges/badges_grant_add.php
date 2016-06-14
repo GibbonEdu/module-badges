@@ -93,7 +93,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
 					<?php
                     try {
                         $dataPurpose = array();
-                        $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
+                        $sqlPurpose = "SELECT * FROM badgesBadge WHERE active='Y' ORDER BY category, name";
                         $resultPurpose = $connection2->prepare($sqlPurpose);
                         $resultPurpose->execute($dataPurpose);
                     } catch (PDOException $e) {

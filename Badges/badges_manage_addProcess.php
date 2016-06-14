@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
             $unique = false;
             while ($unique == false) {
                 $suffix = randomPassword(16);
-                $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.str_replace(' ', '_', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
+                $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.preg_replace('/[^a-zA-Z0-9]/', '', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
                 if (!(file_exists($path.'/'.$logo))) {
                     $unique = true;
                 }

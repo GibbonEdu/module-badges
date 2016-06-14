@@ -1,5 +1,13 @@
 CHANGELOG
 =========
+v2.1.02
+-------
+Logo upload bug fix
+Fixed field length control on badge name
+Fixed link to Student Profile
+Added line breaks to description display
+Ensured active is honoured in badge granting
+
 v2.1.01
 -------
 Added granting notification

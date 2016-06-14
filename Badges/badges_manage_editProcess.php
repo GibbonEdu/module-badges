@@ -97,9 +97,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                     while ($unique == false and $count < 100) {
                         $suffix = randomPassword(16);
                         if ($count == 0) {
-                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.str_replace(' ', '_', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
+                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.preg_replace('/[^a-zA-Z0-9]/', '', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
                         } else {
-                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.str_replace(' ', '_', trim($name))."_$suffix"."_$count".strrchr($_FILES['file']['name'], '.');
+                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.preg_replace('/[^a-zA-Z0-9]/', '', trim($name))."_$suffix"."_$count".strrchr($_FILES['file']['name'], '.');
                         }
 
                         if (!(file_exists($path.'/'.$logo))) {

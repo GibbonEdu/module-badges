@@ -54,7 +54,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 					<b>Name *</b><br/>
 				</td>
 				<td class="right">
-					<input name="name" id="name2" maxlength=100 value="" type="text" style="width: 300px">
+					<input name="name" id="name2" maxlength=50 value="" type="text" style="width: 300px">
 					<script type="text/javascript">
 						var name2=new LiveValidation('name2');
 						name2.add(Validate.Presence);

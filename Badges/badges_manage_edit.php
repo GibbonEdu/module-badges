@@ -73,7 +73,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 							<b>Name *</b><br/>
 						</td>
 						<td class="right">
-							<input name="name" id="name" maxlength=100 value="<?php echo htmlPrep($row['name']) ?>" type="text" style="width: 300px">
+							<input name="name" id="name" maxlength=50 value="<?php echo htmlPrep($row['name']) ?>" type="text" style="width: 300px">
 							<script type="text/javascript">
 								var name=new LiveValidation('name');
 								name.add(Validate.Presence);
