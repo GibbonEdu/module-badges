@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.1.03';
+$version = '2.1.04';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -118,7 +118,7 @@ $actionRows[3]['defaultPermissionTeacher'] = 'N';
 $actionRows[3]['defaultPermissionStudent'] = 'Y';
 $actionRows[3]['defaultPermissionParent'] = 'N';
 $actionRows[3]['defaultPermissionSupport'] = 'N';
-$actionRows[3]['categoryPermissionStaff'] = 'N';
+$actionRows[3]['categoryPermissionStaff'] = 'Y';
 $actionRows[3]['categoryPermissionStudent'] = 'Y';
 $actionRows[3]['categoryPermissionParent'] = 'N';
 $actionRows[3]['categoryPermissionOther'] = 'N';
