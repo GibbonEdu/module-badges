@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.1.04';
+$version = '2.2.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -56,7 +56,7 @@ $moduleTables[1] = 'CREATE TABLE `badgesBadgeStudent` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;';
 
 //Settings
-$moduleTables[2] = "INSERT INTO `gibbonSetting` (`gibbonSystemSettingsID` ,`scope` ,`name` ,`nameDisplay` ,`description` ,`value`) VALUES (NULL , 'Badges', 'badgeCategories', 'Badge Categories', 'Comma-separated list of available choices for badge category.', 'Academic,Athletic,Social,Other');";
+$moduleTables[2] = "INSERT INTO `gibbonSetting` (`gibbonSettingID` ,`scope` ,`name` ,`nameDisplay` ,`description` ,`value`) VALUES (NULL , 'Badges', 'badgeCategories', 'Badge Categories', 'Comma-separated list of available choices for badge category.', 'Academic,Athletic,Social,Other');";
 
 //Action rows
 $actionRows[0]['name'] = 'Manage Badges';
@@ -170,6 +170,22 @@ $actionRows[6]['categoryPermissionStaff'] = 'Y';
 $actionRows[6]['categoryPermissionStudent'] = 'Y';
 $actionRows[6]['categoryPermissionParent'] = 'Y';
 $actionRows[6]['categoryPermissionOther'] = 'Y';
+
+$actionRows[7]['name'] = 'View Available Badges';
+$actionRows[7]['precedence'] = '0';
+$actionRows[7]['category'] = 'View Badges';
+$actionRows[7]['description'] = 'Allows a user to view all available badges.';
+$actionRows[7]['URLList'] = 'badges_view_available.php';
+$actionRows[7]['entryURL'] = 'badges_view_available.php';
+$actionRows[7]['defaultPermissionAdmin'] = 'Y';
+$actionRows[7]['defaultPermissionTeacher'] = 'Y';
+$actionRows[7]['defaultPermissionStudent'] = 'Y';
+$actionRows[7]['defaultPermissionParent'] = 'Y';
+$actionRows[7]['defaultPermissionSupport'] = 'Y';
+$actionRows[7]['categoryPermissionStaff'] = 'Y';
+$actionRows[7]['categoryPermissionStudent'] = 'Y';
+$actionRows[7]['categoryPermissionParent'] = 'Y';
+$actionRows[7]['categoryPermissionOther'] = 'Y';
 
 //HOOKS
 $array = array();
