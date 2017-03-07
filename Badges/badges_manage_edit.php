@@ -60,13 +60,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
             //Let's go!
             $row = $result->fetch();
 
-            if ($_GET['search'] != '') {
+            if ($_GET['search'] != '' || $_GET['category'] != '') {
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>Back to Search Results</a>";
                 echo '</div>';
             }
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL']."/modules/Badges/badges_manage_editProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search'] ?>" enctype="multipart/form-data">
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL']."/modules/Badges/badges_manage_editProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'] ?>" enctype="multipart/form-data">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
 						<td>

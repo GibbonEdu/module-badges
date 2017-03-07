@@ -62,9 +62,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     if (isset($_GET['search'])) {
         $search = $_GET['search'];
     }
+    $category = null;
+    if (isset($_GET['category'])) {
+        $category = $_GET['category'];
+    }
 
     echo "<h2 class='top'>";
-    echo 'Search';
+    echo __('Search & Filter');
     echo '</h2>';
     ?>
 	<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
@@ -72,12 +76,38 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
 			<tr>
 				<td>
 					<b>Search For</b><br/>
-					<span style="font-size: 90%"><i>Name, Category</i></span>
+					<span style="font-size: 90%"><i>Name</i></span>
 				</td>
 				<td class="right">
 					<input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
 				</td>
 			</tr>
+    		<tr>
+    			<td>
+    				<b><?php echo __($guid, 'Category') ?></b><br/>
+    				<span class="emphasis small"></span>
+    			</td>
+    			<td class="right">
+    				<?php
+    				echo "<select name='category' id='category' style='width:302px'>";
+    				echo "<option value=''></option>";
+    				try {
+    					$dataSelect = array();
+    					$sqlSelect = "SELECT DISTINCT category FROM badgesBadge WHERE active='Y' ORDER BY category";
+    					$resultSelect = $connection2->prepare($sqlSelect);
+    					$resultSelect->execute($dataSelect);
+    				} catch (PDOException $e) {
+    				}
+    				while ($rowSelect = $resultSelect->fetch()) {
+    					$selected = '';
+    					if ($rowSelect['category'] == $category) {
+    						$selected = 'selected';
+    					}
+    					echo "<option $selected value='".$rowSelect['category']."'>".$rowSelect['category'].'</option>';
+    				}
+    				echo '</select>'; ?>
+    			</td>
+    		</tr>
 			<tr>
 				<td colspan=2 class="right">
 					<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_manage.php">
@@ -97,11 +127,22 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
 
     try {
         $data = array();
-        $sql = 'SELECT badgesBadge.* FROM badgesBadge ORDER BY category, badgesBadge.name';
-        if ($search != '') {
-            $data = array('search1' => "%$search%", 'search2' => "%$search%");
-            $sql = 'SELECT badgesBadge.* FROM badgesBadge WHERE (badgesBadge.name LIKE :search1 OR badgesBadge.category LIKE :search2) ORDER BY category, badgesBadge.name';
+        $sqlWhere = '';
+        if ($search != '' || $category != '') {
+            $sqlWhere = 'WHERE ';
+            if ($search != '') {
+                $data['search'] = "%$search%";
+                $sqlWhere .= 'badgesBadge.name LIKE :search AND ';
+            }
+            if ($category != '') {
+                $data['category'] = $category;
+                $sqlWhere .= 'badgesBadge.category=:category';
+            }
+            if (mb_substr($sqlWhere, -5) == ' AND ') {
+                $sqlWhere = mb_substr($sqlWhere, 0, -5);
+            }
         }
+        $sql = "SELECT badgesBadge.* FROM badgesBadge $sqlWhere ORDER BY category, badgesBadge.name";
         $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
         $result = $connection2->prepare($sql);
         $result->execute($data);
@@ -109,7 +150,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     }
 
     echo "<div class='linkTop'>";
-    echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_manage_add.php&search=$search'>".__($guid, 'Add')."<img style='margin-left: 5px' title='".__($guid, 'Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+    echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_manage_add.php&search=$search&category=$category'>".__($guid, 'Add')."<img style='margin-left: 5px' title='".__($guid, 'Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
     echo '</div>';
 
     if ($result->rowCount() < 1) { echo "<div class='error'>";
@@ -181,8 +222,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             echo '});';
             echo '});';
             echo '</script>';
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$row['badgesBadgeID']."&search=$search'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID='.$row['badgesBadgeID']."&search=$search'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$row['badgesBadgeID']."&search=$search&category=$category'><img title='Edit' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/config.png'/></a> ";
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID='.$row['badgesBadgeID']."&search=$search&category=$category'><img title='Delete' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
             if ($row['description'] != '') {
                 echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' title='Show Description' onclick='return false;' /></a>";
             }

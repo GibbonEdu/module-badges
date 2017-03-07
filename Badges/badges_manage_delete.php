@@ -60,13 +60,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delet
             //Let's go!
             $row = $result->fetch();
 
-            if ($_GET['search'] != '') {
+            if ($_GET['search'] != '' || $_GET['category'] != '') {
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search']."'>Back to Search Results</a>";
+                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>Back to Search Results</a>";
                 echo '</div>';
             }
             ?>
-			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL']."/modules/Badges/badges_manage_deleteProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search'] ?>">
+			<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL']."/modules/Badges/badges_manage_deleteProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'] ?>">
 				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 					<tr>
 						<td>
