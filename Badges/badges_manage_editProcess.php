@@ -83,32 +83,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                 header("Location: {$URL}");
             } else {
                 //Sort out logo
+                $partialFail = false;
                 $logo = $row['logo'];
-                if ($_FILES['file']['tmp_name'] != '') {
-                    $time = time();
-                    //Check for folder in uploads based on today's date
-                    $path = $_SESSION[$guid]['absolutePath'];
-                    if (is_dir($path.'/uploads/'.date('Y', $time).'/'.date('m', $time)) == false) {
-                        mkdir($path.'/uploads/'.date('Y', $time).'/'.date('m', $time), 0777, true);
-                    }
+                if (!empty($_FILES['file']['tmp_name'])) {
+                    $fileUploader = new Gibbon\FileUploader($pdo, $gibbon->session);
+                    $fileUploader->getFileExtensions('Graphics/Design');
 
-                    $unique = false;
-                    $count = 0;
-                    while ($unique == false and $count < 100) {
-                        $suffix = randomPassword(16);
-                        if ($count == 0) {
-                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.preg_replace('/[^a-zA-Z0-9]/', '', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
-                        } else {
-                            $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.preg_replace('/[^a-zA-Z0-9]/', '', trim($name))."_$suffix"."_$count".strrchr($_FILES['file']['name'], '.');
-                        }
+                    $file = (isset($_FILES['file']))? $_FILES['file'] : null;
 
-                        if (!(file_exists($path.'/'.$logo))) {
-                            $unique = true;
-                        }
-                        ++$count;
-                    }
-                    if (!(move_uploaded_file($_FILES['file']['tmp_name'], $path.'/'.$logo))) {
-                        $logo = '';
+                    // Upload the file, return the /uploads relative path
+                    $logo = $fileUploader->uploadFromPost($file, $name);
+
+                    if (empty($logo)) {
+                        $partialFail = true;
                     }
                 }
 
@@ -125,9 +112,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                     exit();
                 }
 
-                //Success 0
-                $URL = $URL.'&return=success0';
-                header("Location: {$URL}");
+                if ($partialFail == true) {
+                    $URL .= '&return=warning1';
+                    header("Location: {$URL}");
+                } else {
+                    $URL .= "&return=success0";
+                    header("Location: {$URL}");
+                }
             }
         }
     }

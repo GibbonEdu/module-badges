@@ -57,54 +57,42 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     } else {
         $partialFail = false;
         $logo = null;
-        if ($_FILES['file']['tmp_name'] != '') {
-            //Attempt file upload
-            $time = time();
 
-            //Check for folder in uploads based on today's date
-            $path = $_SESSION[$guid]['absolutePath'];
-            if (is_dir($path.'/uploads/'.date('Y', $time).'/'.date('m', $time)) == false) {
-                mkdir($path.'/uploads/'.date('Y', $time).'/'.date('m', $time), 0777, true);
-            }
-            $unique = false;
-            while ($unique == false) {
-                $suffix = randomPassword(16);
-                $logo = 'uploads/'.date('Y', $time).'/'.date('m', $time).'/badges_'.preg_replace('/[^a-zA-Z0-9]/', '', trim($name))."_$suffix".strrchr($_FILES['file']['name'], '.');
-                if (!(file_exists($path.'/'.$logo))) {
-                    $unique = true;
-                }
-            }
+        //Move attached image  file, if there is one
+        if (!empty($_FILES['file']['tmp_name'])) {
+            $fileUploader = new Gibbon\FileUploader($pdo, $gibbon->session);
+            $fileUploader->getFileExtensions('Graphics/Design');
 
-            if (!(move_uploaded_file($_FILES['file']['tmp_name'], $path.'/'.$logo))) {
-                //Fail 5
-                $URL = $URL.'&return=error5';
-                header("Location: {$URL}");
+            $file = (isset($_FILES['file']))? $_FILES['file'] : null;
+
+            // Upload the file, return the /uploads relative path
+            $logo = $fileUploader->uploadFromPost($file, $name);
+
+            if (empty($logo)) {
+                $partialFail = true;
             }
         }
 
-        if ($partialFail == true) {
-            //Fail 5
-            $URL = $URL.'&return=error5';
+        //Write to database
+        try {
+            $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID'], 'timestampCreated' => date('Y-m-d H:i:s'));
+            $sql = 'INSERT INTO badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
+            $result = $connection2->prepare($sql);
+            $result->execute($data);
+        } catch (PDOException $e) {
+            //Fail 2
+            $URL = $URL.'&return=error2';
             header("Location: {$URL}");
             exit();
+        }
+
+        $AI = str_pad($connection2->lastInsertID(), 8, '0', STR_PAD_LEFT);
+
+        if ($partialFail == true) {
+            $URL .= '&return=warning1';
+            header("Location: {$URL}");
         } else {
-            //Write to database
-            try {
-                $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID'], 'timestampCreated' => date('Y-m-d H:i:s'));
-                $sql = 'INSERT INTO badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
-                $result = $connection2->prepare($sql);
-                $result->execute($data);
-            } catch (PDOException $e) {
-                //Fail 2
-                $URL = $URL.'&return=error2';
-                header("Location: {$URL}");
-                exit();
-            }
-
-            $AI = str_pad($connection2->lastInsertID(), 8, '0', STR_PAD_LEFT);
-
-            //Success 0
-            $URL = $URL.'&return=success0&editID='.$AI;
+            $URL .= "&return=success0&editID=$AI";
             header("Location: {$URL}");
         }
     }
