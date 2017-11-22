@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+
 @session_start();
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php') == false) {
@@ -32,47 +34,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php')
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
-    }
-    ?>
+	}
+	
+	$form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badgeSettingsProcess.php');
+	
+	$form->addHiddenValue('address', $_SESSION[$guid]['address']);
 
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badgeSettingsProcess.php' ?>">
-		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-			<tr>
-				<?php
-                try {
-                    $data = array();
-                    $sql = "SELECT * FROM gibbonSetting WHERE scope='Badges' AND name='badgeCategories'";
-                    $result = $connection2->prepare($sql);
-                    $result->execute($data);
-                } catch (PDOException $e) {
-                }
-				$row = $result->fetch();
-				?>
-				<td style='width: 275px'>
-					<b><?php echo __($guid, $row['nameDisplay']) ?> *</b><br/>
-					<span style="font-size: 90%"><i><?php if ($row['description'] != '') { echo __($guid, $row['description']); } ?></i></span>
-				</td>
-				<td class="right">
-					<textarea name="<?php echo $row['name'] ?>" id="<?php echo $row['name'] ?>" type="text" style="width: 300px" rows=4><?php if (isset($row['value'])) { echo $row['value']; } ?></textarea>
-					<script type="text/javascript">
-						var <?php echo $row['name'] ?>=new LiveValidation('<?php echo $row['name'] ?>');
-						<?php echo $row['name'] ?>.add(Validate.Presence);
-					</script>
-				</td>
-			</tr>
+	$setting = getSettingByScope($connection2, 'Badges', 'badgeCategories', true);
+	$row = $form->addRow();
+		$row->addLabel($setting['name'], __($setting['nameDisplay']))->description(__($setting['description']));
+		$row->addTextArea($setting['name'])->setValue($setting['value'])->isRequired()->setRows(4);
 
-			<tr>
-				<td>
-					<span style="font-size: 90%"><i>* <?php echo __($guid, 'denotes a required field'); ?></i></span>
-				</td>
-				<td class="right">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
-				</td>
-			</tr>
-		</table>
-	</form>
-<?php
-
+	$row = $form->addRow();
+		$row->addFooter();
+		$row->addSubmit();
+	
+	echo $form->getOutput();
 }
 ?>

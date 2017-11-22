@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
+
 @session_start();
 
 //Module includes
@@ -48,47 +51,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             if (isset($_GET['gibbonPersonID'])) {
                 $gibbonPersonID = $_GET['gibbonPersonID'];
             }
-            ?>
 
-			<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-				<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-					<tr>
-						<td style='width: 275px'>
-							<b><?php echo __($guid, 'Student') ?></b><br/>
-							<span style="font-size: 90%"><i></i></span>
-						</td>
-						<td class="right">
-							<select style="width: 302px" name="gibbonPersonID">
-								<?php
-                                echo "<option value=''></option>";
-								try {
-									$dataSelect = array();
-									$sqlSelect = "SELECT gibbonPersonID, surname, preferredName, username FROM gibbonPerson WHERE status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
-									$resultSelect = $connection2->prepare($sqlSelect);
-									$resultSelect->execute($dataSelect);
-								} catch (PDOException $e) {
-									echo "<div class='error'>".$e->getMessage().'</div>';
-								}
-								while ($rowSelect = $resultSelect->fetch()) {
-									if ($gibbonPersonID == $rowSelect['gibbonPersonID']) {
-										echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
-									} else {
-										echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
-									}
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td colspan=2 class="right">
-							<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_view.php">
-							<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
-						</td>
-					</tr>
-				</table>
-			</form>
-			<?php
+            $form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+            
+            $form->setFactory(DatabaseFormFactory::create($pdo));
+
+            $form->addHiddenValue('q', "/modules/".$_SESSION[$guid]['module']."/badges_view.php");
+
+            $row = $form->addRow();
+                $row->addLabel('gibbonPersonID', __('Student'));
+                $row->addSelectStudent('gibbonPersonID', $_SESSION[$guid]['gibbonSchoolYearID'])->placeholder()->selected($gibbonPersonID);
+
+            $row = $form->addRow();
+                $row->addSubmit();  
+            
+            echo $form->getOutput();
 
             if ($gibbonPersonID != '') {
                 $output = '';
