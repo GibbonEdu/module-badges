@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.4.00';
+$version = '2.5.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -41,7 +41,7 @@ $moduleTables[0] = "CREATE TABLE `badgesBadge` (
   `gibbonPersonIDCreator` int(8) unsigned zerofill NOT NULL,
   `timestampCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`badgesBadgeID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
 
 $moduleTables[1] = 'CREATE TABLE `badgesBadgeStudent` (
   `badgesBadgeStudentID` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
@@ -53,7 +53,7 @@ $moduleTables[1] = 'CREATE TABLE `badgesBadgeStudent` (
   `gibbonPersonIDCreator` int(10) unsigned zerofill NULL DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`badgesBadgeStudentID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;';
 
 //Settings
 $moduleTables[2] = "INSERT INTO `gibbonSetting` (`gibbonSettingID` ,`scope` ,`name` ,`nameDisplay` ,`description` ,`value`) VALUES (NULL , 'Badges', 'badgeCategories', 'Badge Categories', 'Comma-separated list of available choices for badge category.', 'Academic,Athletic,Social,Other');";

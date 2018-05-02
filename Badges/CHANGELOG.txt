@@ -1,8 +1,12 @@
 CHANGELOG
 =========
+v2.5.00
+-------
+Updated default database storage engine to InnoDB
+
 v2.4.00
 -------
-Form OOification 
+Form OOification
 
 v2.3.01
 -------
