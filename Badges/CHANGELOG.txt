@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.5.01
+-------
+Refactored Breadcrumbs for version 17 or later
+
 v2.5.00
 -------
 Updated default database storage engine to InnoDB

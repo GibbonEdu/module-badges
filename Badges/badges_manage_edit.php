@@ -27,9 +27,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
     echo '</div>';
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/badges_manage.php'>".__($guid, 'Manage Badges')."</a> > </div><div class='trailEnd'>".__($guid, 'Edit Badges').'</div>';
-    echo '</div>';
+    $page->breadcrumbs
+            ->add(__('Manage Badges'),'badges_manage.php')
+            ->add(__('Edit Badges'));    
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
@@ -96,12 +96,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 					?>
 					<tr>
 						<td>
-							<b><?php echo __($guid, 'Category') ?> *</b><br/>
+							<b><?php echo __('Category') ?> *</b><br/>
 							<span style="font-size: 90%"><i></i></span>
 						</td>
 						<td class="right">
 							<select name="category" id="category" style="width: 302px">
-								<option value="Please select..."><?php echo __($guid, 'Please select...') ?></option>
+								<option value="Please select..."><?php echo __('Please select...') ?></option>
 								<?php
                                 for ($i = 0; $i < count($categories); ++$i) {
                                     $selected = '';
@@ -117,7 +117,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 							</select>
 							<script type="text/javascript">
 								var category=new LiveValidation('category');
-								category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
+								category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __('Select something!') ?>"});
 							</script>
 						</td>
 					</tr>
@@ -132,14 +132,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 					<tr>
 						<td>
 							<b>Logo</b><br/>
-							<span style="font-size: 90%"><i><?php echo __($guid, '240px x 240px').'<br/>' ?>
-							<?php if ($row['logo'] != '') { echo __($guid, 'Will overwrite existing attachment.'); } ?>
+							<span style="font-size: 90%"><i><?php echo __('240px x 240px').'<br/>' ?>
+							<?php if ($row['logo'] != '') { echo __('Will overwrite existing attachment.'); } ?>
 							</i></span>
 						</td>
 						<td class="right">
 							<?php
                             if ($row['logo'] != '') {
-                                echo __($guid, 'Current attachment:')." <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'>".$row['logo'].'</a><br/><br/>'; } ?>
+                                echo __('Current attachment:')." <a target='_blank' href='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'>".$row['logo'].'</a><br/><br/>'; } ?>
 							<input type="file" name="file" id="file">
 							<script type="text/javascript">
 								var file=new LiveValidation('file');

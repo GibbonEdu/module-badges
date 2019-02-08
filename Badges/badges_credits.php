@@ -23,14 +23,12 @@ include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
     //Acess denied
     echo "<div class='error'>";
-    echo __($guid, 'You do not have access to this action.');
+    echo __('You do not have access to this action.');
     echo '</div>';
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'Credits & Licensing').'</div>';
-    echo '</div>';
-
+    $page->breadcrumbs->add(__('Credits & Licensing'));
+    
     try {
         $data = array();
         $sql = 'SELECT * FROM badgesBadge ORDER BY name';
@@ -39,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
     } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
     }
     if ($result->rowCount() < 1) { echo "<div class='error'>";
-        echo __($guid, 'There are no records to display.');
+        echo __('There are no records to display.');
         echo '</div>';
     } else {
         while ($row = $result->fetch()) {

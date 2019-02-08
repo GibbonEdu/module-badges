@@ -26,23 +26,21 @@ include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
     //Acess denied
     echo "<div class='error'>";
-    echo __($guid, 'You do not have access to this action.');
+    echo __('You do not have access to this action.');
     echo '</div>';
 } else {
     //Proceed!
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>".__($guid, 'Home')."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".__($guid, getModuleName($_GET['q']))."</a> > </div><div class='trailEnd'>".__($guid, 'View Badges').'</div>';
-    echo '</div>';
+    $page->breadcrumbs->add(__('View Badges'));
 
     //Get action with highest precendence
     $highestAction = getHighestGroupedAction($guid, $_GET['q'], $connection2);
     if ($highestAction == false) { echo "<div class='error'>";
-        echo __($guid, 'The highest grouped action cannot be determined.');
+        echo __('The highest grouped action cannot be determined.');
         echo '</div>';
     } else {
         if ($highestAction == 'View Badges_all') {
             echo '<h2>';
-            echo __($guid, 'Choose Student');
+            echo __('Choose Student');
             echo '</h2>';
 
             $gibbonPersonID = null;
@@ -68,7 +66,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             if ($gibbonPersonID != '') {
                 $output = '';
                 echo '<h2>';
-                echo __($guid, 'Badges');
+                echo __('Badges');
                 echo '</h2>';
 
                 try {
@@ -81,7 +79,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 }
                 if ($result->rowCount() != 1) {
                     echo "<div class='error'>";
-                    echo __($guid, 'The specified record does not exist.');
+                    echo __('The specified record does not exist.');
                     echo '</div>';
                 } else {
                     echo getBadges($connection2, $guid, $gibbonPersonID);
@@ -90,7 +88,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
         } elseif ($highestAction == 'View Badges_my') {
             $output = '';
             echo '<h2>';
-            echo __($guid, 'My Badges');
+            echo __('My Badges');
             echo '</h2>';
 
             try {
@@ -103,7 +101,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             }
             if ($result->rowCount() != 1) {
                 echo "<div class='error'>";
-                echo __($guid, 'The specified record does not exist.');
+                echo __('The specified record does not exist.');
                 echo '</div>';
             } else {
                 echo getBadges($connection2, $guid, $_SESSION[$guid]['gibbonPersonID']);
@@ -124,7 +122,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             }
             if ($result->rowCount() < 1) {
                 echo "<div class='error'>";
-                echo __($guid, 'Access denied.');
+                echo __('Access denied.');
                 echo '</div>';
             } else {
                 //Get child list
@@ -153,7 +151,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 }
 
                 echo '<h2>';
-                echo __($guid, 'Choose');
+                echo __('Choose');
                 echo '</h2>';
 
                 ?>
@@ -162,7 +160,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 						<tr><td style="width: 30%"></td><td></td></tr>
 						<tr>
 							<td>
-								<b><?php echo __($guid, 'User') ?></b><br/>
+								<b><?php echo __('User') ?></b><br/>
 							</td>
 							<td class="right">
 								<select name="search" id="search" style="width: 302px">
@@ -178,13 +176,23 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 								<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_View.php">
 								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
 								<?php
-                                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_View.php'>".__($guid, 'Clear Search').'</a>'; ?>
-								<input type="submit" value="<?php echo __($guid, 'Submit'); ?>">
+                                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_View.php'>".__('Clear Search').'</a>'; ?>
+								<input type="submit" value="<?php echo __('Submit'); ?>">
 							</td>
 						</tr>
 					</table>
 				</form>
 				<?php
+                                
+$form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+$form->setFactory(DatabaseFormFactory::create($pdo));
+$form->addHiddenValue('q', "/modules/".$_SESSION[$guid]['module']."/badges_view.php");
+$row = $form->addRow();
+$row->addLabel('gibbonPersonID', __('Student'));
+$row->addSelectStudent('gibbonPersonID', $_SESSION[$guid]['gibbonSchoolYearID'])->placeholder()->selected($gibbonPersonID);
+$row = $form->addRow();
+$row->addSubmit();  
+$form->getOutput();
 
                 if ($gibbonPersonID != '' and $count > 0) {
                     //Confirm access to this student
@@ -202,7 +210,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 
                     if ($resultChild->rowCount() < 1) {
                         echo "<div class='error'>";
-                        echo __($guid, 'The selected record does not exist, or you do not have access to it.');
+                        echo __('The selected record does not exist, or you do not have access to it.');
                         echo '</div>';
                     } else {
                         $rowChild = $resultChild->fetch();
@@ -210,7 +218,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                         if ($gibbonPersonID != '') {
                             $output = '';
                             echo '<h2>';
-                            echo __($guid, 'Badges');
+                            echo __('Badges');
                             echo '</h2>';
 
                             try {
@@ -223,7 +231,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                             }
                             if ($result->rowCount() != 1) {
                                 echo "<div class='error'>";
-                                echo __($guid, 'The specified record does not exist.');
+                                echo __('The specified record does not exist.');
                                 echo '</div>';
                             } else {
                                 $row = $result->fetch();

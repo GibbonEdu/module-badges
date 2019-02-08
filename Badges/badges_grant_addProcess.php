@@ -67,7 +67,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
             $return = setLike($connection2, 'Badges', $_SESSION[$guid]['gibbonSchoolYearID'], 'badgesBadgeStudentID', $badgesBadgeStudentID, $_SESSION[$guid]['gibbonPersonID'], $gibbonPersonID, 'Badges Granted', $likeComment);
 
             //Notify User
-            $notificationText = __($guid, 'Someone has granted you a badge.');
+            $notificationText = __('Someone has granted you a badge.');
             setNotification($connection2, $guid, $gibbonPersonID, $notificationText, 'Badges', "/index.php?q=/modules/Badges/badges_view.php&gibbonPersonID=$gibbonPersonID");
         }
 

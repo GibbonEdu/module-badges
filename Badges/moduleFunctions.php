@@ -30,7 +30,7 @@ function getBadges($connection2, $guid, $gibbonPersonID)
     }
     if ($result->rowCount() < 1) {
         $output .= "<div class='warning'>";
-        $output .= __($guid, 'There are no records to display.');
+        $output .= __('There are no records to display.');
         $output .= '</div>';
     } else {
         //Prep array of awards
