@@ -26,9 +26,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     echo 'You do not have access to this action.';
     echo '</div>';
 } else {
-    echo "<div class='trail'>";
-    echo "<div class='trailHead'><a href='".$_SESSION[$guid]['absoluteURL']."'>Home</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q']).'/'.getModuleEntry($_GET['q'], $connection2, $guid)."'>".getModuleName($_GET['q'])."</a> > <a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_GET['q'])."/badges_manage.php'>".__($guid, 'Manage Badges')."</a> > </div><div class='trailEnd'>".__($guid, 'Add Badges').'</div>';
-    echo '</div>';
+    //Proceed!
+    $page->breadcrumbs
+            ->add(__('Manage Badges'),'badges_manage.php')
+            ->add(__('Add Badges'));
 
     $returns = array();
     $editLink = '';
@@ -78,12 +79,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 			?>
 			<tr>
 				<td>
-					<b><?php echo __($guid, 'Category') ?> *</b><br/>
+					<b><?php echo __('Category') ?> *</b><br/>
 					<span style="font-size: 90%"><i></i></span>
 				</td>
 				<td class="right">
 					<select name="category" id="category" style="width: 302px">
-						<option value="Please select..."><?php echo __($guid, 'Please select...') ?></option>
+						<option value="Please select..."><?php echo __('Please select...') ?></option>
 						<?php
                         for ($i = 0; $i < count($categories); ++$i) {
                             ?>
@@ -95,7 +96,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 					</select>
 					<script type="text/javascript">
 						var category=new LiveValidation('category');
-						category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __($guid, 'Select something!') ?>"});
+						category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __('Select something!') ?>"});
 					</script>
 				</td>
 			</tr>
@@ -110,7 +111,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 			<tr>
 				<td>
 					<b>Logo</b><br/>
-					<span style="font-size: 90%"><i><?php echo __($guid, '240px x 240px') ?></i></span>
+					<span style="font-size: 90%"><i><?php echo __('240px x 240px') ?></i></span>
 				</td>
 				<td class="right">
 					<input type="file" name="file" id="file">
