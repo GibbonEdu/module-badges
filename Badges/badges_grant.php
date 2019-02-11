@@ -120,7 +120,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                         $resultSelect = $connection2->prepare($sqlSelect);
                         $resultSelect->execute($dataSelect);
                     } catch (PDOException $e) {
-                        
+
                     }
                     while ($rowSelect = $resultSelect->fetch()) {
                         if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
@@ -146,7 +146,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                     $resultPurpose = $connection2->prepare($sqlPurpose);
                     $resultPurpose->execute($dataPurpose);
                 } catch (PDOException $e) {
-                    
+
                 }
 
                 echo "<select name='badgesBadgeID2' id='badgesBadgeID2' style='width: 302px'>";
@@ -199,7 +199,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             $resultHook = $connection2->prepare($sqlHook);
             $resultHook->execute($dataHook);
         } catch (PDOException $e) {
-            
+
         }
         if ($resultHook->rowCount() == 1) {
             $rowHook = $resultHook->fetch();
@@ -294,7 +294,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 echo dateConvertBack($guid, $row['date']).'<br/>';
                 echo '</td>';
                 echo '<td>';
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'><img title='".__('Delete')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID&width=650&height=135'><img title='".__('Delete')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
                 echo "<script type='text/javascript'>";
                 echo '$(document).ready(function(){';
                 echo "\$(\".comment-$count\").hide();";

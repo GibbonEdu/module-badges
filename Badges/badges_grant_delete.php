@@ -29,10 +29,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete
     echo '</div>';
 } else {
      //Proceed!
-    $page->breadcrumbs
-            ->add(__('Grant Badges'), 'badges_grant.php')
-            ->add(__('Delete'));
-
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }

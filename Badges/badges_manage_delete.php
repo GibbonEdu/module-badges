@@ -30,10 +30,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delet
     echo '</div>';
 } else {
     //Proceed!
-    $page->breadcrumbs
-            ->add(__('Manage Badges'), 'badges_manage.php')
-            ->add(__('Delete'));    
-
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
@@ -67,7 +63,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delet
                 echo "<a href='" . $_SESSION[$guid]['absoluteURL'] . '/index.php?q=/modules/Badges/badges_manage.php&search=' . $_GET['search'] . '&category=' . $_GET['category'] . "'>Back to Search Results</a>";
                 echo '</div>';
             }
-            
+
             $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/badges_manage_deleteProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&&category=" . $_GET['category']);
             echo $form->getOutput();
         }

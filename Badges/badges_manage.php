@@ -50,7 +50,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         $resultRoles = $connection2->prepare($sqlRoles);
         $resultRoles->execute($dataRoles);
     } catch (PDOException $e) {
-        
+
     }
     while ($rowRoles = $resultRoles->fetch()) {
         $allRoles[$rowRoles['gibbonRoleID']] = $rowRoles['name'];
@@ -95,7 +95,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
                         $resultSelect = $connection2->prepare($sqlSelect);
                         $resultSelect->execute($dataSelect);
                     } catch (PDOException $e) {
-                        
+
                     }
                     while ($rowSelect = $resultSelect->fetch()) {
                         $selected = '';
@@ -224,7 +224,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             echo '});';
             echo '</script>';
             echo "<a href='" . $_SESSION[$guid]['absoluteURL'] . '/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category'><img title='Edit' src='./themes/" . $_SESSION[$guid]['gibbonThemeName'] . "/img/config.png'/></a> ";
-            echo "<a href='" . $_SESSION[$guid]['absoluteURL'] . '/index.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category'><img title='Delete' src='./themes/" . $_SESSION[$guid]['gibbonThemeName'] . "/img/garbage.png'/></a> ";
+            echo "<a class='thickbox' href='" . $_SESSION[$guid]['absoluteURL'] . '/fullscreen.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category&width=650&height=135'><img title='Delete' src='./themes/" . $_SESSION[$guid]['gibbonThemeName'] . "/img/garbage.png'/></a> ";
             if ($row['description'] != '') {
                 echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='" . $_SESSION[$guid]['absoluteURL'] . "/themes/Default/img/page_down.png' title='Show Description' onclick='return false;' /></a>";
             }

@@ -68,8 +68,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete
                 exit();
             }
 
-            $return = deleteLike($connection2, 'Badges', 'badgesBadgeStudentID', $badgesBadgeStudentID, $_SESSION[$guid]['gibbonPersonID'], $row['gibbonPersonID'], 'Badges Granted');
-
             //Success 0
             $URLDelete = $URLDelete.'&return=success0';
             header("Location: {$URLDelete}");
