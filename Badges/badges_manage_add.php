@@ -18,6 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
+use Gibbon\Forms\Form;
+use Gibbon\FileUploader;
+use Gibbon\Forms\DatabaseFormFactory;
+
 include './modules/Badges/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.php') == false) {
@@ -47,99 +51,48 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     }
 
     ?>
-	<form method="post" action="<?php echo $_SESSION[$guid]['absoluteURL'].'/modules/Badges/badges_manage_addProcess.php?search='.$_GET['search'].'&category='.$_GET['category'] ?>" enctype="multipart/form-data">
-		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-			<tr>
-				<td>
-					<b>Name *</b><br/>
-				</td>
-				<td class="right">
-					<input name="name" id="name2" maxlength=50 value="" type="text" style="width: 300px">
-					<script type="text/javascript">
-						var name2=new LiveValidation('name2');
-						name2.add(Validate.Presence);
-					</script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Active *</b><br/>
-					<span style="font-size: 90%"><i></i></span>
-				</td>
-				<td class="right">
-					<select name="active" id="active" style="width: 302px">
-						<option value="Y">Y</option>
-						<option value="N">N</option>
-					</select>
-				</td>
-			</tr>
-			<?php
-            $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
-			$categories = explode(',', $categories);
-			?>
-			<tr>
-				<td>
-					<b><?php echo __('Category') ?> *</b><br/>
-					<span style="font-size: 90%"><i></i></span>
-				</td>
-				<td class="right">
-					<select name="category" id="category" style="width: 302px">
-						<option value="Please select..."><?php echo __('Please select...') ?></option>
-						<?php
-                        for ($i = 0; $i < count($categories); ++$i) {
-                            ?>
-							<option value="<?php echo trim($categories[$i]) ?>"><?php echo trim($categories[$i]) ?></option>
-						<?php
+<?php
 
-                        }
-   						?>
-					</select>
-					<script type="text/javascript">
-						var category=new LiveValidation('category');
-						category.add(Validate.Exclusion, { within: ['Please select...'], failureMessage: "<?php echo __('Select something!') ?>"});
-					</script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Description</b><br/>
-				</td>
-				<td class="right">
-					<textarea name='description' id='description' rows=5 style='width: 300px'></textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Logo</b><br/>
-					<span style="font-size: 90%"><i><?php echo __('240px x 240px') ?></i></span>
-				</td>
-				<td class="right">
-					<input type="file" name="file" id="file">
-					<script type="text/javascript">
-						var file=new LiveValidation('file');
-						file.add( Validate.Inclusion, { within: ['gif','jpg','jpeg','png'], failureMessage: "Illegal file type!", partialMatch: true, caseSensitive: false } );
-					</script>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<b>Logo License/Credits</b><br/>
-				</td>
-				<td class="right">
-					<textarea name='logoLicense' id='logoLicense' rows=5 style='width: 300px'></textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span style="font-size: 90%"><i>* denotes a required field</i></span>
-				</td>
-				<td class="right">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-	</form>
+	$form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_manage_addProcess.php');
+	
+		$form->setFactory(DatabaseFormFactory::create($pdo));
+	
+		$form->addHiddenValue('address', $_SESSION[$guid]['address']);
+
+		$row = $form->addRow();
+			$row->addLabel('name', __('Name'));
+	    	$row->addTextField('name')->required()->maxLength(10);
+
+		$row = $form->addRow();
+			$row->addLabel('active', __('Active'));
+			$row->addYesNo('active')->required();
+		
+		$categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
+			$categories = ($categories != '' ? explode(',', $categories) : '');
+			$row = $form->addRow();
+			$row->addLabel('category', __('Category'));
+			$row->addSelect('category')->fromArray($categories)->selected($category)->required()->placeholder();		
+
+		$row = $form->addRow();
+			$row->addLabel('description', __('Description'));
+			$row->addTextArea('description')->setRows(8);
+		
+		$fileUploader = new FileUploader($pdo, $gibbon->session);
+		
+		$row = $form->addRow();
+                $row->addLabel('logo', __('Logo'));
+                $file = $row->addFileUpload('logo')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
+		
+		$row = $form->addRow();
+			$row->addLabel('logoLicense', __('Logo License/Credits'));
+			$row->addTextArea('logoLicense')->setRows(8);
+			
+		$row = $form->addRow();
+			$row->addSubmit();
+
+		echo $form->getOutput();
+
+?>    
 	<?php
 
 }
