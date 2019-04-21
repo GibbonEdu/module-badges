@@ -21,8 +21,6 @@ include '../../gibbon.php';
 
 include './moduleFunctions.php';
 
-
-
 $URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage_add.php&search='.$_GET['search'].'&category='.$_GET['category'];
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.php') == false) {
@@ -67,6 +65,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
+            echo $e->getMessage();
+            exit;
             //Fail 2
             $URL = $URL.'&return=error2';
             header("Location: {$URL}");

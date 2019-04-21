@@ -16,6 +16,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
 include './modules/Badges/moduleFunctions.php';
@@ -69,55 +71,32 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     echo __('Search & Filter');
     echo '</h2>';
     ?>
-    <form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL'] ?>/index.php">
-        <table class='smallIntBorder' cellspacing='0' style="width: 100%">
-            <tr>
-                <td>
-                    <b>Search For</b><br/>
-                    <span style="font-size: 90%"><i>Name</i></span>
-                </td>
-                <td class="right">
-                    <input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <b><?php echo __('Category') ?></b><br/>
-                    <span class="emphasis small"></span>
-                </td>
-                <td class="right">
-                    <?php
-                    echo "<select name='category' id='category' style='width:302px'>";
-                    echo "<option value=''></option>";
-                    try {
-                        $dataSelect = array();
-                        $sqlSelect = "SELECT DISTINCT category FROM badgesBadge WHERE active='Y' ORDER BY category";
-                        $resultSelect = $connection2->prepare($sqlSelect);
-                        $resultSelect->execute($dataSelect);
-                    } catch (PDOException $e) {
 
-                    }
-                    while ($rowSelect = $resultSelect->fetch()) {
-                        $selected = '';
-                        if ($rowSelect['category'] == $category) {
-                            $selected = 'selected';
-                        }
-                        echo "<option $selected value='" . $rowSelect['category'] . "'>" . $rowSelect['category'] . '</option>';
-                    }
-                    echo '</select>';
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <td colspan=2 class="right">
-                    <input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_manage.php">
-                    <input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-    <?php echo "<a href='" . $_SESSION[$guid]['absoluteURL'] . '/index.php?q=/modules/' . $_SESSION[$guid]['module'] . "/badges_manage.php'>Clear Search</a> "; ?>
-                    <input type="submit" value="Submit">
-                </td>
-            </tr>
-        </table>
-    </form>
+<?php 
+
+	$form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+
+	$form->setFactory(DatabaseFormFactory::create($pdo));
+
+	$form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/badges_manage.php');
+
+	$form-> addHiddenValue('address', '/modules/' . $_SESSION[$guid]['address']);
+
+	$row = $form->addRow();
+		$row->addLabel('search', __('Search For'))->description(__('Name'));
+		$row->addTextField('search')->setValue($search);
+
+	$categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
+		$categories = ($categories != '' ? explode(',', $categories) : '');
+		$row = $form->addRow();
+			$row->addLabel('category', __('Category'));
+			$row->addSelect('category')->fromArray($categories)->selected($category)->placeholder();
+
+	$row = $form->addRow();
+		$row->addSearchSubmit($gibbon->session, __('Clear Search'));
+
+	echo $form->getOutput(); 
+?>
 
     <?php
     echo "<h2 class='top'>";
