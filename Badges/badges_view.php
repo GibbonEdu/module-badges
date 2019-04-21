@@ -39,27 +39,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
         echo '</div>';
     } else {
         if ($highestAction == 'View Badges_all') {
-            echo '<h2>';
-            echo __('Choose Student');
-            echo '</h2>';
-
             $gibbonPersonID = null;
             if (isset($_GET['gibbonPersonID'])) {
                 $gibbonPersonID = $_GET['gibbonPersonID'];
             }
 
-            $form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
-            
+            $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+            $form->setTitle(__('Choose Student'));
+            $form->addClass('noIntBorder');
             $form->setFactory(DatabaseFormFactory::create($pdo));
 
-            $form->addHiddenValue('q', "/modules/".$_SESSION[$guid]['module']."/badges_view.php");
+            $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/badges_view.php');
 
             $row = $form->addRow();
                 $row->addLabel('gibbonPersonID', __('Student'));
                 $row->addSelectStudent('gibbonPersonID', $_SESSION[$guid]['gibbonSchoolYearID'])->placeholder()->selected($gibbonPersonID);
 
             $row = $form->addRow();
-                $row->addSubmit();  
+                $row->addSearchSubmit($gibbon->session);
             
             echo $form->getOutput();
 
@@ -127,7 +124,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             } else {
                 //Get child list
                 $count = 0;
-                $options = '';
+                $users = array(
+                    $_SESSION[$guid]['gibbonPersonID'] => formatName('', $_SESSION[$guid]['preferredName'], $_SESSION[$guid]['surname'], 'Student', true)
+                );
                 while ($row = $result->fetch()) {
                     try {
                         $dataChild = array('gibbonFamilyID' => $row['gibbonFamilyID'], 'gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
@@ -139,14 +138,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                     }
 
                     while ($rowChild = $resultChild->fetch()) {
-                        $select = '';
-                        if ($rowChild['gibbonPersonID'] == $gibbonPersonID) {
-                            $select = 'selected';
-                        }
-
-                        $options = $options."<option $select value='".$rowChild['gibbonPersonID']."'>".formatName('', $rowChild['preferredName'], $rowChild['surname'], 'Student', true).'</option>';
-                        $gibbonPersonIDArray[$count] = $rowChild['gibbonPersonID'];
-                        ++$count;
+                        $users[$rowChild['gibbonPersonID']] = formatName('', $rowChild['preferredName'], $rowChild['surname'], 'Student', true);
+                        $count ++;
                     }
                 }
 
@@ -154,45 +147,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo __('Choose');
                 echo '</h2>';
 
-                ?>
-				<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-					<table class='noIntBorder' cellspacing='0' style="width: 100%">
-						<tr><td style="width: 30%"></td><td></td></tr>
-						<tr>
-							<td>
-								<b><?php echo __('User') ?></b><br/>
-							</td>
-							<td class="right">
-								<select name="search" id="search" style="width: 302px">
-									<?php
-                                    echo "<option value='".$_SESSION[$guid]['gibbonPersonID'] ."'>".formatName('', $_SESSION[$guid]['preferredName'], $_SESSION[$guid]['surname'], 'Student', true)."</value>";
-									echo $options;
-                                    ?>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td colspan=2 class="right">
-								<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_View.php">
-								<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-								<?php
-                                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_View.php'>".__('Clear Search').'</a>'; ?>
-								<input type="submit" value="<?php echo __('Submit'); ?>">
-							</td>
-						</tr>
-					</table>
-				</form>
-				<?php
-                                
-$form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
-$form->setFactory(DatabaseFormFactory::create($pdo));
-$form->addHiddenValue('q', "/modules/".$_SESSION[$guid]['module']."/badges_view.php");
-$row = $form->addRow();
-$row->addLabel('gibbonPersonID', __('Student'));
-$row->addSelectStudent('gibbonPersonID', $_SESSION[$guid]['gibbonSchoolYearID'])->placeholder()->selected($gibbonPersonID);
-$row = $form->addRow();
-$row->addSubmit();  
-$form->getOutput();
+                $form = Form::create('action', $_SESSION[$guid]['absoluteURL']."/index.php", "get");
+                $form->setClass('noIntBorder fullWidth');
+
+                $form->addHiddenValue('address', "/modules/".$_SESSION[$guid]['module']."/badges_View.php");
+                $form->addHiddenValue('q', $_SESSION[$guid]['address']);
+        
+                $row = $form->addRow();
+                    $row->addLabel('search', __('User'));
+                    $row->addSelect('search')->fromArray($users)->selected($gibbonPersonID);
+
+                $row = $form->addRow();
+                    $row->addSearchSubmit($gibbon->session);
+
+                echo $form->getOutput();
+
 
                 if ($gibbonPersonID != '' and $count > 0) {
                     //Confirm access to this student
