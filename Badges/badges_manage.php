@@ -17,7 +17,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 use Gibbon\Forms\Form;
-use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
 include './modules/Badges/moduleFunctions.php';
@@ -67,40 +66,30 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         $category = $_GET['category'];
     }
 
+    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form->setTitle(__('Search & Filter'));
+    $form->addClass('noIntBorder');
+
+    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/badges_manage.php');
+    $form->addHiddenValue('address', '/modules/' . $_SESSION[$guid]['address']);
+
+    $row = $form->addRow();
+        $row->addLabel('search', __('Search For'))->description(__('Name'));
+        $row->addTextField('search')->setValue($search);
+
+    $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
+    $categories = !empty($categories) ? array_map('trim', explode(',', $categories)) : [];
+    $row = $form->addRow();
+        $row->addLabel('category', __('Category'));
+        $row->addSelect('category')->fromArray($categories)->selected($category)->placeholder();
+
+    $row = $form->addRow();
+        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+
+    echo $form->getOutput(); 
+
     echo "<h2 class='top'>";
-    echo __('Search & Filter');
-    echo '</h2>';
-    ?>
-
-<?php 
-
-	$form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
-
-	$form->setFactory(DatabaseFormFactory::create($pdo));
-
-	$form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/badges_manage.php');
-
-	$form-> addHiddenValue('address', '/modules/' . $_SESSION[$guid]['address']);
-
-	$row = $form->addRow();
-		$row->addLabel('search', __('Search For'))->description(__('Name'));
-		$row->addTextField('search')->setValue($search);
-
-	$categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
-		$categories = ($categories != '' ? explode(',', $categories) : '');
-		$row = $form->addRow();
-			$row->addLabel('category', __('Category'));
-			$row->addSelect('category')->fromArray($categories)->selected($category)->placeholder();
-
-	$row = $form->addRow();
-		$row->addSearchSubmit($gibbon->session, __('Clear Search'));
-
-	echo $form->getOutput(); 
-?>
-
-    <?php
-    echo "<h2 class='top'>";
-    echo 'View';
+    echo __('View');
     echo '</h2>';
 
     try {

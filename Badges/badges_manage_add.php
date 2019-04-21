@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //Module includes
 use Gibbon\Forms\Form;
 use Gibbon\FileUploader;
-use Gibbon\Forms\DatabaseFormFactory;
 
 include './modules/Badges/moduleFunctions.php';
 
@@ -32,7 +31,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 } else {
     //Proceed!
     $page->breadcrumbs
-            ->add(__('Manage Badges'),'badges_manage.php')
+            ->add(__('Manage Badges'), 'badges_manage.php')
             ->add(__('Add Badges'));
 
     $returns = array();
@@ -46,54 +45,45 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
     if ($_GET['search'] != '' || $_GET['category'] != '') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>Back to Search Results</a>";
+        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>".__('Back to Search Results')."</a>";
         echo '</div>';
     }
 
-    ?>
-<?php
 
-	$form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_manage_addProcess.php');
-	
-		$form->setFactory(DatabaseFormFactory::create($pdo));
-	
-		$form->addHiddenValue('address', $_SESSION[$guid]['address']);
+    $form = Form::create('badges', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_manage_addProcess.php');
+    
+    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
 
-		$row = $form->addRow();
-			$row->addLabel('name', __('Name'));
-	    	$row->addTextField('name')->required()->maxLength(10);
+    $row = $form->addRow();
+        $row->addLabel('name', __('Name'));
+        $row->addTextField('name')->required()->maxLength(10);
 
-		$row = $form->addRow();
-			$row->addLabel('active', __('Active'));
-			$row->addYesNo('active')->required();
-		
-		$categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
-			$categories = ($categories != '' ? explode(',', $categories) : '');
-			$row = $form->addRow();
-			$row->addLabel('category', __('Category'));
-			$row->addSelect('category')->fromArray($categories)->selected($category)->required()->placeholder();		
+    $row = $form->addRow();
+        $row->addLabel('active', __('Active'));
+        $row->addYesNo('active')->required();
+    
+    $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
+    $categories = !empty($categories) ? array_map('trim', explode(',', $categories)) : [];
+    $row = $form->addRow();
+        $row->addLabel('category', __('Category'));
+        $row->addSelect('category')->fromArray($categories)->required()->placeholder();
 
-		$row = $form->addRow();
-			$row->addLabel('description', __('Description'));
-			$row->addTextArea('description')->setRows(8);
-		
-		$fileUploader = new FileUploader($pdo, $gibbon->session);
-		
-		$row = $form->addRow();
-                $row->addLabel('logo', __('Logo'));
-                $file = $row->addFileUpload('logo')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
-		
-		$row = $form->addRow();
-			$row->addLabel('logoLicense', __('Logo License/Credits'));
-			$row->addTextArea('logoLicense')->setRows(8);
-			
-		$row = $form->addRow();
-			$row->addSubmit();
+    $row = $form->addRow();
+        $row->addLabel('description', __('Description'));
+        $row->addTextArea('description');
+    
+    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    
+    $row = $form->addRow();
+        $row->addLabel('file', __('Logo'))->description(__('240px x 240px'));
+        $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
+    
+    $row = $form->addRow();
+        $row->addLabel('logoLicense', __('Logo License/Credits'));
+        $row->addTextArea('logoLicense');
+        
+    $row = $form->addRow();
+        $row->addSubmit();
 
-		echo $form->getOutput();
-
-?>    
-	<?php
-
+    echo $form->getOutput();
 }
-?>

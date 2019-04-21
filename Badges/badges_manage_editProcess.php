@@ -69,7 +69,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
             } else {
                 //Sort out logo
                 $partialFail = false;
-                $logo = $row['logo'];
+                $logo = $_POST['logo'] ?? $row['logo'];
                 if (!empty($_FILES['file']['tmp_name'])) {
                     $fileUploader = new Gibbon\FileUploader($pdo, $gibbon->session);
                     $fileUploader->getFileExtensions('Graphics/Design');
