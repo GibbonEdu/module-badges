@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.5.03
+-------
+Fixed broken credits page
+
 v2.5.02
 -------
 Refactored Manage Badges, View Badges and Grant Badges forms

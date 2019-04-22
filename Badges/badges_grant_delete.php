@@ -57,12 +57,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete
             //Let's go!
             $row = $result->fetch();
 
-            if ($_GET['gibbonPersonID2'] != '' or $_GET['badgesBadgeID2'] != '') {
-                echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID"."'>".__('Back to Search Results').'</a>';
-                echo '</div>';
-            }
-
             $form = DeleteForm::createForm($_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module']."/badges_grant_deleteProcess.php?badgesBadgeStudentID=$badgesBadgeStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID");
             echo $form->getOutput();
         }
