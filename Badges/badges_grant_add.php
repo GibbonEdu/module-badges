@@ -41,11 +41,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
 
     echo "<div class='linkTop'>";
-    if ($_GET['gibbonPersonID2'] != '' or $_GET['badgesBadgeID2'] != '') { echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."'>".__('Back to Search Results').'</a>';
+
+    //Get the gibbon persion and badge IDs
+    //Set '' for safety
+    $gibbonPersonID2 = '';
+    $badgesBadgeID2 = '';
+    if (isset($_GET['gibbonPersonID2']) ||  isset($_GET['badgesBadgeID2'])) {
+        if($_GET['gibbonPersonID2'] != '' && $_GET['badgesBadgeID2'] != '')
+        {
+            //Only assign variable when it exists
+            $gibbonPersonID2 = $_GET['gibbonPersonID2'];
+            $badgesBadgeID2 = $_GET['badgesBadgeID2'];
+            //Add a "Back to Results" link.
+            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."'>".__('Back to Search Results').'</a>';
+        }
     }
     echo '</div>';
 
-    $form = Form::create('grantBadges', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_grant_addProcess.php?gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID");
+    $form = Form::create('grantBadges', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_grant_addProcess.php?gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."&gibbonSchoolYearID=$gibbonSchoolYearID");
 
     $form->setFactory(DatabaseFormFactory::create($pdo));
             

@@ -17,6 +17,8 @@
   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
 //Module includes
 include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
 
@@ -104,6 +106,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
         */
         $form = Form::create('grantbadges',$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php');
+        $form->setFactory(DatabaseFormFactory::create($pdo));
 
         /*
         echo '<h3>';
@@ -144,7 +147,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         </tr>
         */
         $form->addRow()
-            ->addLabel(__('User'))
+            ->addLabel('gibbonPersonIDMulti',__('User'))
             ->addSelectUsers('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'), ['includeStudents' => true])->selectMultiple()->isRequired();
 
         /*
