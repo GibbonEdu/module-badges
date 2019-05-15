@@ -99,12 +99,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             $type = $_GET['type'];
         }
 
+        /*
+        echo "<form method='get' action='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>";
+        echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
+        */
+        $form = Form::create('grantbadges',$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php');
+
+        /*
         echo '<h3>';
         echo __('Filter');
         echo '</h3>';
-        echo "<form method='get' action='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>";
-        echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
-        ?>
+        */
+        $form->addRow()->addHeading(__('Filter'));
+        $form->addRow();
+
+        /*
         <tr>
             <td>
                 <b><?php echo __('User') ?></b><br/>
@@ -133,6 +142,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 </select>
             </td>
         </tr>
+        */
+        $form->addRow()
+            ->addLabel(__('User'))
+            ->addSelectUsers('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'), ['includeStudents' => true])->selectMultiple()->isRequired();
+
+        /*
         <tr>
             <td>
                 <b><?php echo __('Badges') ?></b><br/>
@@ -168,16 +183,36 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 ?>
             </td>
         </tr>
-        <?php
+        */
+        $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
+        $form->addRow()
+            ->addLabel(__('Badges'))
+            ->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->isRequired()->placeholder();
+
+        /*
         echo '<tr>';
         echo "<td class='right' colspan=2>";
-        echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
+        
         echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>".__('Clear Filters').'</a> ';
         echo "<input type='submit' value='".__('Go')."'>";
         echo '</td>';
         echo '</tr>';
         echo '</table>';
         echo '</form>';
+        */
+        $form->addRow()
+            ->addButton(__('Clear Filters'))
+            ->addSearchSubmit();
+        //echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
+        $form->addHiddenValue('q',$_GET['q']);
+        $form->addRow();
+        $form->addRow()->addHeading(__('Badges'));
+
+        ?>
+        
+        
+        <?php
+        
 
         echo '<h3>';
         echo __('Badges');
