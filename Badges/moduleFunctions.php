@@ -43,11 +43,13 @@ function getBadges($connection2, $guid, $gibbonPersonID)
                 $awardYears[$row['year']][1] = array("$innerCount" => $row['award']);
                 $awardYears[$row['year']][2] = array("$innerCount" => $row['logo']);
                 $awardYears[$row['year']][3] = array("$innerCount" => $row['category']);
+                $awardYears[$row['year']][4] = array("$innerCount" => $row['comment']);
                 ++$innerCount;
             } else { //Already data, so start appending
                 $awardYears[$row['year']][1][$innerCount] = $row['award'];
                 $awardYears[$row['year']][2][$innerCount] = $row['logo'];
                 $awardYears[$row['year']][3][$innerCount] = $row['category'];
+                $awardYears[$row['year']][4][$innerCount] = $row['comment'];
                 ++$innerCount;
             }
         }
@@ -76,6 +78,10 @@ function getBadges($connection2, $guid, $gibbonPersonID)
                 }
                 $output .= '<b>'.$awards.'</b><br/>';
                 $output .= '<span class=\'emphasis small\'>'.$awardYear[3][$count].'</span><br/>';
+                if($showComments == true && array_key_exists($count,$awardYear[4]))
+                {
+                    $output .= '<span class=\'emphasis small\'>'.$awardYear[4][$count].'</span><br/>';
+                }
                 $output .= '</td>';
 
                 if ($count % $columns == ($columns - 1)) {
