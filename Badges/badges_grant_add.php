@@ -21,7 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.php') == false) {
     //Acess denied
@@ -53,21 +53,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
             $gibbonPersonID2 = $_GET['gibbonPersonID2'];
             $badgesBadgeID2 = $_GET['badgesBadgeID2'];
             //Add a "Back to Results" link.
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."'>".__('Back to Search Results').'</a>';
+            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."'>".__('Back to Search Results').'</a>';
         }
     }
     echo '</div>';
 
-    $form = Form::create('grantBadges', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_grant_addProcess.php?gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."&gibbonSchoolYearID=$gibbonSchoolYearID");
+    $form = Form::create('grantBadges', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/badges_grant_addProcess.php?gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."&gibbonSchoolYearID=$gibbonSchoolYearID");
 
     $form->setFactory(DatabaseFormFactory::create($pdo));
             
-    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
-    $form->addHiddenValue('gibbonSchoolYearID', $_SESSION[$guid]['gibbonSchoolYearID']);
+    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('gibbonSchoolYearID', $gibbon->session->get('gibbonSchoolYearID'));
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDMulti', __('Students'));
-        $row->addSelectUsers('gibbonPersonIDMulti', $_SESSION[$guid]['gibbonSchoolYearID'], ['includeStudents' => true])->selectMultiple()->isRequired();
+        $row->addSelectUsers('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'), ['includeStudents' => true])->selectMultiple()->isRequired();
 
     $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
     $row = $form->addRow();
@@ -76,7 +76,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
 
     $row = $form->addRow();
         $row->addLabel('date', __('Date'));
-        $row->addDate('date')->setValue(date($_SESSION[$guid]['i18n']['dateFormatPHP']))->isRequired();
+        $row->addDate('date')->setValue(date($gibbon->session->get('i18n')['dateFormatPHP']))->isRequired();
 
     $col = $form->addRow()->addColumn();
         $col->addLabel('comment', __('Comment'));

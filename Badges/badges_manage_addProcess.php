@@ -21,7 +21,7 @@ include '../../gibbon.php';
 
 include './moduleFunctions.php';
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage_add.php&search='.$_GET['search'].'&category='.$_GET['category'];
+$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage_add.php&search='.$_GET['search'].'&category='.$_GET['category'];
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.php') == false) {
     //Fail 0
@@ -60,7 +60,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
         //Write to database
         try {
-            $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID'], 'timestampCreated' => date('Y-m-d H:i:s'));
+            $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID'), 'timestampCreated' => date('Y-m-d H:i:s'));
             $sql = 'INSERT INTO badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
             $result = $connection2->prepare($sql);
             $result->execute($data);

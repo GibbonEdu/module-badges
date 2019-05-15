@@ -22,7 +22,7 @@ include '../../gibbon.php';
 
 $gibbonSchoolYearID = $_POST['gibbonSchoolYearID'];
 
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_grant_add.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
+$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_grant_add.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.php') == false) {
     //Fail 0
@@ -49,7 +49,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         foreach ($gibbonPersonIDMulti as $gibbonPersonID) {
             //Write to database
             try {
-                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => dateConvert($guid, $date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $_SESSION[$guid]['gibbonPersonID']);
+                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => dateConvert($guid, $date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID',''));
                 $sql = 'INSERT INTO badgesBadgeStudent SET badgesBadgeID=:badgesBadgeID, gibbonSchoolYearID=:gibbonSchoolYearID, date=:date, gibbonPersonID=:gibbonPersonID, comment=:comment, gibbonPersonIDCreator=:gibbonPersonIDCreator';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);

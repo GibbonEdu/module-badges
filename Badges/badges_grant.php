@@ -20,7 +20,7 @@
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') == false) {
     //Acess denied
@@ -39,12 +39,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
     if (isset($_GET['gibbonSchoolYearID'])) {
         $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     }
-    if ($gibbonSchoolYearID == '' or $gibbonSchoolYearID == $_SESSION[$guid]['gibbonSchoolYearID']) {
-        $gibbonSchoolYearID = $_SESSION[$guid]['gibbonSchoolYearID'];
-        $gibbonSchoolYearName = $_SESSION[$guid]['gibbonSchoolYearName'];
+    if ($gibbonSchoolYearID == '' or $gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
+        $gibbonSchoolYearID = $gibbon->session->get('gibbonSchoolYearID');
+        $gibbonSchoolYearName = $gibbon->session->get('gibbonSchoolYearName');
     }
 
-    if ($gibbonSchoolYearID != $_SESSION[$guid]['gibbonSchoolYearID']) {
+    if ($gibbonSchoolYearID != $gibbon->session->get('gibbonSchoolYearID')) {
         try {
             $data = array('gibbonSchoolYearID' => $_GET['gibbonSchoolYearID']);
             $sql = 'SELECT * FROM gibbonSchoolYear WHERE gibbonSchoolYearID=:gibbonSchoolYearID';
@@ -72,13 +72,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         echo "<div class='linkTop'>";
         //Print year picker
         if (getPreviousSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Previous Year').'</a> ';
+            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Previous Year').'</a> ';
         } else {
             echo __('Previous Year').' ';
         }
         echo ' | ';
         if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Next Year').'</a> ';
+            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Next Year').'</a> ';
         } else {
             echo __('Next Year').' ';
         }
@@ -101,116 +101,31 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             $type = $_GET['type'];
         }
 
-        /*
-        echo "<form method='get' action='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>";
-        echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
-        */
-        $form = Form::create('grantbadges',$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_grant.php');
+        $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php');
         $form->setFactory(DatabaseFormFactory::create($pdo));
 
-        /*
-        echo '<h3>';
-        echo __('Filter');
-        echo '</h3>';
-        */
         $form->addRow()->addHeading(__('Filter'));
         $form->addRow();
 
-        /*
-        <tr>
-            <td>
-                <b><?php echo __('User') ?></b><br/>
-                <span style="font-size: 90%"><i></i></span>
-            </td>
-            <td class="right">
-                <select name="gibbonPersonID2" id="gibbonPersonID2" style="width: 302px">
-                    <option value=""></option>
-                    <?php
-                    try {
-                        $dataSelect = array();
-                        $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, preferredName, surname, username FROM gibbonPerson WHERE status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
-                        $resultSelect = $connection2->prepare($sqlSelect);
-                        $resultSelect->execute($dataSelect);
-                    } catch (PDOException $e) {
-
-                    }
-                    while ($rowSelect = $resultSelect->fetch()) {
-                        if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
-                            echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
-                        } else {
-                            echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
-                        }
-                    }
-                    ?>
-                </select>
-            </td>
-        </tr>
-        */
-        $form->addRow()
-            ->addLabel('gibbonPersonIDMulti',__('User'))
-            ->addSelectUsers('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'), ['includeStudents' => true])->selectMultiple()->isRequired();
-
-        /*
-        <tr>
-            <td>
-                <b><?php echo __('Badges') ?></b><br/>
-                <span style="font-size: 90%"><i></i></span>
-            </td>
-            <td class="right">
-                <?php
-                try {
-                    $dataPurpose = array();
-                    $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
-                    $resultPurpose = $connection2->prepare($sqlPurpose);
-                    $resultPurpose->execute($dataPurpose);
-                } catch (PDOException $e) {
-
-                }
-
-                echo "<select name='badgesBadgeID2' id='badgesBadgeID2' style='width: 302px'>";
-                echo "<option value=''></option>";
-                $lastCategory = '';
-                while ($rowPurpose = $resultPurpose->fetch()) {
-                    $selected = '';
-                    if ($rowPurpose['badgesBadgeID'] == $badgesBadgeID2) {
-                        $selected = 'selected';
-                    }
-                    $currentCategory = $rowPurpose['category'];
-                    if ($currentCategory != $lastCategory) {
-                        echo "<optgroup label='--".$currentCategory."--'>";
-                    }
-                    echo "<option $selected value='".$rowPurpose['badgesBadgeID']."'>".$rowPurpose['name'].'</option>';
-                    $lastCategory = $currentCategory;
-                }
-                echo '</select>';
-                ?>
-            </td>
-        </tr>
-        */
-        $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
-        $form->addRow()
-            ->addLabel(__('Badges'))
-            ->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->isRequired()->placeholder();
-
-        /*
-        echo '<tr>';
-        echo "<td class='right' colspan=2>";
         
-        echo "<a href='".$_SESSION[$guid]['absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>".__('Clear Filters').'</a> ';
-        echo "<input type='submit' value='".__('Go')."'>";
-        echo '</td>';
-        echo '</tr>';
-        echo '</table>';
-        echo '</form>';
-        */
-        $form->addRow()
-            ->addButton(__('Clear Filters'))
-            ->addSearchSubmit();
-        //echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
+        $row = $form->addRow();
+        $row->addLabel('gibbonPersonIDMulti',__('User'));
+        $row->addSelectStudent('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'))->selectMultiple()->isRequired();
+
+        $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
+        $row = $form->addRow();
+        $row->addLabel('badgesBadgeID',__('Badges'));
+        $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->isRequired()->placeholder();
+
+        
+        $row = $form->addRow();
+        $row->addSearchSubmit($gibbon->session);
+
+       
         $form->addHiddenValue('q',$_GET['q']);
         $form->addRow();
         $form->addRow()->addHeading(__('Badges'));
-
+        echo $form->getOutput();
         ?>
         
         
@@ -268,10 +183,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         } catch (PDOException $e) {
             echo "<div class='error'>".$e->getMessage().'</div>';
         }
-        $sqlPage = $sql.' LIMIT '.$_SESSION[$guid]['pagination'].' OFFSET '.(($page - 1) * $_SESSION[$guid]['pagination']);
+        $sqlPage = $sql.' LIMIT '.$gibbon->session->get('pagination').' OFFSET '.(($page - 1) * $gibbon->session->get('pagination'));
 
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_grant_add.php&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'>".__('Add')."<img style='margin: 0 0 -4px 5px' title='".__('Add')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/page_new.png'/></a>";
+        echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module')."/badges_grant_add.php&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'>".__('Add')."<img style='margin: 0 0 -4px 5px' title='".__('Add')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/page_new.png'/></a>";
         echo '</div>';
 
         if ($result->rowCount() < 1) {
@@ -279,8 +194,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             echo __('There are no records to display.');
             echo '</div>';
         } else {
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
+            if ($result->rowCount() > $gibbon->session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'top', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
             }
 
             echo "<table cellspacing='0' style='width: 100%'>";
@@ -319,9 +234,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 echo "<tr class=$rowNum>";
                 echo "<td style='font-weight: bold; text-align: center'>";
                 if ($row['logo'] != '') {
-                    echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'/>";
+                    echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$gibbon->session->get('absoluteURL').'/'.$row['logo']."'/>";
                 } else {
-                    echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/>";
+                    echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$gibbon->session->get('absoluteURL').'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/>";
                 }
                 echo $row['name'];
                 echo '</td>';
@@ -332,7 +247,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 echo dateConvertBack($guid, $row['date']).'<br/>';
                 echo '</td>';
                 echo '<td>';
-                echo "<a class='thickbox' href='".$_SESSION[$guid]['absoluteURL'].'/fullscreen.php?q=/modules/'.$_SESSION[$guid]['module'].'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID&width=650&height=135'><img title='".__('Delete')."' src='./themes/".$_SESSION[$guid]['gibbonThemeName']."/img/garbage.png'/></a> ";
+                echo "<a class='thickbox' href='".$gibbon->session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID&width=650&height=135'><img title='".__('Delete')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
                 echo "<script type='text/javascript'>";
                 echo '$(document).ready(function(){';
                 echo "\$(\".comment-$count\").hide();";
@@ -343,7 +258,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 echo '});';
                 echo '</script>';
                 if ($row['comment'] != '') {
-                    echo "<a title='".__('View Description')."' class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$_SESSION[$guid]['absoluteURL']."/themes/Default/img/page_down.png' alt='".__('Show Comment')."' onclick='return false;' /></a>";
+                    echo "<a title='".__('View Description')."' class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$gibbon->session->get('absoluteURL')."/themes/Default/img/page_down.png' alt='".__('Show Comment')."' onclick='return false;' /></a>";
                 }
                 echo '</td>';
                 echo '</tr>';
@@ -360,8 +275,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             }
             echo '</table>';
 
-            if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-                printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
+            if ($result->rowCount() > $gibbon->session->get('pagination')) {
+                printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'bottom', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
             }
         }
     }

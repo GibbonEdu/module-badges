@@ -37,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     $returns = array();
     $editLink = '';
     if (isset($_GET['editID'])) {
-        $editLink = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'].'&category='.$_GET['category'];
+        $editLink = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'].'&category='.$_GET['category'];
     }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
@@ -45,14 +45,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
     if ($_GET['search'] != '' || $_GET['category'] != '') {
         echo "<div class='linkTop'>";
-        echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>".__('Back to Search Results')."</a>";
+        echo "<a href='".$gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>".__('Back to Search Results')."</a>";
         echo '</div>';
     }
 
 
-    $form = Form::create('badges', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_manage_addProcess.php');
+    $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_addProcess.php');
     
-    $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+    $form->addHiddenValue('address', $gibbon->session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'));
