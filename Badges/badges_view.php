@@ -39,10 +39,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
         echo '</div>';
     } else {
         if ($highestAction == 'View Badges_all') {
-            $gibbonPersonID = null;
-            if (isset($_GET['gibbonPersonID'])) {
-                $gibbonPersonID = $_GET['gibbonPersonID'];
-            }
+            $gibbonPersonID = $_GET['gibbonPersonID'] ?? '';
 
             $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'GET');
             $form->setTitle(__('Choose Student'));
@@ -104,10 +101,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'));
             }
         } elseif ($highestAction == 'View Badges_myChildren') {
-            $gibbonPersonID = $gibbon->session->get('gibbonPersonID');
-            if (isset($_GET['search'])) {
-                $gibbonPersonID = $_GET['search'];
-            }
+            $gibbonPersonID = $gibbon->session->get('gibbonPersonID') ?? $_GET['search'];
+            
             //Test data access field for permission
             try {
                 $data = array('gibbonPersonID' => $gibbon->session->get('gibbonPersonID'));

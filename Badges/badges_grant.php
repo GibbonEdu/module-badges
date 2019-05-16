@@ -35,12 +35,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    $gibbonSchoolYearID = '';
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $gibbon->session->get('gibbonSchoolYearID');
     if (isset($_GET['gibbonSchoolYearID'])) {
-        $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
+        
     }
-    if ($gibbonSchoolYearID == '' or $gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
-        $gibbonSchoolYearID = $gibbon->session->get('gibbonSchoolYearID');
+    if ($gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
         $gibbonSchoolYearName = $gibbon->session->get('gibbonSchoolYearName');
     }
 
@@ -84,22 +83,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         }
         echo '</div>';
 
-        $gibbonPersonID2 = null;
-        if (isset($_GET['gibbonPersonID2'])) {
-            $gibbonPersonID2 = $_GET['gibbonPersonID2'];
-        }
-        $badgesBadgeID2 = null;
-        if (isset($_GET['badgesBadgeID2'])) {
-            $badgesBadgeID2 = $_GET['badgesBadgeID2'];
-        }
-        $gibbonYearGroupID = null;
-        if (isset($_GET['gibbonYearGroupID'])) {
-            $gibbonYearGroupID = $_GET['gibbonYearGroupID'];
-        }
-        $type = null;
-        if (isset($_GET['type'])) {
-            $type = $_GET['type'];
-        }
+        $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
+        $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
+        $gibbonYearGroupID = $_GET['gibbonYearGroupID'] ?? '';
+        $type = $_GET['type'] ?? '';
 
         $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
         $form->setFactory(DatabaseFormFactory::create($pdo));
@@ -168,11 +155,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 $data['badgesBadgeID2'] = $badgesBadgeID2;
                 $sqlWhere .= 'badgesBadge.badgesBadgeID=:badgesBadgeID2 AND ';
             }
-            if ($sqlWhere == 'AND ') {
-                $sqlWhere = '';
-            } else {
-                $sqlWhere = substr($sqlWhere, 0, -5);
-            }
+            $sqlWhere = $sqlWhere == 'AND ' ? '' : substr($sqlWhere, 0, -5);
+
             $data['gibbonSchoolYearID2'] = $gibbonSchoolYearID;
             $sql = "SELECT badgesBadge.*, badgesBadgeStudent.*, surname, preferredName FROM badgesBadge JOIN badgesBadgeStudent ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonPerson ON (badgesBadgeStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE badgesBadgeStudent.gibbonSchoolYearID=:gibbonSchoolYearID2 $sqlWhere ORDER BY timestamp DESC";
             $result = $connection2->prepare($sql);
