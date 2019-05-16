@@ -44,7 +44,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 $gibbonPersonID = $_GET['gibbonPersonID'];
             }
 
-            $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'get');
+            $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'GET');
             $form->setTitle(__('Choose Student'));
             $form->addClass('noIntBorder');
             $form->setFactory(DatabaseFormFactory::create($pdo));

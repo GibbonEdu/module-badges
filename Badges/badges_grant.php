@@ -101,7 +101,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             $type = $_GET['type'];
         }
 
-        $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php');
+        $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
         $form->setFactory(DatabaseFormFactory::create($pdo));
 
         $form->addRow()->addHeading(__('Filter'));
