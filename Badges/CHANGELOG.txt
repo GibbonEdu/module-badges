@@ -1,9 +1,5 @@
 CHANGELOG
 =========
-v2.5.04
--------
-Form OOification and some session handling improvements
-
 v2.5.03
 -------
 Fixed broken credits page

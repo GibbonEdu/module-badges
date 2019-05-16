@@ -57,8 +57,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         $allRoles[$rowRoles['gibbonRoleID']] = $rowRoles['name'];
     }
 
-    $search = $_GET['search'] ?? '';
-    $category = $_GET['category'] ?? '';
+    $search = null;
+    if (isset($_GET['search'])) {
+        $search = $_GET['search'];
+    }
+    $category = null;
+    if (isset($_GET['category'])) {
+        $category = $_GET['category'];
+    }
 
     $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'get');
     $form->setTitle(__('Search & Filter'));

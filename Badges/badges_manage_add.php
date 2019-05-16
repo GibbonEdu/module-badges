@@ -35,7 +35,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
             ->add(__('Add Badges'));
 
     $returns = array();
-    $editLink = isset($editLink) ? $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'].'&category='.$_GET['category'] : '';
+    $editLink = '';
+    if (isset($_GET['editID'])) {
+        $editLink = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'].'&category='.$_GET['category'];
+    }
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], $editLink, null);
     }

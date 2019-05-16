@@ -47,12 +47,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
     $gibbonPersonID2 = '';
     $badgesBadgeID2 = '';
     if (isset($_GET['gibbonPersonID2']) ||  isset($_GET['badgesBadgeID2'])) {
-        //Only assign variable when it exists
-        $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
-        $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
-        
-        //Add a "Back to Results" link.
-        echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."'>".__('Back to Search Results').'</a>';
+        if($_GET['gibbonPersonID2'] != '' && $_GET['badgesBadgeID2'] != '')
+        {
+            //Only assign variable when it exists
+            $gibbonPersonID2 = $_GET['gibbonPersonID2'];
+            $badgesBadgeID2 = $_GET['badgesBadgeID2'];
+            //Add a "Back to Results" link.
+            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."'>".__('Back to Search Results').'</a>';
+        }
     }
     echo '</div>';
 

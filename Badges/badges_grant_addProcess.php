@@ -30,10 +30,14 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
     header("Location: {$URL}");
 } else {
     //Proceed!
-    $gibbonPersonIDMulti = $_POST['gibbonPersonIDMulti'] ?? null;
-    $badgesBadgeID = $_POST['badgesBadgeID'] ?? '';
-    $date = $_POST['date'] ?? '';
-    $comment = $_POST['comment'] ?? '';
+    if (isset($_POST['gibbonPersonIDMulti'])) {
+        $gibbonPersonIDMulti = $_POST['gibbonPersonIDMulti'];
+    } else {
+        $gibbonPersonIDMulti = null;
+    }
+    $badgesBadgeID = $_POST['badgesBadgeID'];
+    $date = $_POST['date'];
+    $comment = $_POST['comment'];
 
     if ($gibbonPersonIDMulti == null or $date == '' or $badgesBadgeID == '' or $gibbonSchoolYearID == '') {
         //Fail 3

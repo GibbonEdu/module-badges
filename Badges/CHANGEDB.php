@@ -159,7 +159,3 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '2.5.03';
 $sql[$count][1] = "UPDATE gibbonAction SET URLList='badges_credits.php', entryURL='badges_credits.php' WHERE name='Credits & Licensing' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges');end";
-
-++$count;
-$sql[$count][0] = '2.5.04';
-$sql[$count][1] = "";

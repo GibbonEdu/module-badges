@@ -19,6 +19,10 @@
 
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
+use Gibbon\Tables\DataTable;
+use Gibbon\Services\Format;
+use Gibbon\Domain\Badges\BadgeGateway;
+
 //Module includes
 include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
@@ -35,11 +39,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         returnProcess($guid, $_GET['return'], null, null);
     }
 
-    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $gibbon->session->get('gibbonSchoolYearID');
+    $gibbonSchoolYearID = '';
     if (isset($_GET['gibbonSchoolYearID'])) {
-        
+        $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
     }
-    if ($gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
+    if ($gibbonSchoolYearID == '' or $gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
+        $gibbonSchoolYearID = $gibbon->session->get('gibbonSchoolYearID');
         $gibbonSchoolYearName = $gibbon->session->get('gibbonSchoolYearName');
     }
 
@@ -83,10 +88,22 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         }
         echo '</div>';
 
-        $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
-        $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
-        $gibbonYearGroupID = $_GET['gibbonYearGroupID'] ?? '';
-        $type = $_GET['type'] ?? '';
+        $gibbonPersonID2 = null;
+        if (isset($_GET['gibbonPersonID2'])) {
+            $gibbonPersonID2 = $_GET['gibbonPersonID2'];
+        }
+        $badgesBadgeID2 = null;
+        if (isset($_GET['badgesBadgeID2'])) {
+            $badgesBadgeID2 = $_GET['badgesBadgeID2'];
+        }
+        $gibbonYearGroupID = null;
+        if (isset($_GET['gibbonYearGroupID'])) {
+            $gibbonYearGroupID = $_GET['gibbonYearGroupID'];
+        }
+        $type = null;
+        if (isset($_GET['type'])) {
+            $type = $_GET['type'];
+        }
 
         $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
         $form->setFactory(DatabaseFormFactory::create($pdo));
@@ -155,8 +172,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 $data['badgesBadgeID2'] = $badgesBadgeID2;
                 $sqlWhere .= 'badgesBadge.badgesBadgeID=:badgesBadgeID2 AND ';
             }
-            $sqlWhere = $sqlWhere == 'AND ' ? '' : substr($sqlWhere, 0, -5);
-
+            if ($sqlWhere == 'AND ') {
+                $sqlWhere = '';
+            } else {
+                $sqlWhere = substr($sqlWhere, 0, -5);
+            }
             $data['gibbonSchoolYearID2'] = $gibbonSchoolYearID;
             $sql = "SELECT badgesBadge.*, badgesBadgeStudent.*, surname, preferredName FROM badgesBadge JOIN badgesBadgeStudent ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonPerson ON (badgesBadgeStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE badgesBadgeStudent.gibbonSchoolYearID=:gibbonSchoolYearID2 $sqlWhere ORDER BY timestamp DESC";
             $result = $connection2->prepare($sql);
@@ -178,6 +198,52 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             if ($result->rowCount() > $gibbon->session->get('pagination')) {
                 printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'top', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
             }
+
+            $badgesGateway = $container->get(BadgeGateway::class);
+            $criteria = $badgesGateway->newQueryCriteria()
+                //->searchBy($badgesGateway->getSearchableColumns(),$search)
+                ->fromPOST();
+            $badges = $badgesGateway->queryBadges($criteria,$gibbonSchoolYearID);
+            $table = DataTable::Create('badges');
+
+            //Setup params
+            $table
+                ->addHeaderAction('add',__('Add'))
+                ->setURL('/modules/Badges/badges_grant_add.php')
+                ->addParam('gibbonPersonID2',$gibbonPersonID2)
+                ->addParam('badgesBadgeID2',$badgesBadgeID2)
+                ->addParam('gibbonSchoolYearID',$gibbonSchoolYearID);
+
+            //Setup columns
+            $table
+                ->addColumn('badge',__('Badge'))
+                ->format(function ($row){
+                    return (Format::userPhoto($row['logo'])) . "<br/>" . $row['name']; //TODO: Set image to 150x150. Current available sizes are 75 and 240.
+                });
+            $table
+                ->addColumn('student',__('Student'))
+                ->format(Format::using('name',[null,'preferredName','surname','Student',true,false]));
+                //->setURL('/modules/Students/student_view_details.php')
+                //->addParam('gibbonPersonID',$gibbonPersonID2);
+
+            $table->addColumn('date',__('Date'))->format(Format::using('date','date'));
+            $table->addExpandableColumn('comment'); //Not working.
+
+            //Setup actions
+            $actions = $table->addActionColumn();
+            $actions->format(function ($row,$actions) use ($gibbon){
+                $actions->addAction('delete',__('Delete'))
+                    ->setURL('/modules/Badges/badges_grant_delete.php')
+                    ->addParam('badgesBadgeStudentID',$row['badgesBadgeStudentID']);
+
+                $actions->addAction('view',__('View'))
+                    ->setIcon('page_down')
+                    ->onClick("#");
+            });
+                
+                //&gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2.'&gibbonSchoolYearID='.$gibbonSchoolYearID.'&width=650&height=135');
+            echo $table->render($badges);
+
 
             echo "<table cellspacing='0' style='width: 100%'>";
             echo "<tr class='head'>";
