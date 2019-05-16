@@ -101,27 +101,112 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             $type = $_GET['type'];
         }
 
+        /*
+        echo "<form method='get' action='".$gibbon->session->get('absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>";
+        echo "<table class='noIntBorder' cellspacing='0' style='width: 100%'>";
+        */
         $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php');
         $form->setFactory(DatabaseFormFactory::create($pdo));
 
+        /*
+        echo '<h3>';
+        echo __('Filter');
+        echo '</h3>';
+        */
         $form->addRow()->addHeading(__('Filter'));
         $form->addRow();
 
-        
+        /*
+        <tr>
+            <td>
+                <b><?php echo __('User') ?></b><br/>
+                <span style="font-size: 90%"><i></i></span>
+            </td>
+            <td class="right">
+                <select name="gibbonPersonID2" id="gibbonPersonID2" style="width: 302px">
+                    <option value=""></option>
+                    <?php
+                    try {
+                        $dataSelect = array();
+                        $sqlSelect = "SELECT gibbonPerson.gibbonPersonID, preferredName, surname, username FROM gibbonPerson WHERE status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') ORDER BY surname, preferredName";
+                        $resultSelect = $connection2->prepare($sqlSelect);
+                        $resultSelect->execute($dataSelect);
+                    } catch (PDOException $e) {
+
+                    }
+                    while ($rowSelect = $resultSelect->fetch()) {
+                        if ($gibbonPersonID2 == $rowSelect['gibbonPersonID']) {
+                            echo "<option selected value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
+                        } else {
+                            echo "<option value='".$rowSelect['gibbonPersonID']."'>".formatName('', htmlPrep($rowSelect['preferredName']), htmlPrep($rowSelect['surname']), 'Student', true).' ('.htmlPrep($rowSelect['username']).')</option>';
+                        }
+                    }
+                    ?>
+                </select>
+            </td>
+        </tr>
+        */
         $row = $form->addRow();
         $row->addLabel('gibbonPersonIDMulti',__('User'));
         $row->addSelectStudent('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'))->selectMultiple()->isRequired();
 
+        /*
+        <tr>
+            <td>
+                <b><?php echo __('Badges') ?></b><br/>
+                <span style="font-size: 90%"><i></i></span>
+            </td>
+            <td class="right">
+                <?php
+                try {
+                    $dataPurpose = array();
+                    $sqlPurpose = 'SELECT * FROM badgesBadge ORDER BY category, name';
+                    $resultPurpose = $connection2->prepare($sqlPurpose);
+                    $resultPurpose->execute($dataPurpose);
+                } catch (PDOException $e) {
+
+                }
+
+                echo "<select name='badgesBadgeID2' id='badgesBadgeID2' style='width: 302px'>";
+                echo "<option value=''></option>";
+                $lastCategory = '';
+                while ($rowPurpose = $resultPurpose->fetch()) {
+                    $selected = '';
+                    if ($rowPurpose['badgesBadgeID'] == $badgesBadgeID2) {
+                        $selected = 'selected';
+                    }
+                    $currentCategory = $rowPurpose['category'];
+                    if ($currentCategory != $lastCategory) {
+                        echo "<optgroup label='--".$currentCategory."--'>";
+                    }
+                    echo "<option $selected value='".$rowPurpose['badgesBadgeID']."'>".$rowPurpose['name'].'</option>';
+                    $lastCategory = $currentCategory;
+                }
+                echo '</select>';
+                ?>
+            </td>
+        </tr>
+        */
         $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
         $row = $form->addRow();
         $row->addLabel('badgesBadgeID',__('Badges'));
         $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->isRequired()->placeholder();
 
+        /*
+        echo '<tr>';
+        echo "<td class='right' colspan=2>";
         
+        echo "<a href='".$gibbon->session->get('absoluteURL']."/index.php?q=/modules/Badges/badges_grant.php'>".__('Clear Filters').'</a> ';
+        echo "<input type='submit' value='".__('Go')."'>";
+        echo '</td>';
+        echo '</tr>';
+        echo '</table>';
+        echo '</form>';
+        */
         $row = $form->addRow();
         $row->addSearchSubmit($gibbon->session);
 
-       
+        //echo "<input type='hidden' name='q' value='".$_GET['q']."'>";
         $form->addHiddenValue('q',$_GET['q']);
         $form->addRow();
         $form->addRow()->addHeading(__('Badges'));

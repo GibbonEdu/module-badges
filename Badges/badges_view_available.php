@@ -18,7 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_available.php') == false) {
     //Acess denied
@@ -42,7 +42,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
     echo __('Search & Filter');
     echo '</h2>';
     ?>
-	<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
+	<form method="get" action="<?php echo $gibbon->session->get('absoluteURL','')?>/index.php">
 		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
 			<tr>
 				<td>
@@ -81,10 +81,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
     		</tr>
 			<tr>
 				<td colspan=2 class="right">
-					<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_view_available.php">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
+					<input type="hidden" name="q" value="/modules/<?php echo $gibbon->session->get('module') ?>/badges_view_available.php">
+					<input type="hidden" name="address" value="<?php echo $gibbon->session->get('address') ?>">
 					<?php
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_view_available.php'>Clear Search</a> "; ?>
+                    echo "<a href='".$gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.$gibbon->session->get('module')."/badges_view_available.php'>Clear Search</a> "; ?>
 					<input type="submit" value="Submit">
 				</td>
 			</tr>
@@ -134,9 +134,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
 
             echo "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
             if ($row['logo'] != '') {
-                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'/><br/>";
+                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/'.$row['logo']."'/><br/>";
             } else {
-                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             }
             echo '<b>'.$row['name'].'</b><br/>';
             echo '<span class=\'emphasis small\'>'.$row['category'].'</span><br/>';

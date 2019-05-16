@@ -63,13 +63,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 
             if ($_GET['search'] != '' || $_GET['category'] != '') {
                 echo "<div class='linkTop'>";
-                echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>Back to Search Results</a>";
+                echo "<a href='".$gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>Back to Search Results</a>";
                 echo '</div>';
             }
 
-            $form = Form::create('badges', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badges_manage_editProcess.php?badgesBadgeID='.$badgesBadgeID.'&search='.$_GET['search'].'&category='.$_GET['category']);
+            $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_editProcess.php?badgesBadgeID='.$badgesBadgeID.'&search='.$_GET['search'].'&category='.$_GET['category']);
     
-            $form->addHiddenValue('address', $_SESSION[$guid]['address']);
+            $form->addHiddenValue('address', $gibbon->session->get('address'));
 
             $row = $form->addRow();
                 $row->addLabel('name', __('Name'));
@@ -95,7 +95,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                 $row->addLabel('file', __('Logo'))->description(__('240px x 240px'));
                 $row->addFileUpload('file')
                     ->accepts($fileUploader->getFileExtensions('Graphics/Design'))
-                    ->setAttachment('logo', $_SESSION[$guid]['absoluteURL'], $values['logo']);
+                    ->setAttachment('logo', $gibbon->session->get('absoluteURL',''), $values['logo']);
             
             $row = $form->addRow();
                 $row->addLabel('logoLicense', __('Logo License/Credits'));

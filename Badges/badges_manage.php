@@ -66,12 +66,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         $category = $_GET['category'];
     }
 
-    $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+    $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'get');
     $form->setTitle(__('Search & Filter'));
     $form->addClass('noIntBorder');
 
-    $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/badges_manage.php');
-    $form->addHiddenValue('address', '/modules/' . $_SESSION[$guid]['address']);
+    $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/badges_manage.php');
+    $form->addHiddenValue('address', '/modules/' . $gibbon->session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search For'))->description(__('Name'));
@@ -110,7 +110,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             }
         }
         $sql = "SELECT badgesBadge.* FROM badgesBadge $sqlWhere ORDER BY category, badgesBadge.name";
-        $sqlPage = $sql . ' LIMIT ' . $_SESSION[$guid]['pagination'] . ' OFFSET ' . (($page - 1) * $_SESSION[$guid]['pagination']);
+        $sqlPage = $sql . ' LIMIT ' . $gibbon->session->get('pagination') . ' OFFSET ' . (($page - 1) * $gibbon->session->get('pagination'));
         $result = $connection2->prepare($sql);
         $result->execute($data);
     } catch (PDOException $e) {
@@ -118,7 +118,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     }
 
     echo "<div class='linkTop'>";
-    echo "<a href='" . $_SESSION[$guid]['absoluteURL'] . "/index.php?q=/modules/Badges/badges_manage_add.php&search=$search&category=$category'>" . __('Add') . "<img style='margin-left: 5px' title='" . __('Add') . "' src='./themes/" . $_SESSION[$guid]['gibbonThemeName'] . "/img/page_new.png'/></a>";
+    echo "<a href='" . $gibbon->session->get('absoluteURL','') . "/index.php?q=/modules/Badges/badges_manage_add.php&search=$search&category=$category'>" . __('Add') . "<img style='margin-left: 5px' title='" . __('Add') . "' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/page_new.png'/></a>";
     echo '</div>';
 
     if ($result->rowCount() < 1) {
@@ -126,8 +126,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         echo 'There are no badges to display.';
         echo '</div>';
     } else {
-        if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-            printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'top', "search=$search");
+        if ($result->rowCount() > $gibbon->session->get('pagination')) {
+            printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'top', "search=$search");
         }
 
         echo "<table cellspacing='0' style='width: 100%'>";
@@ -170,9 +170,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             echo "<tr class=$rowNum>";
             echo '<td>';
             if ($row['logo'] != '') {
-                echo "<img class='user' style='max-width: 150px' src='" . $_SESSION[$guid]['absoluteURL'] . '/' . $row['logo'] . "'/>";
+                echo "<img class='user' style='max-width: 150px' src='" . $gibbon->session->get('absoluteURL','') . '/' . $row['logo'] . "'/>";
             } else {
-                echo "<img class='user' style='max-width: 150px' src='" . $_SESSION[$guid]['absoluteURL'] . '/themes/' . $_SESSION[$guid]['gibbonThemeName'] . "/img/anonymous_240_square.jpg'/>";
+                echo "<img class='user' style='max-width: 150px' src='" . $gibbon->session->get('absoluteURL','') . '/themes/' . $gibbon->session->get('gibbonThemeName') . "/img/anonymous_240_square.jpg'/>";
             }
             echo '</td>';
             echo '<td>';
@@ -191,10 +191,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             echo '});';
             echo '});';
             echo '</script>';
-            echo "<a href='" . $_SESSION[$guid]['absoluteURL'] . '/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category'><img title='Edit' src='./themes/" . $_SESSION[$guid]['gibbonThemeName'] . "/img/config.png'/></a> ";
-            echo "<a class='thickbox' href='" . $_SESSION[$guid]['absoluteURL'] . '/fullscreen.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category&width=650&height=135'><img title='Delete' src='./themes/" . $_SESSION[$guid]['gibbonThemeName'] . "/img/garbage.png'/></a> ";
+            echo "<a href='" . $gibbon->session->get('absoluteURL','') . '/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category'><img title='Edit' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/config.png'/></a> ";
+            echo "<a class='thickbox' href='" . $gibbon->session->get('absoluteURL','') . '/fullscreen.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category&width=650&height=135'><img title='Delete' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/garbage.png'/></a> ";
             if ($row['description'] != '') {
-                echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='" . $_SESSION[$guid]['absoluteURL'] . "/themes/Default/img/page_down.png' title='Show Description' onclick='return false;' /></a>";
+                echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='" . $gibbon->session->get('absoluteURL','') . "/themes/Default/img/page_down.png' title='Show Description' onclick='return false;' /></a>";
             }
             echo '</td>';
             echo '</tr>';
@@ -208,8 +208,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         }
         echo '</table>';
 
-        if ($result->rowCount() > $_SESSION[$guid]['pagination']) {
-            printPagination($guid, $result->rowCount(), $page, $_SESSION[$guid]['pagination'], 'bottom', "search=$search");
+        if ($result->rowCount() > $gibbon->session->get('pagination')) {
+            printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'bottom', "search=$search");
         }
     }
 }

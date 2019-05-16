@@ -21,7 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
     //Acess denied
@@ -44,16 +44,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 $gibbonPersonID = $_GET['gibbonPersonID'];
             }
 
-            $form = Form::create('search', $_SESSION[$guid]['absoluteURL'].'/index.php', 'get');
+            $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'get');
             $form->setTitle(__('Choose Student'));
             $form->addClass('noIntBorder');
             $form->setFactory(DatabaseFormFactory::create($pdo));
 
-            $form->addHiddenValue('q', '/modules/'.$_SESSION[$guid]['module'].'/badges_view.php');
+            $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/badges_view.php');
 
             $row = $form->addRow();
                 $row->addLabel('gibbonPersonID', __('Student'));
-                $row->addSelectStudent('gibbonPersonID', $_SESSION[$guid]['gibbonSchoolYearID'])->placeholder()->selected($gibbonPersonID);
+                $row->addSelectStudent('gibbonPersonID', $gibbon->session->get('gibbonSchoolYearID'))->placeholder()->selected($gibbonPersonID);
 
             $row = $form->addRow();
                 $row->addSearchSubmit($gibbon->session);
@@ -89,7 +89,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             echo '</h2>';
 
             try {
-                $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+                $data = array('gibbonPersonID' => $gibbon->session->get('gibbonPersonID'));
                 $sql = 'SELECT * FROM gibbonPerson WHERE gibbonPerson.gibbonPersonID=:gibbonPersonID ORDER BY surname, preferredName';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
@@ -101,16 +101,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo __('The specified record does not exist.');
                 echo '</div>';
             } else {
-                echo getBadges($connection2, $guid, $_SESSION[$guid]['gibbonPersonID']);
+                echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'));
             }
         } elseif ($highestAction == 'View Badges_myChildren') {
-            $gibbonPersonID = $_SESSION[$guid]['gibbonPersonID'];
+            $gibbonPersonID = $gibbon->session->get('gibbonPersonID');
             if (isset($_GET['search'])) {
                 $gibbonPersonID = $_GET['search'];
             }
             //Test data access field for permission
             try {
-                $data = array('gibbonPersonID' => $_SESSION[$guid]['gibbonPersonID']);
+                $data = array('gibbonPersonID' => $gibbon->session->get('gibbonPersonID'));
                 $sql = "SELECT * FROM gibbonFamilyAdult WHERE gibbonPersonID=:gibbonPersonID AND childDataAccess='Y'";
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
@@ -125,11 +125,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 //Get child list
                 $count = 0;
                 $users = array(
-                    $_SESSION[$guid]['gibbonPersonID'] => formatName('', $_SESSION[$guid]['preferredName'], $_SESSION[$guid]['surname'], 'Student', true)
+                    $gibbon->session->get('gibbonPersonID') => formatName('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', true)
                 );
                 while ($row = $result->fetch()) {
                     try {
-                        $dataChild = array('gibbonFamilyID' => $row['gibbonFamilyID'], 'gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+                        $dataChild = array('gibbonFamilyID' => $row['gibbonFamilyID'], 'gibbonSchoolYearID' => $gibbon->session->get('gibbonSchoolYearID'));
                         $sqlChild = "SELECT * FROM gibbonFamilyChild JOIN gibbonPerson ON (gibbonFamilyChild.gibbonPersonID=gibbonPerson.gibbonPersonID) JOIN gibbonStudentEnrolment ON (gibbonPerson.gibbonPersonID=gibbonStudentEnrolment.gibbonPersonID) JOIN gibbonRollGroup ON (gibbonStudentEnrolment.gibbonRollGroupID=gibbonRollGroup.gibbonRollGroupID) WHERE gibbonFamilyID=:gibbonFamilyID AND gibbonPerson.status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') AND gibbonStudentEnrolment.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY surname, preferredName ";
                         $resultChild = $connection2->prepare($sqlChild);
                         $resultChild->execute($dataChild);
@@ -147,11 +147,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo __('Choose');
                 echo '</h2>';
 
-                $form = Form::create('action', $_SESSION[$guid]['absoluteURL']."/index.php", "get");
+                $form = Form::create('action', $gibbon->session->get('absoluteURL','')."/index.php", "get");
                 $form->setClass('noIntBorder fullWidth');
 
-                $form->addHiddenValue('address', "/modules/".$_SESSION[$guid]['module']."/badges_View.php");
-                $form->addHiddenValue('q', $_SESSION[$guid]['address']);
+                $form->addHiddenValue('address', "/modules/".$gibbon->session->get('module')."/badges_View.php");
+                $form->addHiddenValue('q', $gibbon->session->get('address'));
         
                 $row = $form->addRow();
                     $row->addLabel('search', __('User'));
@@ -166,7 +166,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 if ($gibbonPersonID != '' and $count > 0) {
                     //Confirm access to this student
                     try {
-                        $dataChild = array('gibbonPersonID' => $gibbonPersonID, 'gibbonPersonID2' => $_SESSION[$guid]['gibbonPersonID'], 'gibbonPersonID3' => $_SESSION[$guid]['gibbonPersonID']);
+                        $dataChild = array('gibbonPersonID' => $gibbonPersonID, 'gibbonPersonID2' => $gibbon->session->get('gibbonPersonID'), 'gibbonPersonID3' => $gibbon->session->get('gibbonPersonID'));
                         $sqlChild = "(SELECT gibbonPerson.gibbonPersonID FROM gibbonFamilyChild JOIN gibbonFamily ON (gibbonFamilyChild.gibbonFamilyID=gibbonFamily.gibbonFamilyID) JOIN gibbonFamilyAdult ON (gibbonFamilyAdult.gibbonFamilyID=gibbonFamily.gibbonFamilyID) JOIN gibbonPerson ON (gibbonFamilyChild.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE gibbonPerson.status='Full' AND (dateStart IS NULL OR dateStart<='".date('Y-m-d')."') AND (dateEnd IS NULL  OR dateEnd>='".date('Y-m-d')."') AND gibbonFamilyChild.gibbonPersonID=:gibbonPersonID AND gibbonFamilyAdult.gibbonPersonID=:gibbonPersonID2 AND childDataAccess='Y')
                             UNION
                             (SELECT gibbonPersonID FROM gibbonPerson WHERE gibbonPersonID=:gibbonPersonID3)
