@@ -113,12 +113,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 
         $row = $form->addRow();
         $row->addLabel('gibbonPersonIDMulti',__('User'));
-        $row->addSelectStudent('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'))->selectMultiple()->isRequired();
+        $row->addSelectStudent('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'))->selectMultiple();
 
         $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
         $row = $form->addRow();
         $row->addLabel('badgesBadgeID',__('Badges'));
-        $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->isRequired()->placeholder();
+        $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->placeholder();
 
         $row = $form->addRow();
         $row->addSearchSubmit($gibbon->session);
@@ -200,9 +200,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
             }
 
             $badgesGateway = $container->get(BadgeGateway::class);
-            $criteria = $badgesGateway->newQueryCriteria()
-                //->searchBy($badgesGateway->getSearchableColumns(),$search)
+            $criteria = $badgesGateway->newQueryCriteria();
+            if(isset($_GET['gibbonPersonIDMulti']) && $_GET['gibbonPersonIDMulti'] != "")
+            {
+                $criteria->filterBy('studentIdMulti',$_GET['gibbonPersonIDMulti']);
+            }
+            $criteria
                 ->fromPOST();
+
+                var_dump($gibbonSchoolYearID);
+                echo "<br/><br/>";
+                var_dump($criteria);
             $badges = $badgesGateway->queryBadges($criteria,$gibbonSchoolYearID);
             $table = DataTable::Create('badges');
 
@@ -222,12 +230,27 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 });
             $table
                 ->addColumn('student',__('Student'))
-                ->format(Format::using('name',[null,'preferredName','surname','Student',true,false]));
-                //->setURL('/modules/Students/student_view_details.php')
+                ->format(function($row) use ($gibbonHookID)
+                {
+                    $link = Format::link('/modules/Students/student_view_details.php',Format::name(null,$row['preferredName'],$row['surname'],'Student',true,false));
+                    /*
+                    Need to add these params:
+                    ,[
+                        "gibbonPersonID" => $row['gibbonPersonID'],
+                        "hook" => "Badges",
+                        "action" => "View Badges_all",
+                        "gibbonHookID" => $gibbonHookID,
+                        "search" => "",
+                        "allStudents" => "",
+                        "sort" => "surname, preferredName"
+                    ]);*/
+                    return $link;
+                });
+                //->setURL('')
                 //->addParam('gibbonPersonID',$gibbonPersonID2);
 
             $table->addColumn('date',__('Date'))->format(Format::using('date','date'));
-            $table->addExpandableColumn('comment'); //Not working.
+            $table->addExpandableColumn('comment'); //Not working. Need info on expander columns.
 
             //Setup actions
             $actions = $table->addActionColumn();

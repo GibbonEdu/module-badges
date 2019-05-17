@@ -19,9 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
-use Gibbon\Tables\DataTable;
-use Gibbon\Services\Format;
-use Gibbon\Domain\Badges\BadgeGateway;
 
 //Module includes
 include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
@@ -64,9 +61,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
             echo $form->getOutput();
 
             if ($gibbonPersonID != '') {
-
-                $table = DataTable::create('badges');
-                $table->addColumn('');
                 $output = '';
                 echo '<h2>';
                 echo __('Badges');
@@ -85,7 +79,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                     echo __('The specified record does not exist.');
                     echo '</div>';
                 } else {
-                    echo getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
+                    echo getBadges($connection2, $guid, $gibbonPersonID);
                 }
             }
         } elseif ($highestAction == 'View Badges_my') {
@@ -107,7 +101,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo __('The specified record does not exist.');
                 echo '</div>';
             } else {
-                echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'),$gibbon);
+                echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'));
             }
         } elseif ($highestAction == 'View Badges_myChildren') {
             $gibbonPersonID = $gibbon->session->get('gibbonPersonID');
@@ -210,7 +204,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                                 echo '</div>';
                             } else {
                                 $row = $result->fetch();
-                                echo getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
+                                echo getBadges($connection2, $guid, $gibbonPersonID);
                             }
                         }
                     }
