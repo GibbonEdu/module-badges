@@ -26,5 +26,5 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
     echo 'You do not have access to this action.';
     echo '</div>';
 } else {
-    echo getBadges($connection2, $guid, $gibbonPersonID);
+    echo getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
 }

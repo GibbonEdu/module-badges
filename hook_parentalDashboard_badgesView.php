@@ -37,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
     $returnInt .= 'You do not have access to this action.';
     $returnInt .= '</div>';
 } else {
-    $returnInt .= getBadges($connection2, $guid, $gibbonPersonID);
+    $returnInt .= getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
 }
 
 return $returnInt;
