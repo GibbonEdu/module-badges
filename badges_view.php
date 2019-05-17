@@ -76,7 +76,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                     echo __('The specified record does not exist.');
                     echo '</div>';
                 } else {
-                    echo getBadges($connection2, $guid, $gibbonPersonID);
+                    echo getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
                 }
             }
         } elseif ($highestAction == 'View Badges_my') {
@@ -98,7 +98,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo __('The specified record does not exist.');
                 echo '</div>';
             } else {
-                echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'));
+                echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'),$gibbon);
             }
         } elseif ($highestAction == 'View Badges_myChildren') {
             $gibbonPersonID = $gibbon->session->get('gibbonPersonID') ?? $_GET['search'];
@@ -199,7 +199,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                                 echo '</div>';
                             } else {
                                 $row = $result->fetch();
-                                echo getBadges($connection2, $guid, $gibbonPersonID);
+                                echo getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
                             }
                         }
                     }

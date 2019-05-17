@@ -17,14 +17,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//Module includes
-include './modules/Badges/moduleFunctions.php';
+$returnInt = null;
+
+//Only include module include if it is not already included (which it may be been on the index page)
+$included = false;
+$includes = get_included_files();
+foreach ($includes as $include) {
+    if ($include == $gibbon->session->get('absolutePath','').'/modules/Badges/moduleFunctions.php') {
+        $included = true;
+    }
+}
+if ($included == false) {
+    include './modules/Badges/moduleFunctions.php';
+}
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') == false) {
     //Acess denied
-    echo "<div class='error'>";
-    echo 'You do not have access to this action.';
-    echo '</div>';
+    $returnInt .= "<div class='error'>";
+    $returnInt .= 'You do not have access to this action.';
+    $returnInt .= '</div>';
 } else {
-    echo getBadges($connection2, $guid, $gibbonPersonID);
+    $returnInt .= getBadges($connection2, $guid, $gibbonPersonID,$gibbon);
 }
+
+return $returnInt;
