@@ -21,8 +21,8 @@ include '../../gibbon.php';
 
 include './moduleFunctions.php';
 
-$badgesBadgeID = $_GET['badgesBadgeID'];
-$URL = $_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_edit.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'];
+$badgesBadgeID = $_GET['badgesBadgeID'] ?? '';
+$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_edit.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'];
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.php') == false) {
     //Fail 0

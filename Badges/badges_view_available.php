@@ -17,8 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
+
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_available.php') == false) {
     //Acess denied
@@ -41,56 +44,26 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
     echo "<h2 class='top'>";
     echo __('Search & Filter');
     echo '</h2>';
-    ?>
-	<form method="get" action="<?php echo $_SESSION[$guid]['absoluteURL']?>/index.php">
-		<table class='smallIntBorder' cellspacing='0' style="width: 100%">
-			<tr>
-				<td>
-					<b>Search For</b><br/>
-					<span style="font-size: 90%"><i>Name</i></span>
-				</td>
-				<td class="right">
-					<input name="search" id="search" maxlength=20 value="<?php echo $search ?>" type="text" style="width: 300px">
-				</td>
-			</tr>
-    		<tr>
-    			<td>
-    				<b><?php echo __('Category') ?></b><br/>
-    				<span class="emphasis small"></span>
-    			</td>
-    			<td class="right">
-    				<?php
-    				echo "<select name='category' id='category' style='width:302px'>";
-    				echo "<option value=''></option>";
-    				try {
-    					$dataSelect = array();
-    					$sqlSelect = "SELECT DISTINCT category FROM badgesBadge WHERE active='Y' ORDER BY category";
-    					$resultSelect = $connection2->prepare($sqlSelect);
-    					$resultSelect->execute($dataSelect);
-    				} catch (PDOException $e) {
-    				}
-    				while ($rowSelect = $resultSelect->fetch()) {
-    					$selected = '';
-    					if ($rowSelect['category'] == $category) {
-    						$selected = 'selected';
-    					}
-    					echo "<option $selected value='".$rowSelect['category']."'>".$rowSelect['category'].'</option>';
-    				}
-    				echo '</select>'; ?>
-    			</td>
-    		</tr>
-			<tr>
-				<td colspan=2 class="right">
-					<input type="hidden" name="q" value="/modules/<?php echo $_SESSION[$guid]['module'] ?>/badges_view_available.php">
-					<input type="hidden" name="address" value="<?php echo $_SESSION[$guid]['address'] ?>">
-					<?php
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/'.$_SESSION[$guid]['module']."/badges_view_available.php'>Clear Search</a> "; ?>
-					<input type="submit" value="Submit">
-				</td>
-			</tr>
-		</table>
-	</form>
 
+    $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php','GET');
+    $form->setFactory(DatabaseFormFactory::create($pdo));
+    $form->addHiddenValue('q','/modules/' . $gibbon->session->get('module') . '/badges_view_available.php');
+    $form->addHiddenValue('address',$gibbon->session->get('address'));
+    
+    $row = $form->addRow();
+        $row->addLabel('search',__('Search For'))->description("Badge name");
+        $row->addTextField('search');
+    
+    $sql = "SELECT distinct category as value, category as name FROM badgesBadge WHERE active='Y' ORDER BY category, name";
+    $row = $form->addRow();
+        $row->addLabel('category',__('Category'));
+        $row->addSelect('category')->fromQuery($pdo, $sql, [])->placeholder();
+    
+    $row = $form->addRow()->addSearchSubmit($gibbon->session);
+    echo $form->getOutput();
+
+    ?>
+	
 	<?php
     echo "<h2 class='top'>";
     echo 'View';
@@ -134,9 +107,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
 
             echo "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
             if ($row['logo'] != '') {
-                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'/><br/>";
+                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/'.$row['logo']."'/><br/>";
             } else {
-                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             }
             echo '<b>'.$row['name'].'</b><br/>';
             echo '<span class=\'emphasis small\'>'.$row['category'].'</span><br/>';

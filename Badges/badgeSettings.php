@@ -32,9 +32,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php')
         returnProcess($guid, $_GET['return'], null, null);
 	}
 	
-	$form = Form::create('action', $_SESSION[$guid]['absoluteURL'].'/modules/'.$_SESSION[$guid]['module'].'/badgeSettingsProcess.php');
+	$form = Form::create('action', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badgeSettingsProcess.php');
 	
-	$form->addHiddenValue('address', $_SESSION[$guid]['address']);
+	$form->addHiddenValue('address', $gibbon->session->get('address'));
 
 	$setting = getSettingByScope($connection2, 'Badges', 'badgeCategories', true);
 	$row = $form->addRow();
