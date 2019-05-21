@@ -30,15 +30,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
     echo '</div>';
 } else {
     //Proceed!
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
+
     $page->breadcrumbs
-        ->add(__('Grant Badges'), 'badges_grant.php')
+        ->add(__('Grant Badges'), 'badges_grant.php&gibbonSchoolYearID='.$gibbonSchoolYearID)
         ->add(__('Add'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
     }
-
-    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
 
     echo "<div class='linkTop'>";
 
@@ -50,18 +50,20 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         //Only assign variable when it exists
         $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
         $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
-        
-        //Add a "Back to Results" link.
-        echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."'>".__('Back to Search Results').'</a>';
+
+        //Add a "Back to Results" link
+        if (!empty($gibbonPersonID2) OR !empty($badgesBadgeID2)) {
+            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."'>".__('Back to Search Results').'</a>';
+        }
     }
     echo '</div>';
 
     $form = Form::create('grantBadges', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/badges_grant_addProcess.php?gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."&gibbonSchoolYearID=$gibbonSchoolYearID");
 
     $form->setFactory(DatabaseFormFactory::create($pdo));
-            
+
     $form->addHiddenValue('address', $gibbon->session->get('address'));
-    $form->addHiddenValue('gibbonSchoolYearID', $gibbon->session->get('gibbonSchoolYearID'));
+    $form->addHiddenValue('gibbonSchoolYearID', $gibbonSchoolYearID);
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDMulti', __('Students'));

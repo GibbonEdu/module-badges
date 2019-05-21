@@ -37,7 +37,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $gibbon->session->get('gibbonSchoolYearID');
     if (isset($_GET['gibbonSchoolYearID'])) {
-        
+
     }
     if ($gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
         $gibbonSchoolYearName = $gibbon->session->get('gibbonSchoolYearName');
@@ -90,31 +90,31 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 
         $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
         $form->setFactory(DatabaseFormFactory::create($pdo));
+        $form->addClass('noIntBorder');
 
-        $form->addRow()->addHeading(__('Filter'));
+        $form->setTitle(__('Filter'));
         $form->addRow();
 
         $row = $form->addRow();
-        $row->addLabel('gibbonPersonIDMulti',__('User'));
-        $row->addSelectStudent('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'))->selectMultiple()->isRequired();
+        $row->addLabel('gibbonPersonID2',__('User'));
+        $row->addSelectStudent('gibbonPersonID2', $gibbon->session->get('gibbonSchoolYearID'))->selected($gibbonPersonID2)->placeholder();
 
         $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
         $row = $form->addRow();
-        $row->addLabel('badgesBadgeID',__('Badges'));
-        $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, [], 'category')->isRequired()->placeholder();
+        $row->addLabel('badgesBadgeID2',__('Badges'));
+        $row->addSelect('badgesBadgeID2')->fromQuery($pdo, $sql, [], 'category')->selected($badgesBadgeID2)->placeholder();
 
         $row = $form->addRow();
         $row->addSearchSubmit($gibbon->session);
 
         $form->addHiddenValue('q',$_GET['q']);
         $form->addRow();
-        $form->addRow()->addHeading(__('Badges'));
         echo $form->getOutput();
         ?>
-        
-        
+
+
         <?php
-        
+
 
         echo '<h3>';
         echo __('Badges');

@@ -72,13 +72,13 @@ function getBadges($connection2, $guid, $gibbonPersonID)
 
                 $output .= "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
                 if ($awardYear[2][$count] != '') {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/'.$awardYear[2][$count]."'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$awardYear[2][$count]."'/><br/>";
                 } else {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
                 }
                 $output .= '<b>'.$awards.'</b><br/>';
                 $output .= '<span class=\'emphasis small\'>'.$awardYear[3][$count].'</span><br/>';
-                if($showComments == true && array_key_exists($count,$awardYear[4]))
+                if(array_key_exists($count,$awardYear[4]))
                 {
                     $output .= '<span class=\'emphasis small\'>'.$awardYear[4][$count].'</span><br/>';
                 }

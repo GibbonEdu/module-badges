@@ -47,23 +47,24 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
 
     $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php','GET');
     $form->setFactory(DatabaseFormFactory::create($pdo));
+    $form->addClass('noIntBorder');
     $form->addHiddenValue('q','/modules/' . $gibbon->session->get('module') . '/badges_view_available.php');
     $form->addHiddenValue('address',$gibbon->session->get('address'));
-    
+
     $row = $form->addRow();
         $row->addLabel('search',__('Search For'))->description("Badge name");
-        $row->addTextField('search');
-    
+        $row->addTextField('search')->setValue($search);
+
     $sql = "SELECT distinct category as value, category as name FROM badgesBadge WHERE active='Y' ORDER BY category, name";
     $row = $form->addRow();
         $row->addLabel('category',__('Category'));
-        $row->addSelect('category')->fromQuery($pdo, $sql, [])->placeholder();
-    
+        $row->addSelect('category')->fromQuery($pdo, $sql, [])->selected($category)->placeholder();
+
     $row = $form->addRow()->addSearchSubmit($gibbon->session);
     echo $form->getOutput();
 
     ?>
-	
+
 	<?php
     echo "<h2 class='top'>";
     echo 'View';
