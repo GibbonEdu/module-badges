@@ -105,8 +105,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 
         $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
         $form->setFactory(DatabaseFormFactory::create($pdo));
+        $form->addClass('noIntBorder');
 
-        $form->addRow()->addHeading(__('Filter'));
+        $form->setTitle(__('Filter'));
         $form->addRow();
 
         $row = $form->addRow();
@@ -124,10 +125,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         $form->addHiddenValue('q',$_GET['q']);
         echo $form->getOutput();
         ?>
-        
-        
+
+
         <?php
-        
+
 
         echo '<h3>';
         echo __('Badges');

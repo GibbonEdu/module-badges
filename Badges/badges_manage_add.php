@@ -50,8 +50,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     }
 
 
-    $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_addProcess.php');
-    
+    $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_addProcess.php?search='.$_GET['search'].'&category='.$_GET['category']);
+
     $form->addHiddenValue('address', $gibbon->session->get('address'));
 
     $row = $form->addRow();
@@ -61,7 +61,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     $row = $form->addRow();
         $row->addLabel('active', __('Active'));
         $row->addYesNo('active')->required();
-    
+
     $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
     $categories = !empty($categories) ? array_map('trim', explode(',', $categories)) : [];
     $row = $form->addRow();
@@ -71,17 +71,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     $row = $form->addRow();
         $row->addLabel('description', __('Description'));
         $row->addTextArea('description');
-    
+
     $fileUploader = new FileUploader($pdo, $gibbon->session);
-    
+
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'))->description(__('240px x 240px'));
         $row->addFileUpload('file')->accepts($fileUploader->getFileExtensions('Graphics/Design'));
-    
+
     $row = $form->addRow();
         $row->addLabel('logoLicense', __('Logo License/Credits'));
         $row->addTextArea('logoLicense');
-        
+
     $row = $form->addRow();
         $row->addSubmit();
 
