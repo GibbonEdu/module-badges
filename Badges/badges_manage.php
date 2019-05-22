@@ -19,7 +19,7 @@
 use Gibbon\Forms\Form;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
-use Gibbon\Domain\Badges\BadgeGateway;
+use Gibbon\Module\Badges\Domain\BadgeGateway;
 
 //Module includes
 include './modules/Badges/moduleFunctions.php';

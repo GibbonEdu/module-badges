@@ -21,7 +21,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Tables\DataTable;
 use Gibbon\Services\Format;
-use Gibbon\Domain\Badges\BadgeGateway;
+use Gibbon\Module\Badges\Domain\BadgeGateway;
 
 //Module includes
 include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
