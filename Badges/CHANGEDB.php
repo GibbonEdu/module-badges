@@ -163,3 +163,7 @@ $sql[$count][1] = "UPDATE gibbonAction SET URLList='badges_credits.php', entryUR
 ++$count;
 $sql[$count][0] = '2.5.04';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.5.05';
+$sql[$count][1] = "";
