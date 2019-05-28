@@ -17,10 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function getBadges($connection2, $guid, $gibbonPersonID)
+function getBadges($connection2, $guid, $gibbonPersonID, $gibbon = null)
 {
     $output = '';
 
+    $gibbonThemeName = $_SESSION['gibbonThemeName'] ?? 'Default';
+    $absoluteURL = $_SESSION['absoluteURL'] ?? '';
+    if($gibbon != null)
+    {
+        $gibbonThemeName = $gibbon->session->get('gibbonThemeName');
+        $absoluteURL = $gibbon->session->get('absoluteURL');
+    }
+    
     try {
         $data = array('gibbonPersonID' => $gibbonPersonID);
         $sql = 'SELECT badgesBadgeStudent.*, badgesBadge.name AS award, badgesBadge.logo AS logo, badgesBadge.category AS category, gibbonSchoolYear.name AS year FROM badgesBadgeStudent JOIN badgesBadge ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonSchoolYear ON (badgesBadgeStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
@@ -43,13 +51,11 @@ function getBadges($connection2, $guid, $gibbonPersonID)
                 $awardYears[$row['year']][1] = array("$innerCount" => $row['award']);
                 $awardYears[$row['year']][2] = array("$innerCount" => $row['logo']);
                 $awardYears[$row['year']][3] = array("$innerCount" => $row['category']);
-                $awardYears[$row['year']][4] = array("$innerCount" => $row['comment']);
                 ++$innerCount;
             } else { //Already data, so start appending
                 $awardYears[$row['year']][1][$innerCount] = $row['award'];
                 $awardYears[$row['year']][2][$innerCount] = $row['logo'];
                 $awardYears[$row['year']][3][$innerCount] = $row['category'];
-                $awardYears[$row['year']][4][$innerCount] = $row['comment'];
                 ++$innerCount;
             }
         }
@@ -72,16 +78,12 @@ function getBadges($connection2, $guid, $gibbonPersonID)
 
                 $output .= "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
                 if ($awardYear[2][$count] != '') {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$awardYear[2][$count]."'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='". $absoluteURL .'/'.$awardYear[2][$count]."'/><br/>";
                 } else {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='". $absoluteURL .'/themes/'. $gibbonThemeName ."/img/anonymous_240_square.jpg'/><br/>";
                 }
                 $output .= '<b>'.$awards.'</b><br/>';
                 $output .= '<span class=\'emphasis small\'>'.$awardYear[3][$count].'</span><br/>';
-                if(array_key_exists($count,$awardYear[4]))
-                {
-                    $output .= '<span class=\'emphasis small\'>'.$awardYear[4][$count].'</span><br/>';
-                }
                 $output .= '</td>';
 
                 if ($count % $columns == ($columns - 1)) {

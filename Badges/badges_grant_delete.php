@@ -34,9 +34,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete
     }
 
     //Check if school year specified
-    $badgesBadgeStudentID = $_GET['badgesBadgeStudentID'];
-    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];
-    if ($badgesBadgeStudentID == '') { echo "<div class='error'>";
+    $badgesBadgeStudentID = $_GET['badgesBadgeStudentID'] ?? '';
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? '';
+    if ($badgesBadgeStudentID == '' || $gibbonSchoolYearID == '') { echo "<div class='error'>";
         echo __('You have not specified one or more required parameters.');
         echo '</div>';
     } else {
@@ -57,7 +57,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete
             //Let's go!
             $row = $result->fetch();
 
-            $form = DeleteForm::createForm($gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module')."/badges_grant_deleteProcess.php?badgesBadgeStudentID=$badgesBadgeStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID");
+            $form = DeleteForm::createForm($gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module')."/badges_grant_deleteProcess.php?badgesBadgeStudentID=$badgesBadgeStudentID&gibbonPersonID2=".$row['gibbonPersonID'].'&badgesBadgeID2='.$row['badgesBadgeID']."&gibbonSchoolYearID=$gibbonSchoolYearID");
             echo $form->getOutput();
         }
     }

@@ -23,7 +23,7 @@ $returnInt = null;
 $included = false;
 $includes = get_included_files();
 foreach ($includes as $include) {
-    if ($include == $_SESSION[$guid]['absoluteURL'].'/modules/Badges/moduleFunctions.php') {
+    if ($include == $gibbon->session->get('absolutePath','').'/modules/Badges/moduleFunctions.php') {
         $included = true;
     }
 }

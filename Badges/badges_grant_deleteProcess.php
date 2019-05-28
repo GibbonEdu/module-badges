@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 include '../../gibbon.php';
 
 
-$badgesBadgeStudentID = $_GET['badgesBadgeStudentID'] ?? '';
-$gibbonSchoolYearID = $_POST['gibbonSchoolYearID'] ?? '';
+$badgesBadgeStudentID = $_GET['badgesBadgeStudentID'];
+$gibbonSchoolYearID = $_POST['gibbonSchoolYearID'];
 $URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_grant_delete.php&badgesBadgeStudentID=$badgesBadgeStudentID&gibbonPersonID2=".$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
 $URLDelete = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_grant.php&gibbonPersonID2='.$_GET['gibbonPersonID2'].'&badgesBadgeID2='.$_GET['badgesBadgeID2']."&gibbonSchoolYearID=$gibbonSchoolYearID";
 
