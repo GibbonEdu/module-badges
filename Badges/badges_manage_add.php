@@ -53,7 +53,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'));
-        $row->addTextField('name')->required()->maxLength(10);
+        $row->addTextField('name')->required()->maxLength(50);
+
+    $row = $form->addRow();
+        $row->addLabel('license', __m('License'))->description(__m('Does granting this license the recipient to do something?'));
+        $row->addYesNo('license')->required()->selected('N');
 
     $row = $form->addRow();
         $row->addLabel('active', __('Active'));

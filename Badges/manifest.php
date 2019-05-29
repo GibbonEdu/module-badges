@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.5.04';
+$version = '2.6.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -40,6 +40,7 @@ $moduleTables[0] = "CREATE TABLE `badgesBadge` (
   `logoLicense` text NOT NULL,
   `gibbonPersonIDCreator` int(8) unsigned zerofill NOT NULL,
   `timestampCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `license` enum('Y','N') NOT NULL DEFAULT 'N',
   PRIMARY KEY (`badgesBadgeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
 
@@ -186,6 +187,38 @@ $actionRows[7]['categoryPermissionStaff'] = 'Y';
 $actionRows[7]['categoryPermissionStudent'] = 'Y';
 $actionRows[7]['categoryPermissionParent'] = 'Y';
 $actionRows[7]['categoryPermissionOther'] = 'Y';
+
+$actionRows[8]['name'] = 'Licenses by Class';
+$actionRows[8]['precedence'] = '0';
+$actionRows[8]['category'] = 'Report';
+$actionRows[8]['description'] = 'Shows possession of selected license by students in a class.';
+$actionRows[8]['URLList'] = 'report_licensesByClass.php';
+$actionRows[8]['entryURL'] = 'report_licensesByClass.php';
+$actionRows[8]['defaultPermissionAdmin'] = 'Y';
+$actionRows[8]['defaultPermissionTeacher'] = 'Y';
+$actionRows[8]['defaultPermissionStudent'] = 'N';
+$actionRows[8]['defaultPermissionParent'] = 'N';
+$actionRows[8]['defaultPermissionSupport'] = 'N';
+$actionRows[8]['categoryPermissionStaff'] = 'Y';
+$actionRows[8]['categoryPermissionStudent'] = 'N';
+$actionRows[8]['categoryPermissionParent'] = 'N';
+$actionRows[8]['categoryPermissionOther'] = 'N';
+
+$actionRows[9]['name'] = 'Licenses by Activity';
+$actionRows[9]['precedence'] = '0';
+$actionRows[9]['category'] = 'Report';
+$actionRows[9]['description'] = 'Shows possession of selected license by students in an activity.';
+$actionRows[9]['URLList'] = 'report_licensesByActivity.php';
+$actionRows[9]['entryURL'] = 'report_licensesByActivity.php';
+$actionRows[9]['defaultPermissionAdmin'] = 'Y';
+$actionRows[9]['defaultPermissionTeacher'] = 'Y';
+$actionRows[9]['defaultPermissionStudent'] = 'N';
+$actionRows[9]['defaultPermissionParent'] = 'N';
+$actionRows[9]['defaultPermissionSupport'] = 'N';
+$actionRows[9]['categoryPermissionStaff'] = 'Y';
+$actionRows[9]['categoryPermissionStudent'] = 'N';
+$actionRows[9]['categoryPermissionParent'] = 'N';
+$actionRows[9]['categoryPermissionOther'] = 'N';
 
 //HOOKS
 $array = array();

@@ -32,7 +32,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
     //Proceed!
     $page->breadcrumbs
             ->add(__('Manage Badges'),'badges_manage.php')
-            ->add(__('Edit Badges'));    
+            ->add(__('Edit Badges'));
 
     if (isset($_GET['return'])) {
         returnProcess($guid, $_GET['return'], null, null);
@@ -68,17 +68,21 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
             }
 
             $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_editProcess.php?badgesBadgeID='.$badgesBadgeID.'&search='.$_GET['search'].'&category='.$_GET['category']);
-    
+
             $form->addHiddenValue('address', $gibbon->session->get('address'));
 
             $row = $form->addRow();
                 $row->addLabel('name', __('Name'));
-                $row->addTextField('name')->required()->maxLength(10);
+                $row->addTextField('name')->required()->maxLength(50);
+
+            $row = $form->addRow();
+                $row->addLabel('license', __m('License'))->description(__m('Does granting this license the recipient to do something?'));
+                $row->addYesNo('license')->required()->setValue($values['license']);
 
             $row = $form->addRow();
                 $row->addLabel('active', __('Active'));
                 $row->addYesNo('active')->required();
-            
+
             $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
             $categories = !empty($categories) ? array_map('trim', explode(',', $categories)) : [];
             $row = $form->addRow();
@@ -88,19 +92,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
             $row = $form->addRow();
                 $row->addLabel('description', __('Description'));
                 $row->addTextArea('description');
-            
+
             $fileUploader = new FileUploader($pdo, $gibbon->session);
-            
+
             $row = $form->addRow();
                 $row->addLabel('file', __('Logo'))->description(__('240px x 240px'));
                 $row->addFileUpload('file')
                     ->accepts($fileUploader->getFileExtensions('Graphics/Design'))
                     ->setAttachment('logo', $gibbon->session->get('absoluteURL',''), $values['logo']);
-            
+
             $row = $form->addRow();
                 $row->addLabel('logoLicense', __('Logo License/Credits'));
                 $row->addTextArea('logoLicense');
-                
+
             $row = $form->addRow();
                 $row->addSubmit();
 

@@ -57,12 +57,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 
             //Validate Inputs
             $name = $_POST['name'];
+            $license = $_POST['license'];
             $active = $_POST['active'];
             $category = $_POST['category'];
             $description = $_POST['description'];
             $logoLicense = $_POST['logoLicense'];
 
-            if ($name == '' or $active == '' or $category == '') {
+            if ($name == '' or $license == '' or $active == '' or $category == '') {
                 //Fail 3
                 $URL = $URL.'&return=error3';
                 header("Location: {$URL}");
@@ -86,8 +87,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 
                 //Write to database
                 try {
-                    $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'badgesBadgeID' => $badgesBadgeID);
-                    $sql = 'UPDATE badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense WHERE badgesBadgeID=:badgesBadgeID';
+                    $data = array('name' => $name, 'license' => $license, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'badgesBadgeID' => $badgesBadgeID);
+                    $sql = 'UPDATE badgesBadge SET name=:name, license=:license, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense WHERE badgesBadgeID=:badgesBadgeID';
                     $result = $connection2->prepare($sql);
                     $result->execute($data);
                 } catch (PDOException $e) {

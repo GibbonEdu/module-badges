@@ -163,3 +163,15 @@ $sql[$count][1] = "UPDATE gibbonAction SET URLList='badges_credits.php', entryUR
 ++$count;
 $sql[$count][0] = '2.5.04';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.6.00';
+$sql[$count][1] = "
+ALTER TABLE `badgesBadge` ADD `license` enum('Y','N') NOT NULL DEFAULT 'N';end
+INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges'), 'Licenses by Class', 0, 'Report', 'Shows possession of selected license by students in a class.', 'report_licensesByClass.php', 'report_licensesByClass.php', 'Y', 'Y', 'N', 'N', 'N', 'Y', 'Y', 'Y', 'Y') ;end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Badges' AND gibbonAction.name='Licenses by Class'));end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '2', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Badges' AND gibbonAction.name='Licenses by Class'));end
+INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, `description`, `URLList`, `entryURL`, `defaultPermissionAdmin`, `defaultPermissionTeacher`, `defaultPermissionStudent`, `defaultPermissionParent`, `defaultPermissionSupport`, `categoryPermissionStaff`, `categoryPermissionStudent`, `categoryPermissionParent`, `categoryPermissionOther`) VALUES ((SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges'), 'Licenses by Activity', 0, 'Report', 'Shows possession of selected license by students in an activity.', 'report_licensesByActivity.php', 'report_licensesByActivity.php', 'Y', 'Y', 'N', 'N', 'N', 'Y', 'Y', 'Y', 'Y') ;end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Badges' AND gibbonAction.name='Licenses by Activity'));end
+INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '2', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Badges' AND gibbonAction.name='Licenses by Activity'));end
+";

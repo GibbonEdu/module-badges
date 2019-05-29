@@ -80,7 +80,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     $row = $form->addRow();
         $row->addSearchSubmit($gibbon->session, __('Clear Search'));
 
-    echo $form->getOutput(); 
+    echo $form->getOutput();
 
     echo "<h2 class='top'>";
     echo __('View');
@@ -133,6 +133,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         echo 'Name<br/>';
         echo '</th>';
         echo '<th>';
+        echo 'License<br/>';
+        echo '</th>';
+        echo '<th>';
         echo 'Category';
         echo '</th>';
         echo "<th style='width: 120px'>";
@@ -171,6 +174,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
             echo '</td>';
             echo '<td>';
             echo $row['name'];
+            echo '</td>';
+            echo '<td>';
+            if ($row['license'] == "Y") {
+                echo "<img title='" . __('Yes'). "' src='../themes/Default/img/iconTick.png' />";
+            }
             echo '</td>';
             echo '<td>';
             echo $row['category'];

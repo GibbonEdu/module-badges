@@ -21,12 +21,76 @@ function getBadges($connection2, $guid, $gibbonPersonID)
 {
     $output = '';
 
+
+
+    //Licenses
+    try {
+        $data = array('gibbonPersonID' => $gibbonPersonID);
+        $sql = 'SELECT badgesBadgeStudent.*, badgesBadge.name AS award, badgesBadge.logo AS logo, badgesBadge.category AS category, gibbonSchoolYear.name AS year FROM badgesBadgeStudent JOIN badgesBadge ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonSchoolYear ON (badgesBadgeStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID AND license=\'Y\' ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
+        $result = $connection2->prepare($sql);
+        $result->execute($data);
+    } catch (PDOException $e) {
+        echo "<div class='error'>".$e->getMessage().'</div>';
+    }
+    if ($result->rowCount() > 0) {
+        $columns = 3;
+        $count = 0;
+
+        $output .= '<h3>';
+        $output .= __m('Licenses');
+        $output .= '</h3>';
+
+        while ($row = $result->fetch()) {
+            // $awardYears[$row['year']][1] = array("$innerCount" => $row['award']);
+            // $awardYears[$row['year']][2] = array("$innerCount" => $row['logo']);
+            // $awardYears[$row['year']][3] = array("$innerCount" => $row['category']);
+            // $awardYears[$row['year']][4] = array("$innerCount" => $row['comment']);
+
+            //Spit out licenses
+            if ($count % $columns == 0) {
+                if ($count == 0) {
+                    $output .= "<table class='margin-bottom: 10px; smallIntBorder' cellspacing='0' style='width:100%'>";
+                }
+                $output .= '<tr>';
+            }
+
+            $output .= "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
+            if ($row['logo'] != '') {
+                $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'/><br/>";
+            } else {
+                $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+            }
+            $output .= '<b>'.$row['award'].'</b><br/>';
+            $output .= '<span class=\'emphasis small\'>'.$row['category'].'</span><br/>';
+            if (!empty($row['comment'])) {
+                $output .= '<span class=\'emphasis small\'>'.$row['comment'].'</span><br/>';
+            }
+            $output .= '</td>';
+
+            if ($count % $columns == ($columns - 1)) {
+                $output .= '</tr>';
+            }
+            ++$count;
+        }
+
+        if ($count % $columns != 0) {
+            for ($i = 0;$i < $columns - ($count % $columns);++$i) {
+                $output .= '<td></td>';
+            }
+            $output .= '</tr>';
+        }
+
+        $output .= '</table>';
+    }
+
+    //Badges
     try {
         $data = array('gibbonPersonID' => $gibbonPersonID);
         $sql = 'SELECT badgesBadgeStudent.*, badgesBadge.name AS award, badgesBadge.logo AS logo, badgesBadge.category AS category, gibbonSchoolYear.name AS year FROM badgesBadgeStudent JOIN badgesBadge ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonSchoolYear ON (badgesBadgeStudent.gibbonSchoolYearID=gibbonSchoolYear.gibbonSchoolYearID) WHERE gibbonPersonID=:gibbonPersonID ORDER BY gibbonSchoolYear.sequenceNumber DESC, date DESC';
         $result = $connection2->prepare($sql);
         $result->execute($data);
-    } catch (PDOException $e) { echo "<div class='error'>".$e->getMessage().'</div>';
+    } catch (PDOException $e) {
+        echo "<div class='error'>".$e->getMessage().'</div>';
     }
     if ($result->rowCount() < 1) {
         $output .= "<div class='warning'>";
@@ -74,7 +138,7 @@ function getBadges($connection2, $guid, $gibbonPersonID)
                 if ($awardYear[2][$count] != '') {
                     $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$awardYear[2][$count]."'/><br/>";
                 } else {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
                 }
                 $output .= '<b>'.$awards.'</b><br/>';
                 $output .= '<span class=\'emphasis small\'>'.$awardYear[3][$count].'</span><br/>';

@@ -30,12 +30,13 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 } else {
     //Proceed!
     $name = $_POST['name'];
+    $license = $_POST['license'];
     $active = $_POST['active'];
     $category = $_POST['category'];
     $description = $_POST['description'];
     $logoLicense = $_POST['logoLicense'];
 
-    if ($name == '' or $active == '' or $category == '') {
+    if ($name == '' or $license == '' or $active == '' or $category == '') {
         //Fail 3
         $URL = $URL.'&return=error3';
         header("Location: {$URL}");
@@ -60,8 +61,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
         //Write to database
         try {
-            $data = array('name' => $name, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID'), 'timestampCreated' => date('Y-m-d H:i:s'));
-            $sql = 'INSERT INTO badgesBadge SET name=:name, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
+            $data = array('name' => $name, 'license' => $license, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID'), 'timestampCreated' => date('Y-m-d H:i:s'));
+            $sql = 'INSERT INTO badgesBadge SET name=:name, license=:license, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
             $result = $connection2->prepare($sql);
             $result->execute($data);
         } catch (PDOException $e) {
