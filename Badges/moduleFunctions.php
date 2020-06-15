@@ -21,8 +21,6 @@ function getBadges($connection2, $guid, $gibbonPersonID)
 {
     $output = '';
 
-
-
     //Licenses
     try {
         $data = array('gibbonPersonID' => $gibbonPersonID);

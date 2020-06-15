@@ -175,3 +175,7 @@ INSERT INTO `gibbonAction` (`gibbonModuleID`, `name`, `precedence`, `category`, 
 INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '1', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Badges' AND gibbonAction.name='Licenses by Activity'));end
 INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`) VALUES (NULL , '2', (SELECT gibbonActionID FROM gibbonAction JOIN gibbonModule ON (gibbonAction.gibbonModuleID=gibbonModule.gibbonModuleID) WHERE gibbonModule.name='Badges' AND gibbonAction.name='Licenses by Activity'));end
 ";
+
+++$count;
+$sql[$count][0] = '2.6.01';
+$sql[$count][1] = "";
