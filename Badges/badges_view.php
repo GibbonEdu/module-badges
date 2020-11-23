@@ -54,7 +54,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 
             $row = $form->addRow();
                 $row->addSearchSubmit($gibbon->session);
-            
+
             echo $form->getOutput();
 
             if ($gibbonPersonID != '') {
@@ -101,8 +101,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo getBadges($connection2, $guid, $gibbon->session->get('gibbonPersonID'));
             }
         } elseif ($highestAction == 'View Badges_myChildren') {
-            $gibbonPersonID = $gibbon->session->get('gibbonPersonID') ?? $_GET['search'];
-            
+            $gibbonPersonID = $_GET['search'] ?? $gibbon->session->get('gibbonPersonID');
+
             //Test data access field for permission
             try {
                 $data = array('gibbonPersonID' => $gibbon->session->get('gibbonPersonID'));
@@ -147,7 +147,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
 
                 $form->addHiddenValue('address', "/modules/".$gibbon->session->get('module')."/badges_View.php");
                 $form->addHiddenValue('q', $gibbon->session->get('address'));
-        
+
                 $row = $form->addRow();
                     $row->addLabel('search', __('User'));
                     $row->addSelect('search')->fromArray($users)->selected($gibbonPersonID);

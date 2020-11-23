@@ -179,3 +179,7 @@ INSERT INTO `gibbonPermission` (`permissionID` ,`gibbonRoleID` ,`gibbonActionID`
 ++$count;
 $sql[$count][0] = '2.6.01';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.6.02';
+$sql[$count][1] = "";

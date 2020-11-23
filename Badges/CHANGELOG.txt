@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.6.02
+-------
+Fixed access issue in View Badges_myChildren
+
 v2.6.01
 -------
 Fixed module redeclaration bug
