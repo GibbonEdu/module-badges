@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.6.02';
+$version = '2.6.03';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
@@ -232,3 +232,9 @@ $array['sourceModuleName'] = 'Badges';
 $array['sourceModuleAction'] = 'View Badges_myChildren';
 $array['sourceModuleInclude'] = 'hook_parentalDashboard_badgesView.php';
 $hooks[1] = "INSERT INTO `gibbonHook` (`gibbonHookID`, `name`, `type`, `options`, gibbonModuleID) VALUES (NULL, 'Badges', 'Parental Dashboard', '".serialize($array)."', (SELECT gibbonModuleID FROM gibbonModule WHERE name='$name'));";
+
+$array = array();
+$array['sourceModuleName'] = 'Badges';
+$array['sourceModuleAction'] = 'View Badges_my';
+$array['sourceModuleInclude'] = 'hook_studentDashboard_badgesView.php';
+$hooks[2] = "INSERT INTO `gibbonHook` (`gibbonHookID`, `name`, `type`, `options`, gibbonModuleID) VALUES (NULL, 'Badges', 'Student Dashboard', '".serialize($array)."', (SELECT gibbonModuleID FROM gibbonModule WHERE name='$name'));";
