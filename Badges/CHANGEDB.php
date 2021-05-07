@@ -187,3 +187,7 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '2.6.03';
 $sql[$count][1] = "INSERT INTO `gibbonHook` (`name`, `type`, `options`, `gibbonModuleID`) VALUES ('Badges', 'Student Dashboard', 'a:3:{s:16:\"sourceModuleName\";s:6:\"Badges\";s:18:\"sourceModuleAction\";s:14:\"View Badges_my\";s:19:\"sourceModuleInclude\";s:36:\"hook_studentDashboard_badgesView.php\";}', (SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges'));end";
+
+++$count;
+$sql[$count][0] = '2.7.00';
+$sql[$count][1] = "";
