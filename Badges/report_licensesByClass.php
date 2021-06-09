@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Form;
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByClass.php') == false) {
     //Acess denied
@@ -41,7 +41,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByCl
 
     $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/report_licensesByClass.php');
 
-    $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+    $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
     $sql = 'SELECT gibbonCourseClassID AS value, CONCAT(gibbonCourse.nameShort,\'.\',gibbonCourseClass.nameShort) AS name FROM gibbonCourse JOIN gibbonCourseClass ON (gibbonCourseClass.gibbonCourseID=gibbonCourse.gibbonCourseID) WHERE gibbonCourse.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY gibbonCourse.nameShort, gibbonCourseClass.nameShort';
     $row = $form->addRow();
         $row->addLabel('gibbonCourseClassID', __('Class'));
@@ -147,7 +147,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByCl
                     echo $count;
                     echo '</td>';
                     echo '<td>';
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/>';
+                    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/>';
                     echo '</td>';
                     echo '<td>';
                     if (!empty($row['badgesBadgeID'])) {
