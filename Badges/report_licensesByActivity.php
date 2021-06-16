@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 use Gibbon\Forms\Form;
 
 //Module includes
-include './modules/'.$_SESSION[$guid]['module'].'/moduleFunctions.php';
+include './modules/'.$session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByActivity.php') == false) {
     //Acess denied
@@ -45,7 +45,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByAc
 
     $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/report_licensesByActivity.php');
 
-    $data = array('gibbonSchoolYearID' => $_SESSION[$guid]['gibbonSchoolYearID']);
+    $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
     $sql = 'SELECT gibbonActivityID AS value, name FROM gibbonActivity WHERE gibbonActivity.gibbonSchoolYearID=:gibbonSchoolYearID AND active=\'Y\' ORDER BY name';
     $row = $form->addRow();
         $row->addLabel('gibbonActivityID', __('Activity'));
@@ -151,7 +151,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByAc
                     echo $count;
                     echo '</td>';
                     echo '<td>';
-                    echo "<a href='".$_SESSION[$guid]['absoluteURL'].'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/>';
+                    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/>';
                     echo '</td>';
                     echo '<td>';
                     if (!empty($row['badgesBadgeID'])) {

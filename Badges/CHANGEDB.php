@@ -191,3 +191,7 @@ $sql[$count][1] = "INSERT INTO `gibbonHook` (`name`, `type`, `options`, `gibbonM
 ++$count;
 $sql[$count][0] = '2.7.00';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.7.01';
+$sql[$count][1] = "";
