@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 function getBadges($connection2, $guid, $gibbonPersonID)
 {
+    global $session;
+        
     $output = '';
 
     //Licenses
@@ -54,9 +56,9 @@ function getBadges($connection2, $guid, $gibbonPersonID)
 
             $output .= "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
             if ($row['logo'] != '') {
-                $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$row['logo']."'/><br/>";
+                $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$session->get('absoluteURL').'/'.$row['logo']."'/><br/>";
             } else {
-                $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+                $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             }
             $output .= '<b>'.$row['award'].'</b><br/>';
             $output .= '<span class=\'emphasis small\'>'.$row['category'].'</span><br/>';
@@ -134,9 +136,9 @@ function getBadges($connection2, $guid, $gibbonPersonID)
 
                 $output .= "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
                 if ($awardYear[2][$count] != '') {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/'.$awardYear[2][$count]."'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$session->get('absoluteURL').'/'.$awardYear[2][$count]."'/><br/>";
                 } else {
-                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$_SESSION[$guid]['absoluteURL'].'/themes/'.$_SESSION[$guid]['gibbonThemeName']."/img/anonymous_240_square.jpg'/><br/>";
+                    $output .= "<img style='margin-bottom: 20px; max-width: 150px' src='".$session->get('absoluteURL').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
                 }
                 $output .= '<b>'.$awards.'</b><br/>';
                 $output .= '<span class=\'emphasis small\'>'.$awardYear[3][$count].'</span><br/>';
