@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Domain\System\SettingGateway;
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php') == false) {
     //Acess denied
@@ -27,16 +28,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php')
 } else {
     //Proceed!
     $page->breadcrumbs->add(__('Badges Settings'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-	}
 	
 	$form = Form::create('action', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badgeSettingsProcess.php');
 	
 	$form->addHiddenValue('address', $gibbon->session->get('address'));
 
-	$setting = getSettingByScope($connection2, 'Badges', 'badgeCategories', true);
+	$setting = $container->get(SettingGateway::class)->getSettingByScope('Badges', 'badgeCategories', true);
 	$row = $form->addRow();
 		$row->addLabel($setting['name'], __($setting['nameDisplay']))->description(__($setting['description']));
 		$row->addTextArea($setting['name'])->setValue($setting['value'])->isRequired()->setRows(4);

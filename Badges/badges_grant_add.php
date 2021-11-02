@@ -36,10 +36,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         ->add(__('Grant Badges'), 'badges_grant.php&gibbonSchoolYearID='.$gibbonSchoolYearID)
         ->add(__('Add'));
 
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     echo "<div class='linkTop'>";
 
     //Get the gibbon persion and badge IDs

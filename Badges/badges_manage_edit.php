@@ -20,7 +20,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//Module includes
+use Gibbon\Domain\System\SettingGateway;
+
 include './modules/Badges/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.php') == false) {
@@ -33,10 +34,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
     $page->breadcrumbs
             ->add(__('Manage Badges'),'badges_manage.php')
             ->add(__('Edit Badges'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     //Check if school year specified
     $badgesBadgeID = $_GET['badgesBadgeID'];
@@ -83,7 +80,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                 $row->addLabel('active', __('Active'));
                 $row->addYesNo('active')->required();
 
-            $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
+            $categories = $container->get(SettingGateway::class)->getSettingByScope('Badges', 'badgeCategories');
             $categories = !empty($categories) ? array_map('trim', explode(',', $categories)) : [];
             $row = $form->addRow();
                 $row->addLabel('category', __('Category'));

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
@@ -120,7 +121,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 //Get child list
                 $count = 0;
                 $users = array(
-                    $gibbon->session->get('gibbonPersonID') => formatName('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', true)
+                    $gibbon->session->get('gibbonPersonID') => Format::name('', $gibbon->session->get('preferredName'), $gibbon->session->get('surname'), 'Student', true)
                 );
                 while ($row = $result->fetch()) {
                     try {
@@ -133,7 +134,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                     }
 
                     while ($rowChild = $resultChild->fetch()) {
-                        $users[$rowChild['gibbonPersonID']] = formatName('', $rowChild['preferredName'], $rowChild['surname'], 'Student', true);
+                        $users[$rowChild['gibbonPersonID']] = Format::name('', $rowChild['preferredName'], $rowChild['surname'], 'Student', true);
                         $count ++;
                     }
                 }

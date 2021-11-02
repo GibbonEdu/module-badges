@@ -18,7 +18,9 @@
  */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 use Gibbon\Forms\DatabaseFormFactory;
+
 //Module includes
 include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
 
@@ -30,10 +32,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 } else {
     //Get action with highest precendence
     $page->breadcrumbs->add(__('Grant Badges'));
-
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
 
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $gibbon->session->get('gibbonSchoolYearID');
     if (isset($_GET['gibbonSchoolYearID'])) {
@@ -222,10 +220,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
                 echo $row['name'];
                 echo '</td>';
                 echo '<td>';
-                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&hook=Badges&module=Badges&action=View Badges_all&gibbonHookID=$gibbonHookID&search=&allStudents=&sort=surname, preferredName'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
+                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&hook=Badges&module=Badges&action=View Badges_all&gibbonHookID=$gibbonHookID&search=&allStudents=&sort=surname, preferredName'>".Format::name('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
                 echo '</td>';
                 echo '<td>';
-                echo dateConvertBack($guid, $row['date']).'<br/>';
+                echo Format::date($row['date']).'<br/>';
                 echo '</td>';
                 echo '<td>';
                 echo "<a class='thickbox' href='".$gibbon->session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID&width=650&height=135'><img title='".__('Delete')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/garbage.png'/></a> ";

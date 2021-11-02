@@ -28,11 +28,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_delete
     echo __('You do not have access to this action.');
     echo '</div>';
 } else {
-     //Proceed!
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], null, null);
-    }
-
     //Check if school year specified
     $badgesBadgeStudentID = $_GET['badgesBadgeStudentID'];
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'];

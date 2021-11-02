@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//Module includes
 use Gibbon\Forms\Form;
 use Gibbon\FileUploader;
+use Gibbon\Domain\System\SettingGateway;
 
 include './modules/Badges/moduleFunctions.php';
 
@@ -34,11 +34,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
             ->add(__('Manage Badges'), 'badges_manage.php')
             ->add(__('Add Badges'));
 
-    $returns = array();
     $editLink = isset($editLink) ? $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'].'&category='.$_GET['category'] : '';
-    if (isset($_GET['return'])) {
-        returnProcess($guid, $_GET['return'], $editLink, null);
-    }
+    $page->return->setEditLink($editLink);
 
     if ($_GET['search'] != '' || $_GET['category'] != '') {
         echo "<div class='linkTop'>";
@@ -63,7 +60,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
         $row->addLabel('active', __('Active'));
         $row->addYesNo('active')->required();
 
-    $categories = getSettingByScope($connection2, 'Badges', 'badgeCategories');
+    $categories = $container->get(SettingGateway::class)->getSettingByScope('Badges', 'badgeCategories');
     $categories = !empty($categories) ? array_map('trim', explode(',', $categories)) : [];
     $row = $form->addRow();
         $row->addLabel('category', __('Category'));

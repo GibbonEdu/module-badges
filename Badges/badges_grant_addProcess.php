@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Services\Format;
+
 include '../../gibbon.php';
 
 $gibbonSchoolYearID = $_POST['gibbonSchoolYearID'];
@@ -44,7 +46,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         foreach ($gibbonPersonIDMulti as $gibbonPersonID) {
             //Write to database
             try {
-                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => dateConvert($guid, $date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID',''));
+                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => Format::date($date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID',''));
                 $sql = 'INSERT INTO badgesBadgeStudent SET badgesBadgeID=:badgesBadgeID, gibbonSchoolYearID=:gibbonSchoolYearID, date=:date, gibbonPersonID=:gibbonPersonID, comment=:comment, gibbonPersonIDCreator=:gibbonPersonIDCreator';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);
@@ -55,8 +57,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
             $badgesBadgeStudentID = $connection2->lastInsertID();
 
             //Notify User
-            $notificationText = __('Someone has granted you a badge.');
-            setNotification($connection2, $guid, $gibbonPersonID, $notificationText, 'Badges', "/index.php?q=/modules/Badges/badges_view.php&gibbonPersonID=$gibbonPersonID");
+            $notificationGateway = new \Gibbon\Domain\System\NotificationGateway($pdo);
+			$notificationSender = new \Gibbon\Comms\NotificationSender($notificationGateway, $session);
+			$notificationText = __m('Someone has granted you a badge.');
+			$notificationSender->addNotification($gibbonPersonID, $notificationText, 'Badges', "/index.php?q=/modules/Badges/badges_view.php&gibbonPersonID=$gibbonPersonID");
+			$notificationSender->sendNotifications();
         }
 
         if ($partialFail == true) {

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
 
 //Module includes
 include './modules/'.$session->get('module').'/moduleFunctions.php';
@@ -147,7 +148,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByCl
                     echo $count;
                     echo '</td>';
                     echo '<td>';
-                    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'>".formatName('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/>';
+                    echo "<a href='".$session->get('absoluteURL').'/index.php?q=/modules/Students/student_view_details.php&gibbonPersonID='.$row['gibbonPersonID']."'>".Format::name('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/>';
                     echo '</td>';
                     echo '<td>';
                     if (!empty($row['badgesBadgeID'])) {
