@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.7.04
+-------
+Refactored more null coalesce
+
 v2.7.03
 -------
 Removed deprecated function calls

@@ -203,3 +203,7 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '2.7.03';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.7.04';
+$sql[$count][1] = "";
