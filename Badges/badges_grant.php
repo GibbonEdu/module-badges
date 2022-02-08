@@ -62,24 +62,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
     }
 
     if ($gibbonSchoolYearID != '') {
-        echo '<h2>';
-        echo $gibbonSchoolYearName;
-        echo '</h2>';
-
-        echo "<div class='linkTop'>";
-        //Print year picker
-        if (getPreviousSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Previous Year').'</a> ';
-        } else {
-            echo __('Previous Year').' ';
-        }
-        echo ' | ';
-        if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Next Year').'</a> ';
-        } else {
-            echo __('Next Year').' ';
-        }
-        echo '</div>';
+        $page->navigator->addSchoolYearNavigation($gibbonSchoolYearID);
 
         $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
         $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';

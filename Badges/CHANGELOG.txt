@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.8.00
+-------
+Implemented new v23 year selector
+
 v2.7.03
 -------
 Removed deprecated function calls

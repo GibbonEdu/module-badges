@@ -25,7 +25,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '2.7.03';
+$version = '2.8.00';
 $author = 'Ross Parker';
 $url = 'http://rossparker.org';
 
