@@ -207,3 +207,7 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '2.8.00';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.8.01';
+$sql[$count][1] = "";

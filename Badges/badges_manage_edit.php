@@ -20,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Http\Url;
 use Gibbon\Domain\System\SettingGateway;
 
 include './modules/Badges/moduleFunctions.php';
@@ -32,12 +33,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 } else {
     //Proceed!
     $page->breadcrumbs
-            ->add(__('Manage Badges'),'badges_manage.php')
-            ->add(__('Edit Badges'));
+        ->add(__('Manage Badges'),'badges_manage.php')
+        ->add(__('Edit Badges'));
 
-    //Check if school year specified
-    $badgesBadgeID = $_GET['badgesBadgeID'];
-    if ($badgesBadgeID == '') { echo "<div class='error'>";
+    $search = $_GET['search'] ?? '';
+    $category = $_GET['category'] ?? '';
+    $badgesBadgeID = $_GET['badgesBadgeID'] ?? null;
+    
+    if (empty($badgesBadgeID)) {
+        echo "<div class='error'>";
         echo 'You have not specified a policy.';
         echo '</div>';
     } else {
@@ -58,13 +62,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
             //Let's go!
             $values = $result->fetch();
 
-            if ($_GET['search'] != '' || $_GET['category'] != '') {
-                echo "<div class='linkTop'>";
-                echo "<a href='".$gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>Back to Search Results</a>";
-                echo '</div>';
+            if (!empty($search) || !empty($category)) {
+                $params = [
+                    "search" => $search,
+                    "category" => $category
+                ];
+                $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Badges', 'badges_manage.php')->withQueryParams($params));
             }
 
-            $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_editProcess.php?badgesBadgeID='.$badgesBadgeID.'&search='.$_GET['search'].'&category='.$_GET['category']);
+            $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module')."/badges_manage_editProcess.php?badgesBadgeID=$badgesBadgeID&search=$search&category=$category");
 
             $form->addHiddenValue('address', $gibbon->session->get('address'));
 

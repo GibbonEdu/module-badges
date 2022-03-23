@@ -147,9 +147,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         }
         $sqlPage = $sql.' LIMIT '.$gibbon->session->get('pagination').' OFFSET '.(($page - 1) * $gibbon->session->get('pagination'));
 
-        echo "<div class='linkTop'>";
+        echo "<p class='text-right mb-2 text-xs'>";
         echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module')."/badges_grant_add.php&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'>".__('Add')."<img style='margin: 0 0 -4px 5px' title='".__('Add')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-        echo '</div>';
+        echo '</p>';
 
         if ($result->rowCount() < 1) {
             echo "<div class='error'>";

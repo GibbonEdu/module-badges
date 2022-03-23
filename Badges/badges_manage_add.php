@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
 use Gibbon\FileUploader;
 use Gibbon\Domain\System\SettingGateway;
@@ -34,17 +35,22 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
             ->add(__('Manage Badges'), 'badges_manage.php')
             ->add(__('Add Badges'));
 
-    $editLink = isset($editLink) ? $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID='.$_GET['editID'].'&search='.$_GET['search'].'&category='.$_GET['category'] : '';
+    $editID = $_GET['editID'] ?? '';
+    $search = $_GET['search'] ?? '';
+    $category = $_GET['category'] ?? '';
+
+    $editLink = !empty($editID) ? $gibbon->session->get('absoluteURL','')."/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=$editID&search=$search&category=$category" : '';
     $page->return->setEditLink($editLink);
 
-    if ($_GET['search'] != '' || $_GET['category'] != '') {
-        echo "<div class='linkTop'>";
-        echo "<a href='".$gibbon->session->get('absoluteURL','').'/index.php?q=/modules/Badges/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category']."'>".__('Back to Search Results')."</a>";
-        echo '</div>';
+    if (!empty($search) || !empty($category)) {
+        $params = [
+            "search" => $search,
+            "category" => $category
+        ];
+        $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Badges', 'badges_manage.php')->withQueryParams($params));
     }
 
-
-    $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badges_manage_addProcess.php?search='.$_GET['search'].'&category='.$_GET['category']);
+    $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module')."/badges_manage_addProcess.php?search=$search&category=$category");
 
     $form->addHiddenValue('address', $gibbon->session->get('address'));
 

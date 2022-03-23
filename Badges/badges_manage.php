@@ -108,9 +108,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         echo "<div class='error'>" . $e->getMessage() . '</div>';
     }
 
-    echo "<div class='linkTop'>";
+    echo "<p class='text-right mb-2 text-xs'>";
     echo "<a href='" . $gibbon->session->get('absoluteURL','') . "/index.php?q=/modules/Badges/badges_manage_add.php&search=$search&category=$category'>" . __('Add') . "<img style='margin-left: 5px' title='" . __('Add') . "' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/page_new.png'/></a>";
-    echo '</div>';
+    echo '</p>';
 
     if ($result->rowCount() < 1) {
         echo "<div class='error'>";

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Http\Url;
 use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 
@@ -36,25 +37,17 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         ->add(__('Grant Badges'), 'badges_grant.php&gibbonSchoolYearID='.$gibbonSchoolYearID)
         ->add(__('Add'));
 
-    echo "<div class='linkTop'>";
-
-    //Get the gibbon persion and badge IDs
-    //Set '' for safety
-    $gibbonPersonID2 = '';
-    $badgesBadgeID2 = '';
-    if (isset($_GET['gibbonPersonID2']) ||  isset($_GET['badgesBadgeID2'])) {
-        //Only assign variable when it exists
-        $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
-        $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
-
-        //Add a "Back to Results" link
-        if (!empty($gibbonPersonID2) OR !empty($badgesBadgeID2)) {
-            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php&gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."'>".__('Back to Search Results').'</a>';
-        }
+    $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
+    $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
+    if (!empty($gibbonPersonID2) || !empty($badgesBadgeID2)) {
+        $params = [
+            "gibbonPersonID2" => $gibbonPersonID2,
+            "badgesBadgeID2" => $badgesBadgeID2
+        ];
+        $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Badges', 'badges_grant.php')->withQueryParams($params));
     }
-    echo '</div>';
 
-    $form = Form::create('grantBadges', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module').'/badges_grant_addProcess.php?gibbonPersonID2='.$gibbonPersonID2.'&badgesBadgeID2='.$badgesBadgeID2."&gibbonSchoolYearID=$gibbonSchoolYearID");
+    $form = Form::create('grantBadges', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/badges_grant_addProcess.php?gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
 
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
