@@ -46,7 +46,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         foreach ($gibbonPersonIDMulti as $gibbonPersonID) {
             //Write to database
             try {
-                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => Format::date($date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID',''));
+                $data = array('badgesBadgeID' => $badgesBadgeID, 'gibbonSchoolYearID' => $gibbonSchoolYearID, 'date' => Format::dateConvert($date), 'gibbonPersonID' => $gibbonPersonID, 'comment' => $comment, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID',''));
                 $sql = 'INSERT INTO badgesBadgeStudent SET badgesBadgeID=:badgesBadgeID, gibbonSchoolYearID=:gibbonSchoolYearID, date=:date, gibbonPersonID=:gibbonPersonID, comment=:comment, gibbonPersonIDCreator=:gibbonPersonIDCreator';
                 $result = $connection2->prepare($sql);
                 $result->execute($data);

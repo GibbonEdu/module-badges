@@ -1,5 +1,10 @@
 CHANGELOG
 =========
+v2.8.02
+-------
+Refactoring of printPagination
+Fixed empty grant date bug
+
 v2.8.01
 -------
 Refactoring of linkTop divs
