@@ -19,7 +19,9 @@
 
 use Gibbon\Forms\Form;
 use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
 use Gibbon\Forms\DatabaseFormFactory;
+use Gibbon\Module\Badges\Domain\BadgeGateway;
 
 //Module includes
 include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
@@ -34,9 +36,6 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
     $page->breadcrumbs->add(__('Grant Badges'));
 
     $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $gibbon->session->get('gibbonSchoolYearID');
-    if (isset($_GET['gibbonSchoolYearID'])) {
-
-    }
     if ($gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
         $gibbonSchoolYearName = $gibbon->session->get('gibbonSchoolYearName');
     }
@@ -61,25 +60,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         }
     }
 
-    if ($gibbonSchoolYearID != '') {
-        echo '<h2>';
-        echo $gibbonSchoolYearName;
-        echo '</h2>';
+    //Get gibbonHookID for link to Student Profile
+    $gibbonHookID = null;
+    $dataHook = array();
+    $sqlHook = "SELECT gibbonHookID FROM gibbonHook WHERE name='Badges' AND type='Student Profile' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges')";
+    $resultHook = $connection2->prepare($sqlHook);
+    $resultHook->execute($dataHook);
+    if ($resultHook->rowCount() == 1) {
+        $rowHook = $resultHook->fetch();
+        $gibbonHookID = $rowHook['gibbonHookID'];
+    }
 
-        echo "<div class='linkTop'>";
-        //Print year picker
-        if (getPreviousSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant.php&gibbonSchoolYearID='.getPreviousSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Previous Year').'</a> ';
-        } else {
-            echo __('Previous Year').' ';
-        }
-        echo ' | ';
-        if (getNextSchoolYearID($gibbonSchoolYearID, $connection2) != false) {
-            echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant.php&gibbonSchoolYearID='.getNextSchoolYearID($gibbonSchoolYearID, $connection2)."'>".__('Next Year').'</a> ';
-        } else {
-            echo __('Next Year').' ';
-        }
-        echo '</div>';
+    if ($gibbonSchoolYearID != '') {
+        $page->navigator->addSchoolYearNavigation($gibbonSchoolYearID);
 
         $gibbonPersonID2 = $_GET['gibbonPersonID2'] ?? '';
         $badgesBadgeID2 = $_GET['badgesBadgeID2'] ?? '';
@@ -108,156 +101,75 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         $form->addHiddenValue('q',$_GET['q']);
         $form->addRow();
         echo $form->getOutput();
-        ?>
 
+        $badgeGateway = $container->get(BadgeGateway::class);
 
-        <?php
+        // QUERY
+        $criteria = $badgeGateway->newQueryCriteria(true)
+            ->sortBy(['timestamp'], 'DESC')
+            ->pageSize(50)
+            ->fromPOST();
 
+        $badges = $badgeGateway->queryBadgeGrants($criteria, $gibbonSchoolYearID, $gibbonPersonID2, $badgesBadgeID2);
 
-        echo '<h3>';
-        echo __('Badges');
-        echo '</h3>';
-        //Set pagination variable
-        $page = 1;
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-        }
-        if ((!is_numeric($page)) or $page < 1) {
-            $page = 1;
-        }
+        // TABLE
+        $table = DataTable::createPaginated('badges', $criteria);
+        $table->setTitle(__('View'));
 
-        //Get gibbonHookID for link to Student Profile
-        $gibbonHookID = null;
-        try {
-            $dataHook = array();
-            $sqlHook = "SELECT gibbonHookID FROM gibbonHook WHERE name='Badges' AND type='Student Profile' AND gibbonModuleID=(SELECT gibbonModuleID FROM gibbonModule WHERE name='Badges')";
-            $resultHook = $connection2->prepare($sqlHook);
-            $resultHook->execute($dataHook);
-        } catch (PDOException $e) {
+        $table->addHeaderAction('add', __('Add'))
+            ->addParam('gibbonPersonID2', $gibbonPersonID2)
+            ->addParam('badgesBadgeID2', $badgesBadgeID2)
+            ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
+            ->setURL('/modules/Badges/badges_grant_add.php')
+            ->displayLabel();
 
-        }
-        if ($resultHook->rowCount() == 1) {
-            $rowHook = $resultHook->fetch();
-            $gibbonHookID = $rowHook['gibbonHookID'];
-        }
+        $table->addExpandableColumn('comment')->format(function ($values) use ($session) {
+            $return = '';
 
-        //Search with filters applied
-        try {
-            $data = array();
-            $sqlWhere = 'AND ';
-            if ($gibbonPersonID2 != '') {
-                $data['gibbonPersonID'] = $gibbonPersonID2;
-                $sqlWhere .= 'badgesBadgeStudent.gibbonPersonID=:gibbonPersonID AND ';
+            if (!empty($values['description'])) {
+                $return .= Format::bold(__('Description'))."<br/>".$values['description']."<br/>";
             }
-            if ($badgesBadgeID2 != '') {
-                $data['badgesBadgeID2'] = $badgesBadgeID2;
-                $sqlWhere .= 'badgesBadge.badgesBadgeID=:badgesBadgeID2 AND ';
-            }
-            $sqlWhere = $sqlWhere == 'AND ' ? '' : substr($sqlWhere, 0, -5);
-
-            $data['gibbonSchoolYearID2'] = $gibbonSchoolYearID;
-            $sql = "SELECT badgesBadge.*, badgesBadgeStudent.*, surname, preferredName FROM badgesBadge JOIN badgesBadgeStudent ON (badgesBadgeStudent.badgesBadgeID=badgesBadge.badgesBadgeID) JOIN gibbonPerson ON (badgesBadgeStudent.gibbonPersonID=gibbonPerson.gibbonPersonID) WHERE badgesBadgeStudent.gibbonSchoolYearID=:gibbonSchoolYearID2 $sqlWhere ORDER BY timestamp DESC";
-            $result = $connection2->prepare($sql);
-            $result->execute($data);
-        } catch (PDOException $e) {
-            echo "<div class='error'>".$e->getMessage().'</div>';
-        }
-        $sqlPage = $sql.' LIMIT '.$gibbon->session->get('pagination').' OFFSET '.(($page - 1) * $gibbon->session->get('pagination'));
-
-        echo "<div class='linkTop'>";
-        echo "<a href='".$gibbon->session->get('absoluteURL').'/index.php?q=/modules/'.$gibbon->session->get('module')."/badges_grant_add.php&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID'>".__('Add')."<img style='margin: 0 0 -4px 5px' title='".__('Add')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/page_new.png'/></a>";
-        echo '</div>';
-
-        if ($result->rowCount() < 1) {
-            echo "<div class='error'>";
-            echo __('There are no records to display.');
-            echo '</div>';
-        } else {
-            if ($result->rowCount() > $gibbon->session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'top', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
+            if (!empty($values['comment'])) {
+                if (!empty($values['description'])) {
+                    $return .= "<br/>";
+                }
+                $return .= Format::bold(__('Comment'))."<br/>".$values['comment'];
             }
 
-            echo "<table cellspacing='0' style='width: 100%'>";
-            echo "<tr class='head'>";
-            echo "<th style='width: 180px'>";
-            echo __('Badges');
-            echo '</th>';
-            echo '<th>';
-            echo __('Student');
-            echo '</th>';
-            echo '<th>';
-            echo __('Date');
-            echo '</th>';
-            echo "<th style='min-width: 70px'>";
-            echo __('Actions');
-            echo '</th>';
-            echo '</tr>';
+            return $return;
+        });
 
-            $count = 0;
-            $rowNum = 'odd';
-            try {
-                $resultPage = $connection2->prepare($sqlPage);
-                $resultPage->execute($data);
-            } catch (PDOException $e) {
-                echo "<div class='error'>".$e->getMessage().'</div>';
-            }
-            while ($row = $resultPage->fetch()) {
-                if ($count % 2 == 0) {
-                    $rowNum = 'even';
+        $table->addColumn('badge', __('Badge'))
+            ->format(function ($values) use ($session) {
+                $return = "<div class='text-center'>";
+                if ($values['logo'] != '') {
+                    $return .= "<img class='user' style='max-width: 150px' src='" . $session->get('absoluteURL','') . '/' . $values['logo'] . "'/>";
                 } else {
-                    $rowNum = 'odd';
+                    $return .= "<img class='user' style='max-width: 150px' src='" . $session->get('absoluteURL','') . '/themes/' . $session->get('gibbonThemeName') . "/img/anonymous_240_square.jpg'/>";
                 }
-                ++$count;
+                $return .= "<br/>".Format::bold($values['name'])."</div>";
 
-                //COLOR ROW BY STATUS!
-                echo "<tr class=$rowNum>";
-                echo "<td style='font-weight: bold; text-align: center'>";
-                if ($row['logo'] != '') {
-                    echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$gibbon->session->get('absoluteURL').'/'.$row['logo']."'/>";
-                } else {
-                    echo "<img class='user' style='margin-bottom: 10px; max-width: 150px' src='".$gibbon->session->get('absoluteURL').'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/>";
-                }
-                echo $row['name'];
-                echo '</td>';
-                echo '<td>';
-                echo "<div style='padding: 2px 0px'><b><a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$row['gibbonPersonID']."&hook=Badges&module=Badges&action=View Badges_all&gibbonHookID=$gibbonHookID&search=&allStudents=&sort=surname, preferredName'>".Format::name('', $row['preferredName'], $row['surname'], 'Student', true).'</a><br/></div>';
-                echo '</td>';
-                echo '<td>';
-                echo Format::date($row['date']).'<br/>';
-                echo '</td>';
-                echo '<td>';
-                echo "<a class='thickbox' href='".$gibbon->session->get('absoluteURL').'/fullscreen.php?q=/modules/'.$gibbon->session->get('module').'/badges_grant_delete.php&badgesBadgeStudentID='.$row['badgesBadgeStudentID']."&gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID&width=650&height=135'><img title='".__('Delete')."' src='./themes/".$gibbon->session->get('gibbonThemeName')."/img/garbage.png'/></a> ";
-                echo "<script type='text/javascript'>";
-                echo '$(document).ready(function(){';
-                echo "\$(\".comment-$count\").hide();";
-                echo "\$(\".show_hide-$count\").fadeIn(1000);";
-                echo "\$(\".show_hide-$count\").click(function(){";
-                echo "\$(\".comment-$count\").fadeToggle(1000);";
-                echo '});';
-                echo '});';
-                echo '</script>';
-                if ($row['comment'] != '') {
-                    echo "<a title='".__('View Description')."' class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='".$gibbon->session->get('absoluteURL')."/themes/Default/img/page_down.png' alt='".__('Show Comment')."' onclick='return false;' /></a>";
-                }
-                echo '</td>';
-                echo '</tr>';
-                if ($row['comment'] != '') {
-                    echo "<tr class='comment-$count' id='comment-$count'>";
-                    echo '<td colspan=4>';
-                    if ($row['comment'] != '') {
-                        echo '<b>'.__('Comment').'</b><br/>';
-                        echo nl2brr($row['comment']).'<br/><br/>';
-                    }
-                    echo '</td>';
-                    echo '</tr>';
-                }
-            }
-            echo '</table>';
+                return $return;
+            });
 
-            if ($result->rowCount() > $gibbon->session->get('pagination')) {
-                printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'bottom', "gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
-            }
-        }
+        $table->addColumn('student', __('Student'))
+            ->format(function ($values) use ($gibbonHookID) {
+                return "<a href='index.php?q=/modules/Students/student_view_details.php&gibbonPersonID=".$values['gibbonPersonID']."&hook=Badges&module=Badges&action=View Badges_all&gibbonHookID=$gibbonHookID&search=&allStudents=&sort=surname, preferredName'>".Format::name('', $values['preferredName'], $values['surname'], 'Student', true).'</a>';
+            });
+
+        $table->addColumn('date', __('Date'))->format(Format::using('date', 'date'));
+
+        $actions = $table->addActionColumn()
+            ->addParam('badgesBadgeStudentID')
+            ->addParam('gibbonPersonID2', $gibbonPersonID2)
+            ->addParam('badgesBadgeID2', $badgesBadgeID2)
+            ->addParam('gibbonSchoolYearID', $gibbonSchoolYearID)
+            ->format(function ($resource, $actions) {
+                $actions->addAction('delete', __('Delete'))
+                    ->setURL('/modules/Badges/badges_grant_delete.php');
+            });
+
+        echo $table->render($badges);
     }
 }
 ?>

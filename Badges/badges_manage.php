@@ -18,7 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Gibbon\Forms\Form;
+use Gibbon\Services\Format;
+use Gibbon\Tables\DataTable;
 use Gibbon\Domain\System\SettingGateway;
+use Gibbon\Module\Badges\Domain\BadgeGateway;
 
 include './modules/Badges/moduleFunctions.php';
 
@@ -31,29 +34,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     //Proceed!
     $page->breadcrumbs->add(__('Manage Badges'));
 
-    //Set pagination variable
-    $page = null;
-    if (isset($_GET['page'])) {
-        $page = $_GET['page'];
-    }
-    if ((!is_numeric($page)) or $page < 1) {
-        $page = 1;
-    }
-
-    //Build role lookup array
-    $allRoles = array();
-    try {
-        $dataRoles = array();
-        $sqlRoles = 'SELECT * FROM gibbonRole';
-        $resultRoles = $connection2->prepare($sqlRoles);
-        $resultRoles->execute($dataRoles);
-    } catch (PDOException $e) {
-
-    }
-    while ($rowRoles = $resultRoles->fetch()) {
-        $allRoles[$rowRoles['gibbonRoleID']] = $rowRoles['name'];
-    }
-
+    // FILTER
     $search = $_GET['search'] ?? '';
     $category = $_GET['category'] ?? '';
 
@@ -79,137 +60,70 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
 
     echo $form->getOutput();
 
-    echo "<h2 class='top'>";
-    echo __('View');
-    echo '</h2>';
+    $badgeGateway = $container->get(BadgeGateway::class);
 
-    try {
-        $data = array();
-        $sqlWhere = '';
-        if ($search != '' || $category != '') {
-            $sqlWhere = 'WHERE ';
-            if ($search != '') {
-                $data['search'] = "%$search%";
-                $sqlWhere .= 'badgesBadge.name LIKE :search AND ';
-            }
-            if ($category != '') {
-                $data['category'] = $category;
-                $sqlWhere .= 'badgesBadge.category=:category';
-            }
-            if (mb_substr($sqlWhere, -5) == ' AND ') {
-                $sqlWhere = mb_substr($sqlWhere, 0, -5);
-            }
-        }
-        $sql = "SELECT badgesBadge.* FROM badgesBadge $sqlWhere ORDER BY category, badgesBadge.name";
-        $sqlPage = $sql . ' LIMIT ' . $gibbon->session->get('pagination') . ' OFFSET ' . (($page - 1) * $gibbon->session->get('pagination'));
-        $result = $connection2->prepare($sql);
-        $result->execute($data);
-    } catch (PDOException $e) {
-        echo "<div class='error'>" . $e->getMessage() . '</div>';
-    }
+    // QUERY
+    $criteria = $badgeGateway->newQueryCriteria(true)
+        ->sortBy(['name'])
+        ->pageSize(50)
+        ->fromPOST();
 
-    echo "<div class='linkTop'>";
-    echo "<a href='" . $gibbon->session->get('absoluteURL','') . "/index.php?q=/modules/Badges/badges_manage_add.php&search=$search&category=$category'>" . __('Add') . "<img style='margin-left: 5px' title='" . __('Add') . "' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/page_new.png'/></a>";
-    echo '</div>';
+    $badges = $badgeGateway->queryBadges($criteria, $search, $category);
 
-    if ($result->rowCount() < 1) {
-        echo "<div class='error'>";
-        echo 'There are no badges to display.';
-        echo '</div>';
-    } else {
-        if ($result->rowCount() > $gibbon->session->get('pagination')) {
-            printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'top', "search=$search");
-        }
 
-        echo "<table cellspacing='0' style='width: 100%'>";
-        echo "<tr class='head'>";
-        echo "<th style='width: 180px'>";
-        echo __('Logo');
-        echo '</th>';
-        echo '<th>';
-        echo 'Name<br/>';
-        echo '</th>';
-        echo '<th>';
-        echo 'License<br/>';
-        echo '</th>';
-        echo '<th>';
-        echo 'Category';
-        echo '</th>';
-        echo "<th style='width: 120px'>";
-        echo 'Actions';
-        echo '</th>';
-        echo '</tr>';
+    // TABLE
+    $table = DataTable::createPaginated('badges', $criteria);
+    $table->setTitle(__('View'));
 
-        $count = 0;
-        $rowNum = 'odd';
-        try {
-            $resultPage = $connection2->prepare($sqlPage);
-            $resultPage->execute($data);
-        } catch (PDOException $e) {
-            echo "<div class='error'>" . $e->getMessage() . '</div>';
-        }
-        while ($row = $resultPage->fetch()) {
-            if ($count % 2 == 0) {
-                $rowNum = 'even';
+    $table->modifyRows(function ($unit, $row) {
+        if ($unit['active'] != 'Y') $row->addClass('error');
+        return $row;
+    });
+
+    $table->addHeaderAction('add', __('Add'))
+        ->addParam('search', $search)
+        ->addParam('category', $category)
+        ->setURL('/modules/Badges/badges_manage_add.php')
+        ->displayLabel();
+
+    $table->addExpandableColumn('description');
+
+    $table->addColumn('logo', __('Logo'))
+        ->format(function ($values) use ($session) {
+            if ($values['logo'] != '') {
+                return "<img class='user' style='max-width: 150px' src='" . $session->get('absoluteURL','') . '/' . $values['logo'] . "'/>";
             } else {
-                $rowNum = 'odd';
+                return "<img class='user' style='max-width: 150px' src='" . $session->get('absoluteURL','') . '/themes/' . $session->get('gibbonThemeName') . "/img/anonymous_240_square.jpg'/>";
             }
-            ++$count;
+        });
 
-            if ($row['active'] == 'N') {
-                $rowNum = 'error';
-            }
+    $table->addColumn('name', __('Name'));
 
-            //COLOR ROW BY STATUS!
-            echo "<tr class=$rowNum>";
-            echo '<td>';
-            if ($row['logo'] != '') {
-                echo "<img class='user' style='max-width: 150px' src='" . $gibbon->session->get('absoluteURL','') . '/' . $row['logo'] . "'/>";
-            } else {
-                echo "<img class='user' style='max-width: 150px' src='" . $gibbon->session->get('absoluteURL','') . '/themes/' . $gibbon->session->get('gibbonThemeName') . "/img/anonymous_240_square.jpg'/>";
+    $table->addColumn('license', __('License'))
+        ->format(function ($values) use ($session) {
+            if ($values['license'] == "Y") {
+                return "<img title='" . __('Yes'). "' src='./themes/Default/img/iconTick.png' />";
             }
-            echo '</td>';
-            echo '<td>';
-            echo $row['name'];
-            echo '</td>';
-            echo '<td>';
-            if ($row['license'] == "Y") {
-                echo "<img title='" . __('Yes'). "' src='./themes/Default/img/iconTick.png' />";
-            }
-            echo '</td>';
-            echo '<td>';
-            echo $row['category'];
-            echo '</td>';
-            echo '<td>';
-            echo "<script type='text/javascript'>";
-            echo '$(document).ready(function(){';
-            echo "\$(\".comment-$count\").hide();";
-            echo "\$(\".show_hide-$count\").fadeIn(1000);";
-            echo "\$(\".show_hide-$count\").click(function(){";
-            echo "\$(\".comment-$count\").fadeToggle(1000);";
-            echo '});';
-            echo '});';
-            echo '</script>';
-            echo "<a href='" . $gibbon->session->get('absoluteURL','') . '/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category'><img title='Edit' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/config.png'/></a> ";
-            echo "<a class='thickbox' href='" . $gibbon->session->get('absoluteURL','') . '/fullscreen.php?q=/modules/Badges/badges_manage_delete.php&badgesBadgeID=' . $row['badgesBadgeID'] . "&search=$search&category=$category&width=650&height=135'><img title='Delete' src='./themes/" . $gibbon->session->get('gibbonThemeName') . "/img/garbage.png'/></a> ";
-            if ($row['description'] != '') {
-                echo "<a class='show_hide-$count' onclick='false' href='#'><img style='padding-right: 5px' src='" . $gibbon->session->get('absoluteURL','') . "/themes/Default/img/page_down.png' title='Show Description' onclick='return false;' /></a>";
-            }
-            echo '</td>';
-            echo '</tr>';
-            if ($row['description'] != '') {
-                echo "<tr class='comment-$count' id='comment-$count'>";
-                echo "<td style='background-color: #fff' colspan=5>";
-                echo nl2brr($row['description']);
-                echo '</td>';
-                echo '</tr>';
-            }
-        }
-        echo '</table>';
+        });
 
-        if ($result->rowCount() > $gibbon->session->get('pagination')) {
-            printPagination($guid, $result->rowCount(), $page, $gibbon->session->get('pagination'), 'bottom', "search=$search");
-        }
-    }
+    $table->addColumn('category', __('Category'));
+
+    $table->addColumn('active', __('active'))
+        ->format(function ($values) {
+            return Format::yesNo(__($values['active']));
+        });
+
+    $actions = $table->addActionColumn()
+        ->addParam('badgesBadgeID')
+        ->addParam('search', $search)
+        ->addParam('category', $category)
+        ->format(function ($resource, $actions) {
+            $actions->addAction('edit', __('Edit'))
+                ->setURL('/modules/Badges/badges_manage_edit.php');
+            $actions->addAction('delete', __('Delete'))
+                ->setURL('/modules/Badges/badges_manage_delete.php');
+        });
+
+    echo $table->render($badges);
 }
 ?>

@@ -1,8 +1,22 @@
 CHANGELOG
 =========
-v2.7.04
+
+v2.8.03
 -------
 Refactored more null coalesce
+
+v2.8.02
+-------
+Refactoring of printPagination
+Fixed empty grant date bug
+
+v2.8.01
+-------
+Refactoring of linkTop divs
+
+v2.8.00
+-------
+Implemented new v23 year selector
 
 v2.7.03
 -------

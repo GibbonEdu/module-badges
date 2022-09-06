@@ -205,5 +205,20 @@ $sql[$count][0] = '2.7.03';
 $sql[$count][1] = "";
 
 ++$count;
-$sql[$count][0] = '2.7.04';
+$sql[$count][0] = '2.8.00';
 $sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.8.01';
+$sql[$count][1] = "";
+
+++$count;
+$sql[$count][0] = '2.8.02';
+$sql[$count][1] = "
+UPDATE badgesBadgeStudent SET date=SUBSTRING(timestamp, 1, 10) WHERE date='0000-00-00';end
+";
+
+++$count;
+$sql[$count][0] = '2.8.03';
+$sql[$count][1] = "";
+
