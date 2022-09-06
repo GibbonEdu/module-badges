@@ -29,12 +29,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     header("Location: {$URL}");
 } else {
     //Proceed!
-    $name = $_POST['name'];
-    $license = $_POST['license'];
-    $active = $_POST['active'];
-    $category = $_POST['category'];
-    $description = $_POST['description'];
-    $logoLicense = $_POST['logoLicense'];
+    $name = $_POST['name'] ?? '';
+    $license = $_POST['license'] ?? '';
+    $active = $_POST['active'] ?? '';
+    $category = $_POST['category'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $logoLicense = $_POST['logoLicense'] ?? '';
 
     if ($name == '' or $license == '' or $active == '' or $category == '') {
         //Fail 3
