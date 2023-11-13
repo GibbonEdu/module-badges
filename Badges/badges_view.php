@@ -114,9 +114,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view.php') =
                 echo "<div class='error'>".$e->getMessage().'</div>';
             }
             if ($result->rowCount() < 1) {
-                echo "<div class='error'>";
-                echo __('Access denied.');
-                echo '</div>';
+                $page->addMessage(__('There are no records to display.'));
             } else {
                 //Get child list
                 $count = 0;

@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+v2.8.04
+-------
+Changed the no badges text from an error to a normal message
+
 v2.8.03
 -------
 Refactored more null coalesce

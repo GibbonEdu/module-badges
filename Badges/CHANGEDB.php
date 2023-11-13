@@ -222,3 +222,7 @@ UPDATE badgesBadgeStudent SET date=SUBSTRING(timestamp, 1, 10) WHERE date='0000-
 $sql[$count][0] = '2.8.03';
 $sql[$count][1] = "";
 
+++$count;
+$sql[$count][0] = '2.8.04';
+$sql[$count][1] = "";
+
