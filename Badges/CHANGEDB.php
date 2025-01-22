@@ -242,3 +242,8 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '2.9.02';
 $sql[$count][1] = "";
+
+//v2.9.03
+++$count;
+$sql[$count][0] = '2.9.03';
+$sql[$count][1] = "";
