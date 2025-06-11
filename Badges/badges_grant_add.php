@@ -24,7 +24,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
-include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
+include './modules/'.$session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.php') == false) {
     //Acess denied
@@ -49,16 +49,16 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
         $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Badges', 'badges_grant.php')->withQueryParams($params));
     }
 
-    $form = Form::create('grantBadges', $gibbon->session->get('absoluteURL').'/modules/'.$gibbon->session->get('module')."/badges_grant_addProcess.php?gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
+    $form = Form::create('grantBadges', $session->get('absoluteURL').'/modules/'.$session->get('module')."/badges_grant_addProcess.php?gibbonPersonID2=$gibbonPersonID2&badgesBadgeID2=$badgesBadgeID2&gibbonSchoolYearID=$gibbonSchoolYearID");
 
     $form->setFactory(DatabaseFormFactory::create($pdo));
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
     $form->addHiddenValue('gibbonSchoolYearID', $gibbonSchoolYearID);
 
     $row = $form->addRow();
         $row->addLabel('gibbonPersonIDMulti', __('Students'));
-        $row->addSelectUsers('gibbonPersonIDMulti', $gibbon->session->get('gibbonSchoolYearID'), ['includeStudents' => true])->selectMultiple()->isRequired();
+        $row->addSelectUsers('gibbonPersonIDMulti', $session->get('gibbonSchoolYearID'), ['includeStudents' => true])->selectMultiple()->isRequired();
 
     $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
     $row = $form->addRow();
@@ -67,7 +67,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant_add.ph
 
     $row = $form->addRow();
         $row->addLabel('date', __('Date'));
-        $row->addDate('date')->setValue(date($gibbon->session->get('i18n')['dateFormatPHP']))->isRequired();
+        $row->addDate('date')->setValue(date($session->get('i18n')['dateFormatPHP']))->isRequired();
 
     $col = $form->addRow()->addColumn();
         $col->addLabel('comment', __('Comment'));

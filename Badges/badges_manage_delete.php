@@ -53,7 +53,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delet
             //Let's go!
             $row = $result->fetch();
 
-            $form = DeleteForm::createForm($gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module')."/badges_manage_deleteProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&&category=" . $_GET['category']);
+            $form = DeleteForm::createForm($session->get('absoluteURL','').'/modules/'.$session->get('module')."/badges_manage_deleteProcess.php?badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&&category=" . $_GET['category']);
             echo $form->getOutput();
         }
     }

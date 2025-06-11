@@ -41,7 +41,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
     $search = $_GET['search'] ?? '';
     $category = $_GET['category'] ?? '';
 
-    $editLink = !empty($editID) ? $gibbon->session->get('absoluteURL','')."/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=$editID&search=$search&category=$category" : '';
+    $editLink = !empty($editID) ? $session->get('absoluteURL','')."/index.php?q=/modules/Badges/badges_manage_edit.php&badgesBadgeID=$editID&search=$search&category=$category" : '';
     $page->return->setEditLink($editLink);
 
     if (!empty($search) || !empty($category)) {
@@ -52,9 +52,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
         $page->navigator->addSearchResultsAction(Url::fromModuleRoute('Badges', 'badges_manage.php')->withQueryParams($params));
     }
 
-    $form = Form::create('badges', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module')."/badges_manage_addProcess.php?search=$search&category=$category");
+    $form = Form::create('badges', $session->get('absoluteURL','').'/modules/'.$session->get('module')."/badges_manage_addProcess.php?search=$search&category=$category");
 
-    $form->addHiddenValue('address', $gibbon->session->get('address'));
+    $form->addHiddenValue('address', $session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('name', __('Name'));
@@ -78,7 +78,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
         $row->addLabel('description', __('Description'));
         $row->addTextArea('description');
 
-    $fileUploader = new FileUploader($pdo, $gibbon->session);
+    $fileUploader = new FileUploader($pdo, $session);
 
     $row = $form->addRow();
         $row->addLabel('file', __('Logo'))->description(__('240px x 240px'));

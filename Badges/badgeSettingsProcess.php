@@ -22,7 +22,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 include '../../gibbon.php';
 
 
-$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badgeSettings.php';
+$URL = $session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badgeSettings.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php') == false) {
     //Fail 0
