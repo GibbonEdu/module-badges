@@ -23,7 +23,7 @@ include '../../gibbon.php';
 
 include './moduleFunctions.php';
 
-$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage_add.php&search='.$_GET['search'].'&category='.$_GET['category'];
+$URL = $session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage_add.php&search='.$_GET['search'].'&category='.$_GET['category'];
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.php') == false) {
     //Fail 0
@@ -48,7 +48,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
         //Move attached image  file, if there is one
         if (!empty($_FILES['file']['tmp_name'])) {
-            $fileUploader = new Gibbon\FileUploader($pdo, $gibbon->session);
+            $fileUploader = new Gibbon\FileUploader($pdo, $session);
             $fileUploader->getFileExtensions('Graphics/Design');
 
             $file = (isset($_FILES['file']))? $_FILES['file'] : null;
@@ -63,7 +63,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
         //Write to database
         try {
-            $data = array('name' => $name, 'license' => $license, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $gibbon->session->get('gibbonPersonID'), 'timestampCreated' => date('Y-m-d H:i:s'));
+            $data = array('name' => $name, 'license' => $license, 'active' => $active, 'category' => $category, 'description' => $description, 'logo' => $logo, 'logoLicense' => $logoLicense, 'gibbonPersonIDCreator' => $session->get('gibbonPersonID'), 'timestampCreated' => date('Y-m-d H:i:s'));
             $sql = 'INSERT INTO badgesBadge SET name=:name, license=:license, active=:active, category=:category, description=:description, logo=:logo, logoLicense=:logoLicense, gibbonPersonIDCreator=:gibbonPersonIDCreator, timestampCreated=:timestampCreated';
             $result = $connection2->prepare($sql);
             $result->execute($data);

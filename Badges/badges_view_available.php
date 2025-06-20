@@ -23,7 +23,7 @@ use Gibbon\Forms\Form;
 use Gibbon\Forms\DatabaseFormFactory;
 
 //Module includes
-include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
+include './modules/'.$session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_available.php') == false) {
     //Acess denied
@@ -47,11 +47,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
     echo __('Search & Filter');
     echo '</h2>';
 
-    $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php','GET');
+    $form = Form::create('grantbadges',$session->get('absoluteURL').'/index.php','GET');
     $form->setFactory(DatabaseFormFactory::create($pdo));
     $form->addClass('noIntBorder');
-    $form->addHiddenValue('q','/modules/' . $gibbon->session->get('module') . '/badges_view_available.php');
-    $form->addHiddenValue('address',$gibbon->session->get('address'));
+    $form->addHiddenValue('q','/modules/' . $session->get('module') . '/badges_view_available.php');
+    $form->addHiddenValue('address',$session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('search',__('Search For'))->description("Badge name");
@@ -62,7 +62,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
         $row->addLabel('category',__('Category'));
         $row->addSelect('category')->fromQuery($pdo, $sql, [])->selected($category)->placeholder();
 
-    $row = $form->addRow()->addSearchSubmit($gibbon->session);
+    $row = $form->addRow()->addSearchSubmit($session);
     echo $form->getOutput();
 
     ?>
@@ -110,9 +110,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_view_availab
 
             echo "<td style='padding-top: 15px!important; padding-bottom: 15px!important; width:33%; text-align: center; vertical-align: top'>";
             if ($row['logo'] != '') {
-                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/'.$row['logo']."'/><br/>";
+                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$session->get('absoluteURL','').'/'.$row['logo']."'/><br/>";
             } else {
-                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$gibbon->session->get('absoluteURL','').'/themes/'.$gibbon->session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
+                echo "<img style='margin-bottom: 20px; max-width: 150px' src='".$session->get('absoluteURL','').'/themes/'.$session->get('gibbonThemeName')."/img/anonymous_240_square.jpg'/><br/>";
             }
             echo '<b>'.$row['name'].'</b><br/>';
             echo '<span class=\'emphasis small\'>'.$row['category'].'</span><br/>';

@@ -40,12 +40,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
     $search = $_GET['search'] ?? '';
     $category = $_GET['category'] ?? '';
 
-    $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'get');
+    $form = Form::create('search', $session->get('absoluteURL','').'/index.php', 'get');
     $form->setTitle(__('Search & Filter'));
     $form->addClass('noIntBorder');
 
-    $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/badges_manage.php');
-    $form->addHiddenValue('address', '/modules/' . $gibbon->session->get('address'));
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/badges_manage.php');
+    $form->addHiddenValue('address', '/modules/' . $session->get('address'));
 
     $row = $form->addRow();
         $row->addLabel('search', __('Search For'))->description(__('Name'));
@@ -58,7 +58,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage.php')
         $row->addSelect('category')->fromArray($categories)->selected($category)->placeholder();
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session, __('Clear Search'));
+        $row->addSearchSubmit($session, __('Clear Search'));
 
     echo $form->getOutput();
 

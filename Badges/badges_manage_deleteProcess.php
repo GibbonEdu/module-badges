@@ -24,8 +24,8 @@ include '../../gibbon.php';
 include './moduleFunctions.php';
 
 $badgesBadgeID = $_POST['badgesBadgeID'] ?? '';
-$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_delete.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'];
-$URLDelete = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category'];
+$URL = $session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_delete.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'];
+$URLDelete = $session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address']).'/badges_manage.php&search='.$_GET['search'].'&category='.$_GET['category'];
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delete.php') == false) {
     //Fail 0

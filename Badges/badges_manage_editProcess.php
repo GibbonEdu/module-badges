@@ -24,7 +24,7 @@ include '../../gibbon.php';
 include './moduleFunctions.php';
 
 $badgesBadgeID = $_GET['badgesBadgeID'] ?? '';
-$URL = $gibbon->session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_edit.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'];
+$URL = $session->get('absoluteURL','').'/index.php?q=/modules/'.getModuleName($_POST['address'])."/badges_manage_edit.php&badgesBadgeID=$badgesBadgeID&search=".$_GET['search']."&category=".$_GET['category'];
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.php') == false) {
     //Fail 0
@@ -74,7 +74,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                 $partialFail = false;
                 $logo = $_POST['logo'] ?? $row['logo'];
                 if (!empty($_FILES['file']['tmp_name'])) {
-                    $fileUploader = new Gibbon\FileUploader($pdo, $gibbon->session);
+                    $fileUploader = new Gibbon\FileUploader($pdo, $session);
                     $fileUploader->getFileExtensions('Graphics/Design');
 
                     $file = (isset($_FILES['file']))? $_FILES['file'] : null;

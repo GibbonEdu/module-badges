@@ -38,11 +38,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByCl
     $gibbonCourseClassID = $_GET['gibbonCourseClassID'] ?? null;
     $badgesBadgeID = $_GET['badgesBadgeID'] ?? null;
 
-    $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'GET');
+    $form = Form::create('search', $session->get('absoluteURL','').'/index.php', 'GET');
     $form->setTitle(__('Choose Class'));
     $form->addClass('noIntBorder');
 
-    $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/report_licensesByClass.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/report_licensesByClass.php');
 
     $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
     $sql = 'SELECT gibbonCourseClassID AS value, CONCAT(gibbonCourse.nameShort,\'.\',gibbonCourseClass.nameShort) AS name FROM gibbonCourse JOIN gibbonCourseClass ON (gibbonCourseClass.gibbonCourseID=gibbonCourse.gibbonCourseID) WHERE gibbonCourse.gibbonSchoolYearID=:gibbonSchoolYearID ORDER BY gibbonCourse.nameShort, gibbonCourseClass.nameShort';
@@ -57,7 +57,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByCl
         $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, $data)->selected($badgesBadgeID)->required()->placeholder();
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session);
+        $row->addSearchSubmit($session);
 
     echo $form->getOutput();
 

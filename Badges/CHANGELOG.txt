@@ -1,5 +1,9 @@
 CHANGELOG
 =========
+v2.9.04
+-------
+Replaced $gibbon->session to $session as "$gibbon->session" is now deprecated
+
 v2.9.03
 -------
 Fixed syntax error in the Edit Badge page

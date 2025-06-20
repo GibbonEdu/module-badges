@@ -24,7 +24,7 @@ use Gibbon\Forms\DatabaseFormFactory;
 use Gibbon\Module\Badges\Domain\BadgeGateway;
 
 //Module includes
-include './modules/'.$gibbon->session->get('module').'/moduleFunctions.php';
+include './modules/'.$session->get('module').'/moduleFunctions.php';
 
 if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') == false) {
     //Acess denied
@@ -35,12 +35,12 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
     //Get action with highest precendence
     $page->breadcrumbs->add(__('Grant Badges'));
 
-    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $gibbon->session->get('gibbonSchoolYearID');
-    if ($gibbonSchoolYearID == $gibbon->session->get('gibbonSchoolYearID')) {
-        $gibbonSchoolYearName = $gibbon->session->get('gibbonSchoolYearName');
+    $gibbonSchoolYearID = $_GET['gibbonSchoolYearID'] ?? $session->get('gibbonSchoolYearID');
+    if ($gibbonSchoolYearID == $session->get('gibbonSchoolYearID')) {
+        $gibbonSchoolYearName = $session->get('gibbonSchoolYearName');
     }
 
-    if ($gibbonSchoolYearID != $gibbon->session->get('gibbonSchoolYearID')) {
+    if ($gibbonSchoolYearID != $session->get('gibbonSchoolYearID')) {
         try {
             $data = array('gibbonSchoolYearID' => $_GET['gibbonSchoolYearID']);
             $sql = 'SELECT * FROM gibbonSchoolYear WHERE gibbonSchoolYearID=:gibbonSchoolYearID';
@@ -79,7 +79,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         $gibbonYearGroupID = $_GET['gibbonYearGroupID'] ?? '';
         $type = $_GET['type'] ?? '';
 
-        $form = Form::create('grantbadges',$gibbon->session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
+        $form = Form::create('grantbadges',$session->get('absoluteURL').'/index.php?q=/modules/Badges/badges_grant.php','GET');
         $form->setFactory(DatabaseFormFactory::create($pdo));
         $form->addClass('noIntBorder');
 
@@ -88,7 +88,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 
         $row = $form->addRow();
         $row->addLabel('gibbonPersonID2',__('User'));
-        $row->addSelectStudent('gibbonPersonID2', $gibbon->session->get('gibbonSchoolYearID'))->selected($gibbonPersonID2)->placeholder();
+        $row->addSelectStudent('gibbonPersonID2', $session->get('gibbonSchoolYearID'))->selected($gibbonPersonID2)->placeholder();
 
         $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
         $row = $form->addRow();
@@ -96,7 +96,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         $row->addSelect('badgesBadgeID2')->fromQuery($pdo, $sql, [], 'category')->selected($badgesBadgeID2)->placeholder();
 
         $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session);
+        $row->addSearchSubmit($session);
 
         $form->addHiddenValue('q',$_GET['q']);
         $form->addRow();

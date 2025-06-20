@@ -42,11 +42,11 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByAc
     $gibbonActivityID = $_GET['gibbonActivityID'] ?? null;
     $badgesBadgeID = $_GET['badgesBadgeID'] ?? null;
 
-    $form = Form::create('search', $gibbon->session->get('absoluteURL','').'/index.php', 'GET');
+    $form = Form::create('search', $session->get('absoluteURL','').'/index.php', 'GET');
     $form->setTitle(__('Choose Class'));
     $form->addClass('noIntBorder');
 
-    $form->addHiddenValue('q', '/modules/'.$gibbon->session->get('module').'/report_licensesByActivity.php');
+    $form->addHiddenValue('q', '/modules/'.$session->get('module').'/report_licensesByActivity.php');
 
     $data = array('gibbonSchoolYearID' => $session->get('gibbonSchoolYearID'));
     $sql = 'SELECT gibbonActivityID AS value, name FROM gibbonActivity WHERE gibbonActivity.gibbonSchoolYearID=:gibbonSchoolYearID AND active=\'Y\' ORDER BY name';
@@ -61,7 +61,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/report_licensesByAc
         $row->addSelect('badgesBadgeID')->fromQuery($pdo, $sql, $data)->selected($badgesBadgeID)->required()->placeholder();
 
     $row = $form->addRow();
-        $row->addSearchSubmit($gibbon->session);
+        $row->addSearchSubmit($session);
 
     echo $form->getOutput();
 

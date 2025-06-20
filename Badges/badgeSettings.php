@@ -31,9 +31,9 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badgeSettings.php')
     //Proceed!
     $page->breadcrumbs->add(__('Badges Settings'));
 	
-	$form = Form::create('action', $gibbon->session->get('absoluteURL','').'/modules/'.$gibbon->session->get('module').'/badgeSettingsProcess.php');
+	$form = Form::create('action', $session->get('absoluteURL','').'/modules/'.$session->get('module').'/badgeSettingsProcess.php');
 	
-	$form->addHiddenValue('address', $gibbon->session->get('address'));
+	$form->addHiddenValue('address', $session->get('address'));
 
 	$setting = $container->get(SettingGateway::class)->getSettingByScope('Badges', 'badgeCategories', true);
 	$row = $form->addRow();
