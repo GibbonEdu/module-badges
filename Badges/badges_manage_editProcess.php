@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Domain\System\FileGateway;
+
 include '../../gibbon.php';
 
 include './moduleFunctions.php';
@@ -73,6 +75,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                 //Sort out logo
                 $partialFail = false;
                 $logo = $_POST['logo'] ?? $row['logo'];
+                $fileMetaData = null;
                 if (!empty($_FILES['file']['tmp_name'])) {
                     $fileUploader = new Gibbon\FileUploader($pdo, $session);
                     $fileUploader->getFileExtensions('Graphics/Design');
@@ -84,6 +87,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
 
                     if (empty($logo)) {
                         $partialFail = true;
+                    } else {
+                        $fileMetaData = $fileUploader->getFileMetaData($logo);
                     }
                 }
 
@@ -98,6 +103,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_edit.
                     $URL = $URL.'&return=error5';
                     header("Location: {$URL}");
                     exit();
+                }
+
+                // Record file tracking
+                if (!empty($fileMetaData) && !empty($badgesBadgeID)) {
+                    $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload($fileMetaData, 'badgesBadge', $badgesBadgeID, 'logo');
+
+                    if (empty($gibbonFileID)) {
+                        $partialFail = true;
+                    }
                 }
 
                 if ($partialFail == true) {
