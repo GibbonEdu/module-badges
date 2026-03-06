@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Gibbon\Domain\System\FileGateway;
+use Gibbon\Contracts\Filesystem\FileHandler;
 
 include '../../gibbon.php';
 
@@ -85,7 +85,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
         // Record file tracking
         if (!empty($fileMetaData) && !empty($AI)) {
-            $gibbonFileID = $container->get(FileGateway::class)->recordFileUpload($fileMetaData, 'badgesBadge', $AI, 'logo');
+            $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload($fileMetaData, 'badgesBadge', $AI, 'logo');
 
             if (empty($gibbonFileID)) {
                 $partialFail = true;
