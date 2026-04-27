@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-v2.9.04
+v3.0.00
 -------
 Added comprehensive file upload tracking system to monitor and manage all file uploads across the system
 

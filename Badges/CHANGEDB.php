@@ -253,7 +253,7 @@ $sql[$count][1] = "";
 $sql[$count][0] = '2.9.04';
 $sql[$count][1] = "";
 
-//v2.9.05
+//v3.0.00
 ++$count;
-$sql[$count][0] = '2.9.05';
+$sql[$count][0] = '3.0.00';
 $sql[$count][1] = "";
