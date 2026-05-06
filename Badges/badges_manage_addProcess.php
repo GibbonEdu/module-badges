@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Contracts\Filesystem\FileHandler;
+
 include '../../gibbon.php';
 
 include './moduleFunctions.php';
@@ -47,6 +49,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
         $logo = null;
 
         //Move attached image  file, if there is one
+        $fileMetaData = null;
         if (!empty($_FILES['file']['tmp_name'])) {
             $fileUploader = new Gibbon\FileUploader($pdo, $session);
             $fileUploader->getFileExtensions('Graphics/Design');
@@ -58,6 +61,8 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
 
             if (empty($logo)) {
                 $partialFail = true;
+            } else {
+                $fileMetaData = $fileUploader->getFileMetaData($logo);
             }
         }
 
@@ -77,6 +82,15 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_add.p
         }
 
         $AI = str_pad($connection2->lastInsertID(), 8, '0', STR_PAD_LEFT);
+
+        // Record file tracking
+        if (!empty($fileMetaData) && !empty($AI)) {
+            $gibbonFileID = $container->get(FileHandler::class)->recordFileUpload($fileMetaData, 'badgesBadge', $AI, 'logo');
+
+            if (empty($gibbonFileID)) {
+                $partialFail = true;
+            }
+        }
 
         if ($partialFail == true) {
             $URL .= '&return=warning1';

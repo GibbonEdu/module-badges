@@ -252,3 +252,8 @@ $sql[$count][1] = "";
 ++$count;
 $sql[$count][0] = '2.9.04';
 $sql[$count][1] = "";
+
+//v3.0.00
+++$count;
+$sql[$count][0] = '3.0.00';
+$sql[$count][1] = "";
