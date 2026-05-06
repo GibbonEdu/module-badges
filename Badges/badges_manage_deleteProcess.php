@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Gibbon\Contracts\Filesystem\FileHandler;
+
 include '../../gibbon.php';
 
 include './moduleFunctions.php';
@@ -69,6 +71,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_manage_delet
             }
 
             //Success 0
+            $fileDeleted = $container->get(FileHandler::class)->deleteFile('badgesBadge', $badgesBadgeID, 'logo');
             $URLDelete = $URLDelete.'&return=success0';
             header("Location: {$URLDelete}");
         }

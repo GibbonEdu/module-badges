@@ -27,7 +27,7 @@ $description = 'The Badges module allows a school to define and assign a range o
 $entryURL = 'badges_view.php';
 $type = 'Additional';
 $category = 'Assess';
-$version = '3.0.00';
+$version = '3.0.01';
 $author = "Gibbon Foundation";
 $url = "https://gibbonedu.org";
 
