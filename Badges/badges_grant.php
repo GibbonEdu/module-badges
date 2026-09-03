@@ -88,7 +88,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
 
         $row = $form->addRow();
         $row->addLabel('gibbonPersonID2',__('User'));
-        $row->addSelectStudent('gibbonPersonID2', $session->get('gibbonSchoolYearID'))->selected($gibbonPersonID2)->placeholder();
+        $row->addSelectStudent('gibbonPersonID2', $gibbonSchoolYearID)->selected($gibbonPersonID2)->placeholder();
 
         $sql = "SELECT badgesBadgeID as value, name, category FROM badgesBadge WHERE active='Y' ORDER BY category, name";
         $row = $form->addRow();
@@ -96,9 +96,10 @@ if (isActionAccessible($guid, $connection2, '/modules/Badges/badges_grant.php') 
         $row->addSelect('badgesBadgeID2')->fromQuery($pdo, $sql, [], 'category')->selected($badgesBadgeID2)->placeholder();
 
         $row = $form->addRow();
-        $row->addSearchSubmit($session);
+        $row->addSearchSubmit($session, __('Clear Filters'), ['gibbonSchoolYearID']);
 
         $form->addHiddenValue('q',$_GET['q']);
+        $form->addHiddenValue('gibbonSchoolYearID', $gibbonSchoolYearID);
         $form->addRow();
         echo $form->getOutput();
 
